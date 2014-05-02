@@ -27,7 +27,6 @@
 			Damit die Bedieneinheit keinen eigenen Mikrocontroller braucht und da das \gls{g:roboboard} noch eine unbenutzte SPI-Schnittstelle hat, soll die Steuerung auf dem Controller des \gls{g:roboboard}s realisiert werden. Unsere Bedieneinheit braucht folge dessen eine SPI-Schnittstelle. Es handelt sich dabei um eine 10-Pin-Buchse (X1) mit folgenden Verwendungen und Pin-Bezeichnungen (Neu) analog dem \gls{g:roboboard} (Alt): (Tabelle \ref{tab:10-pin-buchse})
 	 		\begin{table}[H]
 		    	\centering
-		    	\caption{SPI 10-Pin-Buchse (X1)}
 		    	\begin{tabular}{|c|c|c|p{8cm}|} 
 		    		\hline
 		    		\rowcolor{bfhblue}
@@ -55,7 +54,8 @@
 					10 & GND & GND & Speisungs-Pin\\
 					\hline
 				\end{tabular}
-			\label{tab:10-pin-buchse}
+				\caption{SPI 10-Pin-Buchse (X1)}
+				\label{tab:10-pin-buchse}
 			\end{table}
 			 %	
 			Des weiteren wurde vom Speisungsteam gewünscht, eine Zustands-LED (D1) vom LIPO-Wächter auf den Print der Bedieneinheit anzubringen. Die Vorwärtsspannung des LEDs beträgt 2 V  und der -Strom 20 mA.

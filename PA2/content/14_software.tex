@@ -197,7 +197,7 @@
 	%
 	%
 	%Bedieneinheit
-	\newpage
+	\FloatBarrier
 	\section{Bedieneinheit}\label{s:sw_bedieneinheit}
 		Der für die Bedieneinheit entwickelte SW-Code ist grundsätzlich in den folgenden Dateien zu finden:
 		\begin{itemize}
@@ -261,7 +261,7 @@
 			%
 		\subsection{RoboSetup}\label{ss:robosetup}
 			In der RoboSetup-Datei befindet sich die Menüsteuerung. Damit nicht aus Versehen Konfigurationen vergessen gehen, wurde ein serieller Aufruf der einzelnen Menüstates realisiert (siehe Abbildung \ref{pic:menuabfolge}).\\
-			Es wurde versucht ein möglichst modularer Aufbau umzusetzen, damit wahlweise weitere Menüinhalte (Konfigurationen) hinzugefügt werden können. Erreicht wurde dies mit dem typdef struct menu\_t (Abbildung \ref{pic:menu_t}). Pro benötigte Konfiguration (Menüstate) muss somit zuerst je eine menu\_t-Struktur mit den gewünschten Initialisierungswerten erstellt werden.
+			Es wurde versucht ein möglichst modularer Aufbau umzusetzen, damit wahlweise weitere Menüinhalte (Konfigurationen) hinzugefügt werden können. Erreicht wurde dies mit dem \texttt{typdef struct menu\_t} (Abbildung \ref{pic:menu_t}). Pro benötigte Konfiguration (Menüstate) muss somit zuerst je eine menu\_t-Struktur mit den gewünschten Initialisierungswerten erstellt werden.
 			\par
 			\image{content/image/Bedienpanel/menu_t}{scale=0.8}{htbp}[Typdef structure menu\_t][pic:menu_t]
 			%
@@ -299,7 +299,7 @@
 			%
 	%
 	%Spielstrategie
-	\newpage
+	\FloatBarrier
 	\section{Spielstrategie}\label{s:speilstrategie}
 		Eine gute Spielstrategie entscheidet schlussendlich über Sieg oder Niederlage. Deshalb wird ein grosses Augenmerk auf eine ausgefeilte Spielstrategie gelegt.
 		%
