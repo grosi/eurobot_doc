@@ -1,0 +1,27 @@
+modul:Modul[ap]
+ttx:vCANTx[ap]
+qtx:qCANTx[ap]
+can:can[a]
+
+
+
+
+*1 modul
+Nachricht senden (z.B. GotoXY)
+*1
+(1)modul
+modul:qtx.GotoXY -> createCANMessage
+
+qtx:ttx.
+*2 ttx
+Nachricht vom Queue nach Tx-Task übertragen
+*2
+(2)ttx
+
+ttx:can.CAN_Transmit
+*3 ttx
+Nachricht senden
+*3
+(3)ttx
+
+

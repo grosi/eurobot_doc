@@ -1,0 +1,501 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Mechanik
+% Autor:   rohrp1, roth3
+% Datum:   13.12.2013
+% Version: 0.0.1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+%
+% 0.0.1       Erstellung der Datei
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+\chapter{Mechanik}\label{ch:mechanik_pa2}
+	%Im folgenden Kapitel wird auf den Teilbereich der Mechanik eingegangen.
+	%
+	% Konzeptphase
+	\section{Konzeptphase}\label{s:konzeptphase_pa2}
+		Aus der In der PA 1 erarbeiteten Strategie (siehe Dokumentation \gls{ac:pa1}, Kapitel 3.1) werden für den Roboter 2 die Aufgaben Feuer und Netz vorgegeben. Da dieser Roboter einen Umfang von 1500mm beim Start aufweisen darf und keine Spielelemente vorgängig im Roboter gespeichert werden müssen, können die beiden Aufgaben beliebig komplex Ausgearbeitet werden.
+		\par
+		Die Lösungsansätze der Aufgaben werden in einem Morphologischen Kasten erarbeitet. Der Schwerpunkt wird zu Beginn auf die Netz Aufgabe gelegt, da mit dieser in kurzer Zeit relativ viele Punkte erzielt werden können.
+		%
+		\subsection{Morphologischer Kasten}\label{ss:morph_kasten_pa2}
+			Die Morphologischen Kästen für die Netz und Feuer Aufgabe werden in die drei respektive fünf Teilfunktionen unterteilt. Viele der einzelnen Teilsysteme sind mit einfachen Skizzen dargestellt, andere werden lediglich beschrieben. Alle Teilfunktionen sind zu diesem Zeitpunkt beliebig kombinierbar (siehe \cref{tab:netz} und \cref{tab:teilfunktionen_feuer}).
+			%
+            %\subsubsection*{Netz}
+			\begin{table}[htbp]
+            \centering
+	            \begin{tabularx}{\textwidth}{|l|X|} 
+	                \hline
+	                \rowcolor{bfhblue}
+	                \textcolor{white}{Teilfunktion} & \textcolor{white}{Erläuterung}\\
+	                \hline
+	                Netz Form & Form des Netzes (rund, dreieckig, rechteckig?)\\
+	                \hline
+	                Wurfmechanismus & Abschussmechanismus mit Auslösung\\
+	                \hline
+	                Abwurfbahn & Netz Führung nach dem Auslösen\\
+	                \hline
+	            \end{tabularx}
+	            \caption{Teilfunktionen Netz}
+	            \label{tab:netz}  
+        	\end{table}\vspace{-35pt}
+			%
+            %\subsubsection*{Feuer}
+           		\begin{table}[htbp]
+	          		\centering
+	          		\begin{tabularx}{\textwidth}{|l|X|} 
+		              \hline
+		              \rowcolor{bfhblue}
+		              \textcolor{white}{Teilfunktion} & \textcolor{white}{Erläuterung}\\
+		              \hline
+		              Greifer & Art und Funktionsweise des Greifers\\
+		              \hline
+		              Hebel / Arm & Bauform des Haupthebelarms\\
+		              \hline
+		              Heben & Anheben und Absenken der Feuer\\
+		              \hline
+		              Wenden & Wenden der Feuer auf die gewünschte Teamfarbe\\
+		              \hline
+		              Erkennen & Erkennen der Feuer auf dem Spielfeld\\
+		              \hline
+	          		\end{tabularx}
+	          		\caption{Teilfunktionen Feuer}
+	          		\label{tab:teilfunktionen_feuer} 
+	      		\end{table}	
+	      		\newpage
+		%
+		%
+		\subsection{Testreihe}\label{ss:testreihe_pa2}
+			Der Netz Wurf ist von sehr vielen Parametern, die extrem schwierig zu erfassen sind, abhängig. Aus diesem Grund werden für die einzelnen Wurfmechanismen einfachen Prototypen aufgebaut.
+			Diese werden auf ihre Funktionalität und Treffsicherheit mit verschiedenen Parametern geprüft und anschliessend mit einer Nutzwertanalyse bewertet.
+			%
+			\begin{table}[htbp]
+            \centering
+	            \begin{tabularx}{\textwidth}{|l|X|c|} 
+	                \hline
+	                \rowcolor{bfhblue}
+	                \textcolor{white}{Lösungsprinzip} & \textcolor{white}{Resultat} & \textcolor{white}{Versuchsaufbau}\\
+	                \hline
+	                Netzpistole
+	                &
+	                \tableitemize 
+	                \begin{itemize} 
+	                    \item Ungenügender Wurf
+	                    \item Kein Treffer
+	                    \item Zu grosse Kräfte
+	                \end{itemize} 
+	                & 
+	                \multirow{1}{*}{\imagetotab[width=4cm]{content/image/Mechanik_PA2/Konzeptphase/Netzpistole}}\\
+	                &&\\
+	                &&\\
+	                &&\\
+	                &&\\
+	                &&\\
+	                &&\\
+	                \hline
+	                %
+	                Armbrust
+	                &
+	                \tableitemize 
+	                \begin{itemize} 
+	                    \item Gute Treffsicherheit
+	                    \item Einfache Auslösung
+	                    \item Einfaches Laden
+	                \end{itemize} 
+	                & 
+	                \multirow{1}{*}{\imagetotab[width=4cm]{content/image/Mechanik_PA2/Konzeptphase/Armbrust}}\\
+	                &&\\
+	                %
+	                \hline
+	                %
+	                Blattfeder
+	                &
+	                \tableitemize 
+	                \begin{itemize} 
+	                    \item Synergien vom Mammut
+	                    \item Viele Ecken zum Verhacken
+	                    \item Komplexe Auslösung
+	                \end{itemize} 
+	                & 
+	                \multirow{1}{*}{\imagetotab[width=4cm]{content/image/Mechanik_PA2/Konzeptphase/Blattfeder}}\\
+	                &&\\
+	                \hline
+	                %
+	                Hubbalken
+	                &
+	                \tableitemize 
+	                \begin{itemize} 
+	                    \item Kein Wurf
+	                    \item Viele Unsicherheiten
+	                \end{itemize} 
+	                & Keine Versuchsreihe\\
+%	                \tableitemize 
+%             		\begin{itemize} 
+%                  		\item Keine Versuchsreihe
+%              		\end{itemize}\\
+	                %
+	                \hline
+	            \end{tabularx}
+	            \caption{Resultate Testreihe PA2}
+	            \label{tab:resultate_testreihe_pa2}  
+        	\end{table}
+       		\FloatBarrier
+    		%
+			Bei der Feuer Aufgabe wird auf eine Testreihe mit Prototypen verzichtet. Die Aufgabe ist nicht von vielen freien Parametern abhängig und ein Prototyp wird somit als zu aufwendig für den Nutzen beurteilt.
+			%
+     	%
+     	\subsection{Bewertung}\label{ss:bewertung_pa2}
+     		Die Bewertung der verschiedenen Lösungsprinzipien der Netz- und Feuer-Aufgabe erfolgt durch eine gewichtete
+     		Nutzwertanalyse. Die Bewertung durch dass Kernteam ist ohne grössere Unstimmigkeiten abgelaufen, so dass auf eine weitere Bewertung mit aussenstehenden Personen verzichtet werden kann. Bewertet wurde mit den Folgenden technischen und wirtschaftlichen Kriterien(siehe \cref{tab:kriterien_und_gewichtung_netz_und_feuer}).
+			%
+     		\begin{table}[htbp]
+          		\centering
+          		\begin{tabular}{|l|c|} 
+					\hline
+					\rowcolor{bfhblue}
+					\textcolor{white}{Technische Aspekte} & \textcolor{white}{Gewichtung}\\
+					\hline
+					Treffsicherheit & 3\\
+					\hline
+					Fehleranfälligkeit & 2\\
+					\hline
+					Baugrösse & 1\\
+					\hline
+					Zugänglichkeit Laden & 2\\
+					\hline
+					Wurfauslösung & 2\\
+					\hline
+					\rowcolor{bfhblue}
+					\textcolor{white}{Wirtschaftliche Aspekte} & \textcolor{white}{Gewichtung}\\
+					\hline
+					Konstruktiver Aufwand & 3\\
+					\hline
+					Herstellungsaufwand & 2\\
+					\hline
+					Elektronischer Aufwand & 2\\
+					\hline
+					Kosten & 1\\
+					\hline
+				\end{tabular}
+          		\caption{Kriterien und Gewichtung Netz}
+          		\label{tab:kriterien_und_gewichtung_netz_und_feuer}  
+      		\end{table}	
+      		%
+      		\par
+      		Die Nutzwertanalyse ist im Anhang C zu finden.
+      		%
+		%
+		\subsection{Entscheid}\label{ss:entscheid_pa2}
+			\paragraph{Netz}
+			%\subsubsection{Netz}
+				Das System mit der Blattfeder hätte den grossen Vorteil, dass vieles von der Mammut Aufgabe übernommen werden könnte, sie scheitert aber an der eher komplexen Wurfauslösung und der erhöhten Gefahr des Verhakens. Die Nutzwertanalyse ergibt dadurch eine Führung für die Armbrustvariante. Sie zeichnet sich insbesondere durch die hohe Treffsicherheit, die einfache Wurfauslösung und dem vergleichsweise geringen konstruktiven Aufwand aus. Diese Variante wird nun weitergezogen.
+			\par
+			\paragraph{Feuer}
+			%\subsubsection{Feuer}
+				Bei der Feuer Aufgabe wurde auf eine Zeit aufwendige Bewertung verzichtet. Der Entscheid ist schnell und diskussionslos auf ein System mit einem einfachen Hebelarm mit einem Vakuumsauger gefallen. Der Arm soll vertikal verfahr bar sein, so dass alle Feuer, die in einer Feuerstelle oder am Spielrand stehen, bearbeitet werden können. Es wird allerdings auf ein Wenden der Feuer verzichtet. Die Feuer können bestenfalls durch geschicktes Fallenlassen über ein Hindernis gedreht werden.
+	      	\newpage
+	      	%
+	%
+	% Ausarbeitungsphase
+	\section{Ausarbeitungsphase}\label{s:ausarbeitungsphase_pa2}
+		Der in der PA 1 erarbeitete Roboter welcher die Aufgaben Mammut und Fresko bearbeitet haltet die Abmessungen für den kleinen Roboter gerade noch ein. Das heisst der zweite Roboter welcher keine Spielelemente zu speichern hat, darf bedeutend grösser ausfallen. Die Baugrösse verliert somit deutlich an Bedeutung. Es wird dennoch ein nicht allzu grosser Umfang angestrebt um auf dem Spieltisch einfacher manövrieren zu können.
+		Der zweite Roboter soll grundsätzlich wie der Erste aufgebaut werden um möglichst viele Synergien nutzen zu können und die vorhandenen Ressourcen optimal auszunützen. Alle Bauteile sind im Unigraphic NX8 modelliert. Die dazugehörigen Fertigungszeichnungen sind im Anhang D einzusehen.
+		%
+		%
+		\subsection{Feuer}\label{ss:Feuer}
+			%
+			%\subsubsection{Allgemeine Beschreibung}	
+				Auf einer Miniatur Linearführung der Firma Schneeberger wird die Sauger-Aufnahme montiert. Der Hebel wir über ein digitales Servo der Firma Hitec vertikal verschoben. Ein mechanischer Taster erfasst ob ein Feuer angesaugt wird und ob es wider fallen gelassen worden ist. Der Sauger wird zudem mit einer Schutzklinge geschützt, dies damit die auf dem Tisch stehenden Feuer gekippt werden können ohne den Sauger zu beschädigen. Die Klinke ist drehbar gelagert so das sie beim Ansaugen eines Feuers nicht zu einem Hindernis wird.(Abbildung \ref{abb:vakuumsauger})
+				%
+				\image{content/image/Mechanik_PA2/Konzeptphase/Vakuumsauger}{scale=1}{htbp}[Vakuumsauger][abb:vakuumsauger]
+				%
+				\subsubsection{Handling}
+					Das System ist so ausgelegt, dass sämtliche Feuer aus den Feuerstellen gehoben werden können. Die Feuer welche auf dem Spielfeld liegen können jedoch nicht angehoben werden. Dies wäre erst mit einer funktionierenden Bildverarbeitung sinnvoll, da die Feuer überall liegen können.(Abbildung \ref{abb:feuerstelle})
+					%
+					\image{content/image/Mechanik_PA2/Konzeptphase/Feuer1}{scale=0.6}{htbp}[Feuerstelle][abb:feuerstelle]
+					\par
+					Feuer die auf dem Spielfeld stehen und noch nicht gekippt wurden, können mit der Schutzklinke umgefahren werden. Die Feuer welche an der Bande Stehen können mit der Schutzklinke zudem überstossen und anschliessend mit dem Sauger angehoben werden.(Abbildung \ref{abb:feueranbande})
+					%
+					\image{content/image/Mechanik_PA2/Konzeptphase/Feuer2}{scale=0.6}{htbp}[Feuer an der Bande][abb:feueranbande]
+				%
+				\subsubsection{Eingekaufte Komponente}
+					\begin{description}
+						\item[Servo] Hitec, digitales Standard Servo HS 7985
+						\item[Linearführung] Schneeberger, Minirail MNL 9
+						\item[Lagerbuchsen] Igus GmbH, iglidur J Gleitlager, Form F
+						\item[Tastsensor] Omron, Snap Action Switch D2F-01L
+						\item[Vakuumpumpe] KNF Neuberger, Micro-Membran-Gasförderpumpe NMP 850
+						\item[Magnetventil] Festo, Magnetventil MOFH
+						\item[Magnetspule] Festo, Magnetspule MSFG
+					\end{description}
+					Für alle Komponente sei auf den Anhang E \textit{Datenblätter} verwiesen.
+				%
+				\subsubsection{Servo}
+					Es wird ein digitales Servo verwendet um die Ansteuerung möglichst einfach zu halten. Um Fehler zu verhindern wurde das nötige Drehmoment welches das Servo aufbringen muss vorgängig berechnet und mit einer Sicherheit von 1.5 versehen. Verbaut wird schliesslich das leistungsstarke HS 7985 MG. Dieses bringt zudem den Vorteil, dass es auch bei der Netz und Mammut Aufgabe verwendet wird. Somit kann bei den Reserve Servos bedeutend gespart werden. Die genaue Auslegung ist im Anhang C einzusehen.
+				%
+				\subsubsection{Linearführung}
+					Der Saug-Arm soll möglichst spielfrei geführt werden und möglichst geringe Reibverluste aufweisen. Die kleinen Linearführungen von Schneeberger drängen sich dafür förmlich auf. Da die Baugrösse nicht extrem eingeschränkt ist wird auf eine 9 mm Schiene mit Standard  Wagen gesetzt.
+				%
+				\subsubsection{Lagerbuchse}
+					Der Servohebel ist zusätzlich gelagert damit es nie zu einem Verklemmen des Zweiteiligen Hebels kommen kann. Da auf die Lagerung zu keinem Zeitpunkt grosse Kräfte wirken, wird eine kleine N-Führung der Firma Igus eingebaut. Sie zeichnet sich insbesondere durch das niedrige Gewicht und die geringen Reibwerte ohne zusätzliche Schmierung aus (\cref{abb:lagerbuchse}).
+					%
+					\image{content/image/Mechanik_PA2/Konzeptphase/Lagerbuchse}{scale=0.4}{htbp}[Lagerbuchse][abb:lagerbuchse]
+				%
+				\subsubsection{Tastsensor}
+					Damit überwachtwerden kann wann und ob ein Feuer angesaugt wird, ist ein mechanischer Tastsensor eingebaut. Der Sensoren der Firma Omron zeichnen sich insbesondere durch die sehr geringe Baugrösse aus. Zudem wird derselbe Sensor wie bei der Fresko Aufgabe verwendet. Er wird über zwei Langlöcher Verschraubt. Das ermöglicht ein flexibles einstellen der Position.
+				%
+				\subsubsection{Vakuumpumpe}
+					Das Vakuum wird über eine Micro-Membran-Gasförderpumpe der Firma KNF Neuberger erzeugt. Diese zeichnet sich insbesondere durch die geringe Baugrösse aus. Zudem arbeitet sie Wartungsfrei und wird Einbaufertig geliefert. Der Hersteller verspricht darüber hinaus eine lange Lebensdauer.
+				%
+				\subsubsection{Magnetventil und Magnetspule}
+					Das Vakuum wird über eine Micro-Membran-Gasförderpumpe der Firma KNF Neuberger erzeugt. Diese zeichnet sich insbesondere durch die geringe Baugrösse aus. Zudem arbeitet sie Wartungsfrei und wird Einbaufertig geliefert. Der Hersteller verspricht darüber hinaus eine lange Lebensdauer.
+				\newpage
+		%
+		\subsection{Netz (Funny Action)}\label{ss:Netz}
+			%
+			%\subsubsection{Allgemeine Beschreibung}	
+				Auf dem Abschussblech ist der ganze Netzwurfmechanismus aufgebaut (\cref{abb:abschlussblech}). Das System ist so aufgebaut, dass das Netz im Innern des Mechanismus möglichst nirgends einhacken kann. Die Beiden vorderen Ringe werden vor dem Spiel in die Auslösestäbe eingefahren und durch diese fest gehalten. Die Gummibänder werden über die beiden Nasen vorgespannt. Das Netz wird dann sauber zusammengefaltet in den Abwurfschacht gelegt (\cref{abb:netz}).
+				%
+				\image{content/image/Mechanik_PA2/Konzeptphase/Netz}{scale=0.07}{htbp}[Netz][abb:netz]
+				%
+				\image{content/image/Mechanik_PA2/Konzeptphase/Abschussblech}{scale=0.65}{htbp}[Abwurfmechanismus][abb:abschussblech]
+				\par
+				Das Herzstück des Wurfmechanismus ist die Auslösung. Das Laden des Netzes erfolgt durch das Einschieben der Ringe. Durch die Abschrägung der Auslösestäbe werden diese ohne Betätigen des Servos nach oben geführt. Die Druckfedern verhindern anschliessend eine unerwünschte Auslösung. Betätigt wird über ein digitales Servo der Firma Hitec. Der Servohebel drückt die beiden Auslösestäbe gegen oben weg, was direkt zur Auslösung des Netzwurfes führt. Die Druckfedern führen das System anschliessend wider in die Ausgangsposition zurück.
+				%
+				\image{content/image/Mechanik_PA2/Konzeptphase/Wurfmechanismus}{scale=0.7}{htbp}[Schnitt Wurfauslösung][abb:wurfmechanismus]
+				%
+				\newpage
+				\subsubsection{Eingekaufte Komponente}
+					\begin{description}
+						\item[Servo] Hitec, digitales Standard Servo HS 8380 TH 
+						\item[Druckfeder] Federtechnik Groupe, Normdruckfeder
+						\item[Lagerbuchsen] Igus GmbH, iglidur J Gleitlager, Form F
+						\item[Gummiband] Maped Gummibänder
+						\item[Netz] BernhardFishing, Feumer und Kelchen Quiknet 
+					\end{description}
+					Für alle Komponente gilt: siehe Anhang E \textit{Datenblätter}.
+				%
+				\subsubsection{Servo}
+					Es wird ein digitales Servo verwendet um die Ansteuerung möglichst einfach zu halten. Um Fehler zu verhindern wurde das nötige Drehmoment, welches das Servo aufbringen muss vorgängig berechnet und mit einer Sicherheit von 1.5 versehen. Verbaut wird schliesslich das leistungsstarke HS 8380 TH. Dieses bringt wiederum den Vorteil, dass es auch bei der Feuer und Mammut Aufgabe verwendet wird.
+				%
+				\subsubsection{Lagerbuchse}
+					Damit die Auslösung über das Servo fehlerfrei abläuft, ist es von grosser Bedeutung, dass es nie zu einem Verklemmen der Auslösestäbe kommen kann. Um dies zu verhindern werden diese in je zwei kleinen Lagerbuchsen der Firma Igus geführt. Sie zeichnen sich insbesondere durch das niedrige Gewicht und die geringen Reibwerte ohne zusätzliche Schmierung aus.
+				%
+				\subsubsection{Druckfeder}
+					Damit das Netz im gespannten Zustand bleibt und keine unerwünschte Auslösung durch Vibrationen welche durch das Fahren entstehen werden die Auslösestäbe über je eine Druckfeder in ihrer Position gehalten. Das System soll ohne Betätigung des Servos geladen werden. Dies führt aber dazu, dass das Servo keine Rückführung der Auslösestäbe übernehmen kann. Diese Aufgabe wird zusätzlich durch die Druckfedern übernommen.
+				%
+				\subsubsection{Gummiband}
+					Die Vorspannung des Netzes wird durch handelsübliche Bürogummibänder gemacht. Mit der Wahl des Gummibandes kann die Spannkraft und somit die Abschusskraft eingestellt werden. Dies ist mittels Tests zu evaluieren.
+				%
+				\subsubsection{Netz}
+					Damit das Netz eine zufriedenstellend über ein Mammut geworfen werden kann, ist ein geringes Masse und ausreichende Beweglichkeit von grosser Bedeutung. Weiter darf die Maschenbreite nicht zu gross sein, da dies sonst zu einem Verhaken im Roboter führen kann. Die Wahl fällt schliesslich auf einen handelsüblichen Feumer. Daraus ist ein rechteckiges Stück ausgeschnitten worden. An den Seiten wurde etwas dickerer Faden eingenäht. Weiter sind an den Ecken Kunststoffringe angebracht. Diese dienen einerseits als Gewicht und anderseits als Verbindung zwischen Netz und Gummiband.
+		\newpage
+%-----------------------------------------------
+	%
+	% Testphase
+	\section{Testphase}\label{s:testphase_pa2}
+		Damit die Funktionsfähigkeit aller Systeme belegt werden kann und allfällige Fehler aufgedeckt werden, ist es wichtig alles sauber zu testen. Da die beiden Roboter bis zum Stand der Dokumentation noch nicht in Betrieb genommen wurden, konnten die einzelnen Funktionstests noch nicht durgeführt werden (siehe Anhang F). Einzig die Mammutaufgabe wurde genauer getestet. Wobei hierfür die Ansteuerung des Servos über ein Netzgerät und ein Servotestgerät lief. Das Testprotokoll ist im Anhang F einzusehen.
+		Die restlichen Systeme wurden lediglich durch manuelles Betätigen auf ihre Funktionalität geprüft. Bereits diese improvisierten Tests haben jedoch zu diversen Anpassungen und Erweiterungen der Mechanik geführt. (Tabelle \ref{tab:anpassungen_mammut} \& \ref{tab:anpassungen_fresko} Anpassungen Mechanik)
+		\begin{table}[htbp]
+        \centering
+         \begin{tabularx}{\textwidth}{|X|X|} 
+             \hline
+             \rowcolor{bfhblue}
+             \textcolor{white}{Fehler \& Ursache} & \textcolor{white}{Anpassung}\\
+             \hline
+             Servo für Mammutaufgabe kann das geforderte Drehmoment nicht aufbringen. 
+             Grund: Falsche Dimensionierung & \tableitemize 
+              \begin{itemize} 
+               \item Neues Servo HS-8380-TH wird eingesetzt
+               \item Befestigungsbügel für neues Servo
+               \item Ausparung im Lagerbock
+              \end{itemize}\\
+             \hline
+             Verkannten der Verbindungsblöcke in der Lagerung &
+			 \tableitemize 
+              \begin{itemize} 
+               \item Neuer Gabelförmiger Servohebel
+              \end{itemize}\\
+             \hline
+             Die Feder wird zu wenig gespannt. 
+             Grund: die Verformung der Blattfeder entspricht nicht der Simulation &
+			 \tableitemize 
+              \begin{itemize} 
+               \item Neue Gewinde Bohrung in Klinkenwellen Lagerung ermöglicht grössere Spannwinkel
+              \end{itemize}\\
+             \hline
+             Grosse Streuung der Speere.
+             Grund: Nicht gleichbleibende Bedingungen für die einzelnen Speere beim Abschuss &
+			 \tableitemize 
+              \begin{itemize} 
+               \item Nachrüsten einer Vereinzelung
+               \item Anbringen von Stegen, welche die Position der Speere definieren
+              \end{itemize}\\
+             \hline
+             Herausfallen der Speere &
+			 \tableitemize 
+              \begin{itemize} 
+               \item Anpassung der Zuführrohre
+              \end{itemize}\\
+             \hline
+         \end{tabularx}
+         \caption{Anpassungen Mechanik Mammut}
+         \label{tab:anpassungen_mammut}  
+       	\end{table}
+		%
+%		\par
+		%
+		\begin{table}[htbp]
+        \centering
+         \begin{tabularx}{\textwidth}{|X|X|} 
+             \hline
+             \rowcolor{bfhblue}
+             \textcolor{white}{Fehler \& Ursachen} & \textcolor{white}{Anpassung}\\
+             \hline
+             Servo wird ersetzt.
+             Grund: Das verwendete Servo hat im Betrieb nicht überzeugt. Dazu kommen neue Belastungen durch die Vereinzelung &
+             \tableitemize 
+              \begin{itemize} 
+               \item Neues Servo HS-7985-MG wird eingesetzt
+              \end{itemize}\\
+             \hline
+         \end{tabularx}
+         \caption{Anpassungen Mechanik Fresko}
+         \label{tab:anpassungen_fresko}  
+       	\end{table}
+		%		
+	% Aenderungen
+	\section{\"Anderungen an Roboter 1}\label{s:aenderungen an robo1}
+		Nach Abschluss der PA 1 wurde der kleine Roboter komplett montiert und die ersten Tests der mechanischen Funktionalität durchgeführt. Dabei sind einige Defizite aufgetaucht, die in der PA2 ausgemerzt werden mussten. Fertigungszeichnungen der geänderten und neu konstruierten Teile (siehe Anhang D)
+		%
+		\subsection{Anpassungen Mammut}\label{ss:anpassungen_mammut}	
+			\paragraph{Servo}
+				Das eingesetzte Servo von Hitec HS-5125 MG ist nicht stark genug um die Blattfeder zu spannen (siehe Anhang C). Der Fehler entstand durch ein Missachten der Einheiten bei der Auslegung. Neu wird ein Servo von Hitec HS-8380TH eingesetzt. (siehe Anhang E Datenblätter). Auf Grund der grösseren Abmassen des Servos wurde die Befestigung neu mit einem Befestigungsbügel realisiert(Abbildung \ref{abb:nach}). Weiter ist ein Ausschnitt im Lagerbock Federspanner links erforderlich gewesen damit das Servo in die vorgesehene Platzverhältnisse passte. (Abbildung \ref{abb:nach})
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/seitenansicht_Servo_Mammut}{scale=0.2}{htbp}[Konstruktion vor der Korrektur][abb:vor]\vspace{-40pt}
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/aenderungen_Servo}{scale=0.5}{htbp}[Konstruktion nach der Korrektur][abb:nach]
+				\newpage
+			%
+			\paragraph{Gabelhebel Servo}
+				Aufgrund der Verkantungsgefahr der Verbindungsblöcke und der Lagerung Klinkenwelle während dem Spannen der Blattfedern wurde der Servohebel neu entworfen. Dazu ist ein Gabelhebel konstruiert worden, der die Bewegungskraft an zwei Punkten an die Klinkenwelle übergibt. (siehe Abbildung \ref{abb:abschuss} und \ref{abb:hebel})
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/Abschuss}{scale=1}{htbp}[Abschussmech. vor (links) und nach (rechts) Korrektur Servohebel][abb:abschuss]
+				\par
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/Hebel}{scale=0.5}{htbp}[Servohebel (links) und Gabelhebel Servo (rechts)][abb:hebel]
+			%
+			\paragraph{Verformung Blattfeder}
+				Die Verformung der Blattfeder wurde in der PA 1 in Ansys Workbench simuliert (siehe Anhang C). Die Blattfeder zeigte jedoch in Wirklichkeit eine stärkere Abbiegung als die von der Simulation vorgegeben. Somit verliert die Klinke die Blattfeder zu früh und kann diese nicht über die geforderte Spannweite spannen. Damit dies möglich wird, wurde eine zweite Gewindebohrung in die Lagerung Klinkenwelle realisiert. Dies erlaubt jetzt den Spannwinkel zu vergrössern und somit die geforderte Spannweite der Blattfeder zu erreichen. (siehe Abbildung \ref{abb:korrektur_spann} Korrektur Spannwinkel Blattfeder). Zusätzlich ist eine Fase an der Lagerung Klinkenwelle links angebracht worden. Ohne die Fase würde die Lagerung Klinkenwelle mit dem Servo kollidieren bevor der maximalen Spannwinkel erreicht ist. (siehe Abbildung \ref{abb:lagerung} Lagerung Klinkenwelle links)
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/Verformung_Blattfeder}{scale=0.4}{htbp}[Korrektur Spannwinkel Blattfeder][abb:korrektur_spann]
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/Lagerung_Klinkenwelle_links}{scale=0.5}{htbp}[Lagerung Klinkenwelle links][abb:lagerung]
+				\newpage
+			%
+			\paragraph{Vereinzelung}
+				Die fehlende Trefferkonstanz die in der ersten Testreihe (siehe Anhang blabla) resultierte, ist durch folgende Gründe entstanden. Ersten hatte kein Speer die gleichen Voraussetzungen beim Abschuss aus dem Roboter. So lastet auf den untersten zwei Speeren gleich zwei weitere auf ihnen, welche mit dem Impuls der Blattfeder zuerst nach oben geschoben werden müssen, bevor die Speere aus dem Roboter fliegen können. Damit verliert das System zu viel Energie und die Speere erreichen die geforderte Wurfweite und Höhe nicht mehr. Zweitens erhielten die Speere im Zuführrohr einen Drallimpuls durch die unten gespickten Speere. Das wirkt sich negativ auf das nachrutschen der Speere aus, so dass diese zum Teil aus dem Roboter hinausfielen. Drittens schwingt die Feder einige Zeit nach. Das führt dazu, dass die Speere beim nachrutschen einen kleinen Stossimpuls erhalten und somit nicht auf der gewünschten Abschussposition auf der Abschussrampe zu liegen kommen. Durch all diese Gründe war eine Vereinzelung im Zuführrohr unumgänglich. Durch den Fortgeschrittenen Entwicklungsstand des Roboters waren die Lösungsmöglichkeiten einer Vereinzelung beschränkt oder schwer zu realisieren.
+				\par
+				Der Lösungsansatz die bereits eingebauten Komponente für eine Vereinzelung zu nutzen war schlussendlich die einfachste und effektivste Lösung. Es braucht kein weiterer Aktor, für die Bewegung des Vereinzlers und dieser konnte mit nur zwei zusätzlichen Teilen erzielt werden. Die Bewegung wird durch den Servo des Linearmoduls gewährleistet. Die Vereinzler Platte und der Vereinzler Distanzhalter sind an das Linearmodul geschraubt. (siehe Abbildung \ref{abb:vereinzelung})
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/Vereinzelung}{scale=.7}{htbp}[Vereinzler Speere][abb:vereinzelung]
+				\par
+				Bei geschlossenem Zustand, dass heisst das Linearmodul ist eingefahren, hebt die Vereinzlerplatte die Speere im Zuführrohr von den Speeren auf der Abschussrampe ab (siehe Abbildung \ref{abb:vor_zu} und Abbildung \ref{abb:auf_zu1}). So ist keine Berührung der Speere mehr möglich und jeder Speer hat die gleichen Bedingungen beim Abschuss. Die Blattfeder kann jetzt ausschwingen ohne den darüberlegenden Speeren einen unerwünschten Impuls zu gebe. Danach wird das Linearmodul ausgefahren und die Speere fallen auf die Abschussposition hinunter (siehe Abbildung \ref{abb:vor_offen} und Abbildung \ref{abb:auf_offen1} ). Das Linearmodul fährt ein und hebt die darüberlegenden Speere wieder ab.
+				%
+				\begin{figure}[htbp] %htbp
+					\centering
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[height=5cm]{content/image/Mechanik_PA2/Aenderungen/Vereinzelung_Vorderansicht_geschlossen}  
+						\caption{Geschlossen}
+						\label{abb:vor_zu}          
+					\end{subfigure}
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+							\includegraphics[height=5cm]{content/image/Mechanik_PA2/Aenderungen/Vereinzelung_Vorderansicht_offen}   
+						\caption{Offen} 
+						\label{abb:vor_offen}         
+					\end{subfigure}
+					\caption{Vereinzler vorderansicht}
+					\label{abb:vor}
+		    	\end{figure}
+		    	%
+				\begin{figure}[htbp] %htbp
+					\centering
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[height=6cm]{content/image/Mechanik_PA2/Aenderungen/Vereinzelung_Aufsicht_geschlossen}  
+						\caption{Geschlossen}
+						\label{abb:auf_zu1}          
+					\end{subfigure}
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+							\includegraphics[height=6cm]{content/image/Mechanik_PA2/Aenderungen/Vereinzelung_Aufsicht_Offen}   
+						\caption{Offen} 
+						\label{abb:auf_offen1}         
+					\end{subfigure}
+					\caption{Vereinzler Aufsicht}
+					\label{abb:auf}
+		    	\end{figure}
+		    	%
+			%
+			\newpage
+			\paragraph{Zuführrohre}
+				Die Resultate aus der ersten Testreihe (siehe Anhang F) zeigten, dass die Zuführrohre vorne einen zu grossen Ausschnitt haben. Denn beim Nachrutschen der Speere kam es dazu, dass die Speere ab der Abschussrampe fielen. Damit mehr seitliche Führung durch die Zuführrohre generiert werden kann, wird eine Tasche gefräst anstelle mittigen Auftrennens des Zuführrohres. Weiter ist durch den, wie vorhin erwähnt, grösseren Spannwinkel eine Kollision mit der Klinkenwelle und dem Zuführrohr möglich. Deshalb wurde der Ausschnitt für die Klinkenwelle und Blattfeder vergrössert. Für die Vereinzelung sind zusätzlich Nuten in die Zuführrohre eingebracht (siehe Abbildung \ref{abb:rohr_nach}). Mit der Umstellung auf die Vereinzelung entfällt der Ausschnitt für die Navigationseinheit, da die Rohrposition nicht mehr einstellbar sein muss. (siehe Abbildung \ref{abb:rohr_vor})
+				%
+				\vspace{-20pt}
+				\image{content/image/Mechanik_PA2/Aenderungen/zufuehrrohr_alt}{scale=0.5}{htbp}[Zuführrohr rechts vor Korrektur][abb:rohr_vor]
+				\vspace{-30pt}
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/zufuehrrohr_neu}{scale=0.55}{htbp}[Zuführrohr rechts nach Korrektur][abb:rohr_nach]
+			%
+			\paragraph{Steg Abschussrampe}
+				Beim Spannen der Blattfeder verliert der Speer den Kontakt mit der Blattfeder. Dadurch rutschen die Speere auf der Abschussrampe leicht nach hinten. Damit die Position der Bälle während dem Spannen der Blattfeder konstant bleibt ist ein Steg in die Abschussrampe geklebt worden. Zusätzlich soll der Steg die Blattfeder bremsen, so dass diese nur noch kurze Zeit überschwingt. (siehe Abbildung \ref{abb:absch_mit_steg} Abschussrampe mit Steg) 
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/Steg}{scale=0.6}{htbp}[Abschussrampe mit Steg][abb:absch_mit_steg]
+			%
+		%
+		\newpage
+		\subsection{Anpassungen Fresko}\label{ss:anpassungen_fresko}	
+			\paragraph{Servo}
+				Das Servo ist neu definiert worden, dies aus dem Grund, weil das eingesetzte Servo ein Restposten war aus vorherigen Jahren und es im Betrieb nicht überzeugt. Weiter kommt hinzu dass durch die Vereinzelung der Speere eine weitere Aufgabe von diesem Servoantrieb abhängig ist. Neu ist ein Servo von Hitec HS 7985MG im Einsatz. (siehe Anhang E Datenblätter)
+			%
+		%
+		\subsection{Anpassungen Antrieb}\label{ss:anpassungen_antrieb}	
+			\paragraph{Distanzscheibe}
+				Drehgeber Das Befestigungsgewinde am Drehgeber ist nicht bis an die Schulter durchgängig. Dadurch konnte der Drehgeber nicht an die Schulter gezogen werden. Mit einer Distanzscheibe von 1mm Dicke konnte der dies behoben werden (siehe Abbildung \ref{abb:distanzscheibe_drehgeber}).
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/Distanzscheibe_Drehgeber}{scale=0.5}{htbp}[Distanzscheibe Drehgeber][abb:distanzscheibe_drehgeber]
+			%
+			\newpage
+			\paragraph{Distanzscheibe Rad}
+				Das Rad streifte das Rad des Drehgebers. Damit kein Kontakt zwischen den beiden Rädern mehr passiert, wurde eine Distanzscheibe auf die Sechkantwelle montiert. (siehe Abbildung \ref{abb:distanzscheibe_auf_sechskantwelle})
+				%
+				\image{content/image/Mechanik_PA2/Aenderungen/Distanzscheibe_Sechstkant}{scale=0.5}{htbp}[Distanzscheibe auf Sechstkantwelle][abb:distanzscheibe_auf_sechskantwelle]
+			%
+			\paragraph{Radkappen}
+				Mit der Änderung der Distanzscheibe und den Abmassen der zugekauften Räder stellte sich heraus, dass die Sechstkantwelle zu lang ist und über das Rad hinausragte (siehe Abbildung 19 Rad montiert ohne Radkappe). Damit das Rad Befestigt werden kann ist eine Radkappe konstruiert worden. (siehe Abbildung \ref{abb:rad} und Abbildung \ref{abb:radkappe})
+				%
+				\begin{figure}[htbp] %htbp
+					\centering
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[height=5cm]{content/image/Mechanik_PA2/Aenderungen/Rad_montiert_ohne_Radkappe}  
+						\caption{Ohne Radkappe}
+						\label{abb:radkappe_ohne}          
+					\end{subfigure}
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+							\includegraphics[height=5cm]{content/image/Mechanik_PA2/Aenderungen/Rad_montiert_mit_Radkappe}   
+						\caption{Mit Radkappe} 
+						\label{abb:radkappe_mit}         
+					\end{subfigure}
+					\caption{Rad montiert}
+					\label{abb:rad}
+		    	\end{figure}
+		    	%
+				%\image{content/image/Mechanik_PA2/Aenderungen/40120_Radkappe}{scale=1}{htbp}[Radkappe][abb:radkappe]
+		

@@ -1,0 +1,23 @@
+modul:Modul[ap]
+trx:vCANRx[ap]
+qrx:qCANRx[ap]
+can:can[ax]
+
+
+can:qrx.catchCANRx
+*1 can
+Nachricht empfangen
+*1
+(1)can
+
+qrx:trx.
+*2 qrx
+Nachricht vom Queue nach Rx-Task übertragen
+*2
+(2)qrx
+
+trx:modul.
+*3 trx
+Listener benachrichtigen
+*3
+(3)trx

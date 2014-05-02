@@ -1,0 +1,36 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Abstract
+% Autor:   S. Grossenbacher
+% Datum:   27.09.2013
+% Version: 1.0.0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Stelle Semester
+%                                                   -2. Stelle neuer Inhalt
+%                                                   -3. Fehlerkorrekturen
+%
+% 1.0.0       Erstellung der Datei
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Abstract}
+	Im Rahmen der \gls{ac:pa1} der Studiengänge Elektro- und Maschinentechnik an der \gls{ac:bfh} nehmen wir am \gls{g:eurobot}-Wettbewerb teil. Als \gls{ac:kernteam} bestanden unsere Hauptaufgaben darin, die vier Sub-Teams zu koordinieren, die Spielstrategie zu entwerfen, die Manipulationen des Spieles zu lösen, das CAN-Bus/Protokoll zu definieren und ein Testkonzept für die einzelnen Module und das Gesamtsystem zu erstellen.\par 
+	%
+	Um das Vorankommen des gesamten \gls{g:eurobot}-Teams überwachen zu können, wurde zu Beginn des Projekts für alle Teams ein sehr grober, aber klarer Zeitplan in Form von Meilensteinen zusammengestellt. Damit nicht zu viel Zeit verloren geht, setzten wir mit Tobias Meerstetter nur ein Teammitglied auf die Überwachung an. Er hatte über das ganze Team einen Überblick und wusste zu jedem Zeitpunkt wer mit welchen Problemen kämpft.\par 
+	%
+	Für die Strategiefindung wurde in einer ersten Phase entschieden Prioritäten zu setzen und nicht alle möglichen Aufgaben zu lösen. Somit musste zuerst entschieden werden, was überhaupt alles umgesetzt werden soll.
+	Mittels einer Chancen Analyse wurden verschiedene Lösungsansätze erarbeitet und schliesslich eine Zwei-Roboter-Strategie mit den Aufgaben \gls{g:fresko}, \gls{g:mammut}, \gls{g:fire} und \gls{g:mammut_catch} definiert. Für die \gls{ac:pa1} galt das Ziel den ersten Roboter mit den Systemen für die Bilder- und die Mammutaufgabe hardwaremässig fertig zu Bauen.\par 
+	%
+	Um bestmögliche Resultate zu erzielen wurden anschliessen auf der mechanischen Seite verschiedenste Testaufbauten ausgiebig getestet und evaluiert. Der Entscheid fällt schlussendlich auf einen Spickmechanismus über eine Blattfeder für die Mammutaufgabe und auf ein Linearmodul für die Freskoaufgabe.\par 
+	%
+	In der Ausarbeitungsphase stellte sich auf mechanischer Seite das Spannen der Blattfeder als grösste Herausforderung heraus. Schlussendlich wurde ein Klinkensystem konstruiert, welches über ein einziges Servo gesteuert werden kann.\par 
+	%
+	Auf der Softwareseite wurde die einzelnen Module des kleinen Roboters verifiziert und definiert. Darauf aufbauend wurden mögliche Kommunikationsmöglichkeiten analysiert und in die Bereiche Information (\acrfull{ac:elp}) und Steuerung unterteilt. Für die beiden Möglichkeiten wurden Protokolle (\acrfull{ac:elp} und \acrfull{ac:goto}) basierend auf einer Master-Slave-Kommunikation erarbeitet.\par
+	%
+	\newpage
+	Die Implementierung der Software wurde in mehrere Teile gegliedert. Zum einen wurde ein Applikationsbereich definiert, der \gls{g:rtos} bezogene Module beinhaltet. Die restliche Softwarebestandteile wurden dem Bereich Firmware zugeordnet. Er beinhaltet Code, der sich direkt auf die Peripherie des Mikrocontrollers bezieht. Zu den fertig und getesteten Implementierungen gehört die Kommunikation in Form eines Gatekeepers, grundlegende Steuertasks, sowie Servo-Ansteuerung, \gls{ac:swd} und \gls{ac:can}. Ausserdem wurde Code aus vergangenen \gls{g:eurobot}-Teams analysiert und verbessert.\par 
+	%
+	Über das ganze \gls{g:eurobot}-Team gesehen werden die Zielsetzungen erreicht. Lediglich bei den Teams Antrieb und Navigation ergaben sich Schwierigkeiten. Bei der Navigation wird nun in der \gls{ac:pa2} ein neues eingekauftes Ultraschall-System zum Einsatz kommen.
+	Das Antriebs-Team soll mit einer Umstrukturierung des Teams wider in eine zufriedenstellende Richtung gelenkt werden.
+	%
+	\image{content/image/1_kleiner_roboter}{scale=0.5}{htbp}[Resultat der \gls{ac:pa1}, der kleine Roboter][abb:kleiner_roboter]	

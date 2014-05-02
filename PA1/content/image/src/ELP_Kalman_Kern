@@ -1,0 +1,27 @@
+
+
+kern:Kernknoten[a]
+antrieb:Antriebknoten (mit Kalman)[a]
+
+
+
+*1 kern
+Kernknoten löst die
+Kommunikation aus
+*1
+(1)kern
+
+
+
+*3 kern
+Kernknoten fragt Position ab
+*3
+kern:Kalman Position Response=antrieb.Kalman Position Request
+(3)kern
+
+
+
+
+
+
+

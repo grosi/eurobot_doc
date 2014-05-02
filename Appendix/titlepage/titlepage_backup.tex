@@ -1,0 +1,63 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Titelseite
+% Autor:   S. Grossenbacher
+% Datum:   15.10.2012
+% Version: 3.0.0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Stelle Semester
+%                                                   -2. Stelle neuer Inhalt
+%                                                   -3. Fehlerkorrekturen
+%
+% 3.0.0       Erstellung der Datei
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Zeilenabstand wider auf normalen Wert zurückstellen
+\begin{spacing}{1}
+    \newlength{\parindenttmp}
+    \setlength{\parindenttmp}{\parindent}
+    \setlength{\parindent}{0pt}
+    %\setlength{\unitlength}{1mm}
+    \textblockorigin{0mm}{0mm}
+    %
+    %Titelseiteumgebung für eigene Kreation, sonst \maketitle
+    \begin{titlepage}    
+        \begin{textblock}{0}(2,1)
+            \includegraphics[scale=1.25]{titlepage/image/bfh_logo}
+        \end{textblock}
+        %
+        %Zentrierte Titel
+        \begin{center}
+            \vspace*{4cm}
+            \color{bfhblue}
+            \textsf{\LARGE\Uebertitel}\\
+            \vspace*{1.5cm}
+            \textbf{\textsf{\Huge\Titel}}
+        \end{center}
+        %
+        %Angaben zum Dokument
+        %Angaben zum Dokument
+        \begin{vfill}
+            \begin{tabular}{ll}
+                \textsf{Autoren} & \textsf\AutorA\\ 
+                               & \textsf\AutorB\\
+                               & \textsf\AutorC\\
+                               & \textsf\AutorD\vspace{5pt}\\
+                \textsf{Dozenten} & \textsf\DozentA\\
+                                & \textsf\DozentB\\
+                                & \textsf\DozentC\vspace{5pt}\\
+                \textsf{Ort, Datum} & \textsf{\Ort, \Datum}\vspace{5pt}\\
+                \textsf{Fachbereiche} & \textsf\FachbereichA\\
+                                      & \textsf\FachbereichB\vspace{5pt}\\
+                \textsf{Version} & \textsf\Version\\ 
+                &\\
+                &\\
+                &\\
+                \multicolumn{2}{p{\columnwidth-14\tabcolsep}}{\textsf{\input{titlepage/titlepage_info}}}\\
+            \end{tabular}
+        \end{vfill}
+    \end{titlepage}
+    \setlength{\parindent}{\parindenttmp}
+\end{spacing}

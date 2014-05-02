@@ -1,0 +1,34 @@
+
+
+kern:Kernknoten[a]
+antrieb:Antriebknoten[a]
+
+
+
+*1 kern
+Kernknoten löst die
+Kommunikation aus
+*1
+(1)kern
+kern:Goto Confirm=antrieb.Goto XY
+
+
+*3 kern
+Kernknoten fragt Status ab
+*3
+kern:Goto State Response=antrieb.Goto State Request
+(3)kern
+
+
+
+
+
+
+
+
+
+
+
+
+
+

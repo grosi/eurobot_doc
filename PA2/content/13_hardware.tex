@@ -1,0 +1,155 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Hardware
+% Autor:   haldj3
+% Datum:   17.04.2014
+% Version: 0.0.1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+%
+% 0.0.1       Erstellung der Datei
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+\chapter{Hardware}\label{ch:hardware_pa2}
+	%
+	%Bedieneinheit
+	\section{Bedieneinheit}\label{s:hw_bedieneinheit}
+		Da vor jeder Spielrunde während dem Eurobot-Turnier die Teamzuteilung (Rot o. Gelb) alternieren kann und sonstige Initialisierung, wie z.B. die Quantität der gegnerischen Roboter, eingestellt werden müssen, benötigen unsere Roboter eine Bedienoberfläche.\\
+		Das Kernteam hat daher beschlossen ein einfaches Bedienpanel mit einem kleinem LCD Display (2x16) und mehreren Tastern zu entwickeln (Abbildung \ref{pic:bedienpanel}). Diese Aufgabe fiel dem Kernteammitglied Jascha zu und stellt damit der Hauptbestandteil seiner Projektarbeit 2 (PA2) dar.
+		\par
+		\image{content/image/Bedienpanel/Bedienpanel}{scale=0.8}{htbp}[Bedienpanel Eurobot 2014][pic:bedienpanel]
+		%
+		Im Folgenden sollen die einzelnen Bestandteile und Entwicklungsschritte dieser Arbeit näher erläutert werden. Die Dokumentation der dazugehörigen Software ist im Kapitel \ref{s:sw_bedieneinheit} zu finden.
+		%
+		\subsection{Schnittstellen}\label{ss:schnittstellen}
+			Damit das Bedienpanel keinen eigenen Mikrocontroller braucht und da das RoboBoard noch eine unbenutzte SPI-Schnittstelle hat, soll die Steuerung auf dem Controller des RoboBoards realisiert werden. Unser Bedienpanel braucht folge dessen eine SPI-Schnittstelle. Es handelt sich dabei um eine 10-Pin-Buchse (X1) mit folgender Pin-Bezeichnung (gleich wie beim RoboBoard) und -Verwendung:
+	 		\begin{table}[H]
+		    	\centering
+		    	\caption{10-Pin-Buchse X1}
+		    	\begin{tabular}{|c|c|p{11cm}|} 
+		    		\hline
+		    		\rowcolor{bfhblue}
+		    		\textcolor{white}{Pin} & \textcolor{white}{Bezeichnung} & \textcolor{white}{Beschreibung der Verwendung}\\
+					\hline
+					1 & 5V & Speisungs-Pin\\
+					\hline
+					2 & SPI\_SCK & System clock der SPI-Übertragung\\
+					\hline
+					3 & SPI\_MISO & Wird für die Steuerung des Displays (RS-Pin) benutzt, da kein direkter Datenaustausch vom Display (Slave) zum RoboBoard (Master) benötigt wird\\
+					\hline
+					4 & SPI\_MOSI & Unidirektionale Datenübertragung vom RoboBoard (Master) zum Display (Slave)\\
+					\hline
+					5 & SPI\_CS1 & Chip select-Pin\\
+					\hline
+					6 & SPI\_CS2 & Wird als weiteres I/O für den Taster 1 benutzt\\
+					\hline
+					7 & SPI\_IO1 & Wird als I/O für den Taster 2 benutzt\\
+					\hline
+					8 & SPI\_IO2 & Wird als I/O für den Taster 3 benutzt\\
+					\hline
+					9 & SPI\_TIM & Wird ebenfalls als I/O benutzt und auf eine 3-Pin-Buchse mit einer Schutzschaltung geführt\\
+					\hline
+					10 & GND & Speisungs-Pin\\
+					\hline
+				\end{tabular}
+			\label{tab:10-pin-buchse}
+			\end{table}
+			 %	
+			Des weiteren wurde vom Speisungsteam gewünscht, eine Zustands-LED (D1) vom LIPO-Wächter auf den Print des Bedienpanels anzubringen.
+			\par
+			Damit ergibt sich folgendes Blockdiagramm mit sämtlichen Schnittstellen (Abbildung \ref{pic:blockdiagramm schnittstellen}):
+			\par
+			\image{content/image/Bedienpanel/Schnittstellen}{scale=1}{htbp}[Blockdiagramm Schnittstellen][pic:blockdiagramm schnittstellen]
+			%
+		\subsection{Displayauswahl}\label{ss:displayaswahl}
+			Für die Auswahl eines passenden Displays wurde eine Anforderungsliste erstellt:
+	        \begin{itemize}
+				\item Alphanumerisch
+				\item 2x16 (2 Zeilen mit je 16 darstellbare Zeichen)
+				\item Blau mit weisser Schrift (nicht rot oder gelb, damit keine Teamfarbe)
+				\item SPI
+				\item Speisung: 5 V oder sogar 3.3 V kompatibel, damit keine Treiber nötig
+				\item Hintergrundbeleuchtung
+	        \end{itemize}
+			Daraus ergaben sich vier LCD Displays, die diese Anforderungen erfüllen. Die Datenblätter dieser, befinden sich im elektronischen Anhang.\\
+			Um die Auswahl zu begrenzen wurden sekundäre Anforderungen definiert:
+	        \begin{itemize}
+				\item Schriftgrösse > 5 mm
+				\item Nicht länger als 80 mm (aus Platzgründen in den Robotern)
+	        \end{itemize}
+	        %
+			Dies hatte zur Folge, dass die Auswahl auf folgende zwei Displays begrenzt wurde:
+			%
+			\subsubsection{NHD-0216K3Z}\label{sss:NHD}
+				Der Vorteil dieses Displays (Abbildung \ref{pic:nhd}) ist das ausführliche Datenblatt und die vielen SW-Vorlagen. Der Nachteil ist die Dicke des Displays mit dem dazugehörigen Print und die Montageart auf dem eigentlichen Print der Bedieneinheit.
+		 		\par
+		 		\image{content/image/Bedienpanel/nhd_display}{scale=0.5}{htbp}[NHD (80x36x13.3mm)][pic:nhd]
+		 		%
+			\subsubsection{EA DOGM162}\label{sss:DOGM}
+				Der Vorteil diese Displays (Abbildung \ref{pic:dogm}) ist die geringe Dicke, da es direkt auf den Print gelötet werden kann und die allgemein kompakte Ausführung mit dessen ungeachtet marktüblicher Schriftgrösse von 5.57 mm. Des weiteren ist es 3.3 V kompatibel. Ein Nachteil ist das spärliche Datenblatt. Dieses Problem kann jedoch mit der Hilfe von diversen Erfahrungskommentaren im Internet entgegengewirkt werden.
+		 		\par
+		 		\image{content/image/Bedienpanel/dogm_display}{scale=1}{htbp}[DOGM (55x31x3.6mm)][pic:dogm]
+		 		%
+				=> Die Wahl fiel schlussendlich auf den EA DOGM162. Der entscheidende Vorteil gegenüber dem New Heaven Display (NHD-0216K3Z) ist die 3.3 V Kompatibilität, was den Zeitaufwand in der Entwicklung und die Bauteilkosten reduziert.
+				%
+		\subsection{Schema}\label{ss:schema}
+			%
+			\subsubsection{Speisung}
+				Da das Display 3.3 V kompatibel ist und somit direkt mit dem Mikrocontroller des RoboBoards verbunden werden kann, ist es naheliegend die vorhandenen 5 V herunter zu wandeln. Umgesetzt wurde dies mit dem MCP1700, welcher ein 5 V zu 3.3 V low dropout (LDO) Spannungsregler ist.\par
+				Da das Display mit der Hintergrundbeleuchtung einen maximal Strom von 60.2 mA benötigt, beträgt die maximale Verlustleistung:\par
+				$ P_{v_{max}} = \Delta U \cdot I_{max} = (5 V - 3.3 V) \cdot 60.2 mA = \underline{102.34 mW} $\par
+				Mit einem $ R_{JA} $ von 52°C/W entspricht dies einer Temperaturerhöhung von 5.3 °C, was als problemlos betrachtet wird. 
+				%
+			\subsubsection{Display und Hintergrundbeleuchtung}			
+				Das Datenblatt des DOGM162 enthält verschiedene Applikationsbeispiele die je nach Kommunikationsart und Speisespannung variieren. Verwendet wurde folge dessen dasjenige mit 3.3 V und SPI (Abbildung \ref{pic:applikationsbeispiel}).
+		 		\par
+		 		\image{content/image/Bedienpanel/Display_Schema}{scale=0.5}{htbp}[Applikationsbeispiel][pic:applikationsbeispiel]
+		 		%
+				Die Hintergrundbeleuchtung ist monochrom und hat zwei separate LED-Pfade, welche parallel oder in Serie geschaltet werden können. Diese benötigen externe Widerstände zur Strombegrenzung. Die Vorwärtspannung der weissen LED's beträgt 3.2 V (parallel geschaltet) und der maximale Strom 30 mA pro Pfad. Mit der Betriebsspannung von 3.3 V ergibt dies über dem Widerstand einen Spannungsabfall von 0.1 V.\par
+				$ R_{min} = \frac{U}{I_{max}} = \frac{0.1 V}{30 mA} = 3.33 \Omega $  -> Wahl: $ \underline{3.9 \Omega} $ (E12-Reihe) 
+		 		\par
+		 		($P_{v_{R}} = \frac{U^{2}}{R} = \frac{(0.1 V)^{2}}{3.9 \Omega} = 2.56 mW$)
+		 		\par
+		 		Das Display und die Hintergrundbeleuchtung (Abbildung \ref{pic:display mit hintergrundbeleuchtung}) wurden im Schema zusammen gezeichnet, damit sie der Realität entsprechend, im gleichen Bauteil vereint sind.
+		 		\par
+		 		\image{content/image/Bedienpanel/Display_mit_Hintergrundbeleuchtung}{scale=0.5}{htbp}[Display mit Hintergrundbeleuchtung][pic:display mit hintergrundbeleuchtung]
+		 		%
+			\subsubsection{Sensor/Aktor-Eingang mit Schutzschaltung}
+				Der Aufbau dieser Schaltung entspricht derjenigen vom RoboBoard. Sie wurde umgesetzt, da ein I/O-Pin der Schnittstelle zum RoboBoard nicht benötigt wurde, möglicherweise aber ein weiterer Sensor oder Aktor angeschlossen werden möchte.
+				Die Kondensatoren C6, C7 und C8 sind Stützkondensatoren. Der Widerstand R3 dient als Schutz im Fehlerfall. Der Pull-Up-Widerstand im Mikrocontroller des RoboBoards beträgt gemäss Datenblatt 40 kOhm. Mit dem gewählten Widerstand von 120 Ohm ergibt dies eine Verlustleistung ($ P_{R_{max}} $) von:\par
+				$ I_{max} = \frac{U}{R_{PU} + R_{3}} = \frac{3.3 V}{40 k\Omega + 120 \Omega} = 82.3 \mu A $ \par
+				$ P_{R_{max}} = I_{max}^{2} \cdot R_{3} = (82.3 \mu A)2 \cdot 120 \Omega = \underline{0.8 \mu W } $ und beim Pull-Up: \underline{271 $ \mu W $}
+	 			%
+	 			\image{content/image/Bedienpanel/Sensor_Schema}{scale=0.5}{htbp}[Sensor/Aktor-Eingang][pic:sensor/aktor-eingang]
+	 			%
+			\subsubsection{Taster}
+				Die drei Taster wurden als Active-Low angeschlossen, um die internen Pull-Ups des Mikrocontrollers des RoboBoards zu nutzen.
+		 		\par
+		 		\image{content/image/Bedienpanel/Taster}{scale=0.7}{htbp}[Taster][pic:taster]
+		 		%
+				Zum Entprellen der Taster wurden je 10 nF Kondensatoren dazu geschaltet. Dieser Wert gilt als Standard und kann folgendermassen hergeleitet werden:\\
+				Die Prellzeit ist stark vom Schaltertyp abhängig. Sie wird jedoch auf ca. 10 ms geschätzt [Quelle: mikrocontroller.net/articles/Entprellung]. In dieser Zeit darf der Mikrocontroller folge dessen noch nicht auf einen Wert von kleiner 1 V (Logisches 0) fallen. Damit dies eingehalten wird, soll sich die Spannung in dieser Zeit lediglich um etwa 1 V ändern. Der Input Leakage Current des Mikrocontrollers des RoboBoards (STM32F4) ist max. 1 uA.\\
+				Es gilt: \par 
+				$  I = C \cdot \frac{dU}{dt} $ -> $ C = I \cdot \frac{dt}{dU} = 1 \mu A \cdot \frac{10 ms}{1 V} = \underline{10 nF} $ \par
+				Sollte dennoch ein störendes Prellen festgestellt werden, könnte ein Entprellen auch in der SW realisiert werden.
+				%
+		\subsection{Layout}\label{ss:layout}
+			Das Layout des Bedienpanel ist einseitig (Bottom-Layer) mit einem GND-Plane und Leiterbahnbreiten von mindestens 20 mil. Bis auf den selbst erstellten Footprint des Displays sind sämtliche Footprints aus der Standardbibliothek. Da das Bedienpanel im Roboter nach Aussen zugänglich sein muss, müssen sämtliche Buchsen abgewinkelt sein. Dies musste im Layout vor allem bei der 10-Pin-Buchse berücksichtigt werden, da aus Zeitgründen kein passender Footprint erstellt wurde. Es wurde ausserdem darauf geachtet, dass die Taster einen genügend grossen Abstand zu den höheren Bauteilen und je einen Abstand von 1 cm zueinander haben, um die Bedienung zu erleichtern.\\
+			Die Prints für beide Roboter können intern (mit der Fräse) innerhalb eines Tages hergestellt werden.
+			%
+		\subsection{Inbetriebnahme}\label{ss:inbetriebnahme}
+			Das Testen der Funktionalität der Hardware wurde parallel zum Bestücken durchgeführt. Dabei wurde vorgängig ein Inbetriebnahme-Protokoll definiert, welches im elektronischen Anhang zu finden ist. Dabei wurden primär die Speisungen und nebeneinander liegende Leitungen auf Kurzschlüsse überprüft.\\
+			Die gemessenen Werte entsprachen den Erwartungen.
+			%
+	%
+	%CAN-Adapter
+	\section{CAN-Adapter}\label{s:can-adapter}
+		Ebenfalls von Jascha wurden vier CAN-Adapter (Abbildung \ref{pic:can_adapter} \& \ref{pic:can_adapter_layout}) angefertigt, die das Debuggen der CAN-Kommunikation erleichtern sollen. Sie enthalten zwei 10-Pin-Buchsen (X1 \& X2), eine D-Sub-Buchse (J1) und eine 3-Pin-Stiftleiste (X3) für Messabgriffe. Ausserdem kann wahlweise ein 150 Ohm Abschlusswiderstand (R1) mit einem Jumper (X4) dazugeschaltet werden.
+		\par
+		\image{content/image/Bedienpanel/CAN_Adapter}{scale=0.6}{htbp}[CAN-Adapter Schema][pic:can_adapter]
+		%
+		\par
+		\image{content/image/Bedienpanel/CAN_Adapter_Layout}{scale=0.6}{htbp}[CAN-Adapter Layout][pic:can_adapter_layout]
+		%

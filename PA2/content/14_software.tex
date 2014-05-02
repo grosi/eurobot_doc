@@ -1,0 +1,520 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Software
+% Autor:   gross10, mert1
+% Datum:   22.09.2013
+% Version: 0.0.1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+%
+% 0.0.1       Erstellung der Datei
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+\chapter{Software}\label{ch:software_pa2}
+	Während der \gls{ac:pa2} wurden die Software-Designs der \gls{ac:pa1} implementiert und bei Bedarf ergäntzt. Es ist anzumerken, dass die entsprechenden Kapitel in der Dokumentation der \gls{ac:pa1} nicht aktualsiert wurden und deshalb veraltete Fakten beinhalten können.
+	%
+	%
+	%System
+	\section{System}\label{s:system}
+		Das komplette System gliedert sich mehrere Komponente. Folgend wird detailiert auf einzelnen Aspekte eingegangen. Dabei wird Top $\rightarrow$ Buttom vorgegangen und nur der kleine Roboter betrachtet.
+		%
+		%
+		\subsection{Roboter}
+			Für den Betrieb des Roboters werden diverse Aktoren und Sensoren eingesetzt, zu sehen im Kontextdiagramm \cref{pic:context}. 
+			%
+			\image{content/image/14_context}{scale=1}{htbp}[Kontextdiagramm][pic:context]
+			%
+			Alle diese Komponenten erfüllen eine spezifische Aufgabe:
+			%
+			\begin{itemize}
+				\item Eingänge
+				\begin{description}
+					\item[Odometrie links/rechts]
+						Mit Hilfe der Odometrie ist eine relative Positionsbestimmung möglich.
+					%
+					\item[Gyro]
+						Für eine absolute Winkelbestimmung muss ein Gyro eingesetzt werden.
+					%
+					\item[Ultraschall Navigation]
+						Ein auf Ultraschall basierendes Positionierungssytem verschaft uns eine absolute Position während eines Matchs.
+					%
+					\item[Funk Navigation]
+						Für den Informationsaustasch zwischen den einzelnen Robotern wird eine Funkverbindung eingesetzt.
+					%
+					\item[Ultraschall Naherkennung]
+						Um im nahen Umfeld des Roboters Gegestände (auch Gegener) genau zu erkenne wird ein einfacher Ultraschallsensor verbaut. Er liefert ab einer bestimmten Distanz\footnote{aktuell 20cm} genau Abstandsinformationen.
+					%
+					\item[Infrarot Naherkennung]
+						Für das einfache Erkennen von Hindernissen kommen zusätzlich zum Ultraschallsensor noch Infrarotschalter zum Einsatz.
+					%
+					\item[Taster Fresko 1, 2 \& Wand]
+						Um verifiziern zu können ob ein Fresko anklebt oder die Wand erreicht wurde, werden drei einfache Hubtaster eingesetzt.
+					%
+					\item[Taster Schlüssel]
+						Das Reglement schreibt vor, dass die Roboter mit dem Herausziehen einer Schnur gestartet werden müssen. In unserem Fall wird mit Hilfe der Schnur ein Schlüssel aus seiner Verankerung verschoben, die wiederum einen Taster akiviert.
+					%
+					\item[Taster Notstopp]
+						Ebenfalls vorgeschrieben ist ein Notstopp-Schalter. Dieser unterbricht zum einen die Stromversorgung zu allen Aktoren und zum anderen wird das System in einen definierten Zustand gesetzt.
+				\end{description}
+				%
+				\item Ausgänge
+				\begin{description}
+					\item[Motor links/rechts]
+						Sind zuständig für die forbewegung des Roboters.
+					%
+					\item[Servo Mammut]
+						Betätigt den Mechnismus zum abfeuern der Bälle
+					%
+					\item[Servo Fresko]
+						Klebt als Hauptaufgabe die Freskos an die Wand. Weiter übernimmt es noch die Vereinzelung der Bälle.
+					%
+					\item[Display]
+						Dient zum einstellen aktueller Spielparameter wie Teamfarbe\footnote{Weitere Erläuterungen dazu sind im \cref{s:hw_bedieneinheit} zu finden}.
+					%
+					\item[LED]
+						Sind für visuelle Kontrolle des aktuellen Systemzustands zuständig (Normalbetrieb/Error).
+				\end{description}
+			\end{itemize}
+		%
+		%
+		\subsection{Systemknoten}\label{ss:systemknoten}
+			Der Roboter besteht aus drei Teilsysteme, die alle miteinander über den Feldbus \gls{ac:can} kommunizieren (siehe \cref{pic:systemknoten}). Jeder dieser sogenannten Bus-Knoten wird von einem separaten Subteam entwickelt.
+			%
+			\begin{description}
+				\item[Kernknoten, \acrfull{ac:kernteam}]
+					Dem Kernknoten unterliegt die Steuerung und Kontrolle des gesamten Systems. Weiter übernimmt er die Ansteuerung der spielaufgaberelevanten Aktoren und Sensoren. Es ist Aufgabe des \gls{ac:kernteam} für seine Funktionialtät zu sorgen. In den folgenden Abschnitten \ref{ss:kernknoten} und \ref{ss:systemzustaende} wird daher näher auf seinen Aufbau eingegangen.
+				%
+				\item[Antriebsknoten, \acrfull{ac:antriebsteam}]
+					Die Aufgabe des Antriebsknoten ist es primär für die Fortbewegung des Roboters zu sorgen. Weiter wird in ihm ein Wegfindealgorithmus und ein Kalman-Filter für eine exaktere Positionsbestimmung implementiert.
+				%
+				\item[Naviagtionsknoten, \acrfull{ac:navigationsteam}]
+					Der Naviagtionsknote verschafft dem System Informationen über die aktullen absolute Position des Systems. Ausserdem übernimmt es die Kommunikation mit den übrigen Robotern auf dem Spielfeld und tauscht mit ihnen Positionsinformationen aus.
+			\end{description}
+			%
+			\image{content/image/14_dfd_level_1}{scale=1}{htbp}[DFD Systemknoten][pic:systemknoten]
+			%
+		%
+		%
+		\subsection{Kernknoten}\label{ss:kernknoten}
+			Wie im vorherigen \cref{ss:systemknoten} erwähnt, muss der Kernknoten die Systemsteuerung übernehmen und die Lösung der Spielaufgaben ermöglichen. Dazu werden mehrere Tasks für die einzelnen Aufgabengebiete erstellt, die miteinander wie in \cref{pic:kernknoten} ersichtlich Verbunden sind.
+			%
+			\begin{description}
+				\item[\gls{ac:can} RX/TX Task]
+					Die \gls{ac:can} RX und TX Tasks sind Bestandteil des \gls{ac:can}-Gatekeepers. Sie werden im Anhang H erläutert.
+				%
+				\item[\gls{ac:elp} Task]
+					Der \gls{ac:elp} Task nutzt die von \gls{g:rtos} gegebene Funktion der Software-Timer. Diese bieten die Möglichkeit der zyklischen Ausführung, sowie der einfachen Steuerung durch entsprechende Funktionen (start/stopp Timer). Innerhalb des Timers wird ein zyklisches \gls{ac:os} ausgeführt, das auf Basis des Timer-Zyklus periodisch \gls{ac:elp}-Anfoderungen an den \gls{ac:can}-Gatekeeper sendet. Die einzelen Positionsanforderungen werden wie folgt aufgerufen:
+					\begin{itemize}
+						\item Navi Position Request: alle 400ms
+						\item Kalman Position Request: alle 600ms
+						\item Confederate Position Request: alle 600ms
+						\item Enemy 1 Position Request: alle 800ms
+						\item Enemy 2 Position Request: alle 800ms
+					\end{itemize}
+					Die Befehle sind dem Anhang H entnommen. Die Periodizität muss eventuell noch an die realen Gegegbenheiten angepasst werden.
+				%
+				\item[Default Task]
+					Für die einfache Visualisierung des \gls{g:rtos}-Zustandes wird der Default Task eingesetzt. Wenn das System ohne Einschränkungen läuft, so wird dies über Lichtspiel angezeigt. Im Falle eines Stackoverflows oder ändlichen Misszuständen wird das Lichtspiel angehalten.
+				%
+				\item[Knoten Task]
+					Im Knoten Task werden die einzelen Aufgaben-Knoten, falls vom System Task gewünscht, der Spielstrategie (siehe dazu \cref{s:speilstrategie}) abgearbeitet. Dies beinhaltet die Steuerung von Aktoren unter Berücksichtigung von Sensorwerten. Weiter muss eine Kommunikation mit dem Rangfinder Task bestehen um mögliche Hindernisse während der Ausführung zu erkennen.
+				%
+				\item[Rangfinder Task]
+					Für die Auswertung der Naherkennung ist der Rangfinder Task zuständig. Als Informationsquelle dienen ihm die zwei Ultraschallsensoren (hinten/vorne) und vier Infrarotschalter. Die Kommunikation zum Knoten Task erfolgt einerseit mit Hilfe einer Semaphore und andererseits mit globalen Zustandsflags.
+				%
+				\item[System Task]
+					Die Abläufe der kompletten Applikation werden mit Hilfe des System Task gesteuert. Weiter ermöglicht erauch Benutzerinteraktionen durch entsprechende Taster (Schlüssel/Notstopp) und Anzeige. Für detailierte Information zu den einzelnen Systemzuständen empfielt sich das \cref{ss:systemzustaende}.
+				%
+				\item[Timer Task]
+					Eine Spielrunde dauert immer 90 Sekunden (+ 5 Sekunden Funny Action) \cite[]{lit:eurobot}. Sollte diese Zeit nicht eingehalten werden, so hat dies Punktabzüge zur Folge. Um diesen Fall zur vermeiden wird der Timer Task eingesetzt. Seine Aufgabe besteht darin die Spielzeit zu überwachen und bei Ablauf den Roboter zu stoppen (sollte die nicht bereits der Fall sein).
+			\end{description}
+			%
+			\image{content/image/14_dfd_level_2}{scale=1}{htbp}[DFD Kernknoten][pic:kernknoten]
+			%
+			\subsubsection{Task-Prioritäten}
+				\gls{g:rtos} bietet die Möglichkeit einzelnen Task eine bestimmte Priorität zu vergeben. Somit können wichtige Teilbereiche eines Systems bevorzugt behandelt werden. Im vorliegenden Konzept sind dies hauptsächlich die Tasks des \gls{ac:can}-Gatekeepers und der Naherkennung.\par 
+				%
+				Die Priorität jedes spezifischen Tasks ist in der \cref{tab:prioritaeten} aufgeführt. Je höher die Zahl, dessto höher ist auch die Priorität.
+				%
+				\begin{table}[htbp]
+				    \centering
+				    \begin{tabular}{|l|l|} 
+				        \hline
+				        \rowcolor{bfhblue}
+				        \textcolor{white}{Task Name} & \textcolor{white}{Priorität} \\
+				        \hline
+				        CAN RX/TX & 6\\
+				        \hline
+				        Rangfinder & 5 \\
+				        \hline
+				        \gls{ac:elp} & 4\\
+				        \hline
+				        Timer & 4\\
+				        \hline
+				        System & 3\\
+				        \hline
+				        Knoten & 2\\
+				        \hline
+				        Default & 1\\
+				        \hline
+				    \end{tabular}
+				    \caption{Task Prioritäten}
+				    \label{tab:prioritaeten}  
+				\end{table}
+		%
+		%
+		\subsection{Systemzustände}\label{ss:systemzustaende}
+			Das System kann sich ingesamt in vier Zuständen befinden, die wiederum Unterzustände beinhalten können.
+			%
+			\begin{description}
+				\item[Initialisierung]
+					Im ersten Zustand werden alle Komponenten initialisiert, die zuvor, vor dem Start des \gls{g:rtos} Task-Schedulers, noch nicht gestartet werden konnten. Dies betrifft auf dem Kern Knoten die Anzeige-Einheit, die auf Verzögerungsfunktionen des \gls{ac:os} angewiesen ist. Weiter wird das komplette System hinsichtlich der Erreichbarkeit von übrigen Feldbus-Knoten überprüft. Sollte eine Teilkomponente nicht auf eine entsprechende Anfragen auf dem \gls{ac:can}-Bus antworten, so ist das System nicht funktionsfähig und er Zustand wechselt zu Error.
+				%
+				\item[Setup]
+				 	Im Setup werden Match betreffende Einstellungen vorgenommen. Dies beinhaltet die Parameter Teamfarbe, Anzahl Gegener/Verbündeter, Durchmesser der Gegner, sowie der gewünschte Startknoten\footnote{Für mögliche Knoten-Identitäten sei auf den \cref{s:speilstrategie} ab Seite \cpageref{s:speilstrategie} und insbesonders auf die \cref{abb:node_id} verwiesen.}. Für die Menü-Navigation stehen drei Taster bereit, mit denen Schritt für Schritt die Einstellungen vorgenommen werden können (Ringmenü-Struktur). Ist die Parametriesierung abgeschlossen, so kann mit Hilfe des Schlüsselschalters der Roboter gestartet werden. 
+				%
+				\item[Run]
+					Nachdem Abschluss der Konfiguration startet ein neuer Match. Die Kontrolle über die  einzelnen Teilaufgaben hat dabei der Run Zustand. Er übernimmt strategische Entscheide und übergibt dem Knoten Task entsprechende Information zum erfüllen einer Spielaufgabe. Die dabei angewandte Struktur ist im \cref{ss:match} erläutert.
+				%
+				\item[Error]
+					Sollte der Roboter nicht funktionsfähig sein (z.B. keine Feldbus-Kommunikation), so befindet sich das System im Error Zustand. Dieser Zustand kann nicht verlassen werden und zwingt so den Bediener den aufgetretene Fehler genau zu analysieren. 
+			\end{description}
+			%
+			\begin{figure}[htbp]
+				\centering
+				\includegraphics[angle=90,scale=0.26]{content/image/14_system_overview}
+				\caption{Systemzustände}
+				\label{pic:systemzustände}
+			\end{figure}
+			%
+			\subsection{Match}\label{ss:match}
+				Wie im \cref{s:speilstrategie} erklärt wird, besteht ein Match aus mehreren Spielaufgaben, die wiederum unterschiedlichen Konten in einem Graphen zugeordnet sind. Für die Auswahl des nächsten Knotens ist die Spielstrategie zuständig, für die Ausführung der Knoten Task. Dafür wird er vom System Task gesteuert und mit neuen Knotendaten informiert. Dieser Vorgang ist in der \cref{pic:match} verdeutlicht.
+				%
+				\image{content/image/14_node_scheduler}{scale=1}{htbp}[Knoten-Scheduling][pic:match]
+				
+	%
+	%
+	%Bedieneinheit
+	\section{Bedieneinheit}\label{s:sw_bedieneinheit}
+		Der für die Bedieneinheit entwickelte SW-Code ist grundsätzlich in den folgenden Dateien zu finden:
+		\begin{itemize}
+			\item (spi.c/.h)
+			\item display.c/.h
+			\item RoboSetup.c/.h
+		\end{itemize}
+		%
+		Dabei dienen die spi- und display-Dateien als Bibliotheksdateien (lib) und die RoboSetup-Datei als System-Datei (application/system). In der letztgenannten befindet sich die Menü-Steuerung um die gewünschten Spiel-spezifischen Initialisierungen einzustellen.
+		\par
+		Die Konfigurationen erfolgen mit den drei Tastern unter dem Display. Die Taster links und rechts dienen der Auswahl einer Option und der mittlere Taster zur Bestätigung. Sämtliche Taster auf der Bedieneinheit funktionieren Flankengesteuert.
+		%
+		\subsection{SPI}\label{ss:spi}
+			Diese Bibliotheksdatei wurden schlussendlich nicht mehr genutzt, da die Datenübertragung manuell programmiert wurde. Sie beinhaltet jedoch eine SPI-Initialisierungsfunktion (initSPI()) und eine Send-Byte-Funktion (SPI\_send\_byte()), die mit den von stm32f4 gegebenen SPI-Funktionen realisiert wurde.\\
+			Bei der Initialisierung ist zu beachten, dass lediglich die SCK- und MOSI-Pins konfiguriert werden. Das MISO-Pin wird in dieser Anwendung nicht benötigt, da nur vom Master (RoboBoard) zum Slave (Bedieneinheit) gesendet werden muss (send only).
+			\par
+			Bei den ersten Tests tauchte das Problem auf, dass die eingestellte Baudrate zu hoch war und daher mit dem Oszilloskop keine erkennbare Byte-Übertragung festgestellt werden konnte. Es ist daher darauf zu achten, dass der SPI\_BaudRatePrescaler gross genug gewählt wird. Er berechnet sich mit der Formel:
+			\par
+			$Baudrate = \frac{(APB2 frequency (=84MHz))}{Prescaler}$
+			\par
+			Verwendet wurde in einem zweiten Versuch der maximale Prescaler von 256, was eine Baudrate von 328'125 Hz zur Folge hat.\\
+			Mit dieser Konfiguration funktionierte das erste Display. Das zweite für den grossen Roboter jedoch nicht. Da das Erste so weit zuverlässig lief, wurde der Fehler logischerweise in der HW gesucht. Nach aufwändiger Fehlersuche und der Mithilfe eines weiteren Kernteammitglieds (Simon) hat man die Fehlerquelle dennoch auf die SW begrenzen können. Dabei wurde versuchsweise die eingestellte Übertragungsfrequenz (mit einem Interrupt) auf 100 kHz begrenzt. Dieser Wert gilt z.B. für das im Kapitel \ref{sss:NHD} beschriebene Display (NHD-0216K3Z) als Maximalwert. Umgesetzt wurde dies mit einem Timerinterrupt in der display.c-Datei, in dessen Handler schlussendlich die gesamte Datenübertragung umgesetzt wurde. Mit dieser Massnahme funktionierte auch das zweite Display.
+			
+			%Dem Datenblatt des Mikrocontrollers im Display (ST7036) kann man lediglich entnehmen, dass dessen interne Clock 540 kHz beträgt.\\
+			
+			\par
+			Bei einer Änderung der GPIO-Pins in der spi.h-Datei muss beachtet werden, dass allfällig die Konfiguration des Peripherie-Clocks (RCC\_AHB1PeriphClockCmd()) in der spi.c-Datei angepasst werden muss.\todo{Anmerkung haldj: spi.c/h werden nicht mehr eingesetzt! Weiter nennt man die aktuelle Umsetzung Software-SPI. Zu erwähnen wäre auch noch, dass die Sendefrequenz evtl. nicht die Ursache war, sonder den zum falschen Zeitpunkt eingesetzten RS-Pegel! Dies war auch der Hauptgrund zum Umschreiben der Software auf SW-SPI}
+			%
+		\subsection{Display}\label{ss:display}
+			In dieser Bibliotheksdatei befinden sich sämtliche Funktionen um das Display anzusteuern. Diejenigen die nicht verwendet wurden, werden in dieser Dokumentation nicht näher erläutert. Sie sollten jedoch selbsterklärend sein, da sie lediglich ein bestimmtes Instruktionsbyte ans Display senden und sinnvoll benannt wurden. Die wichtigsten Funktionen werden in der nachfolgenden Tabelle (\ref{tab:display-funktionen}) beschrieben:
+	 		\begin{table}[H]
+		    	\centering
+		    	\caption{Display-Funktionen}
+		    	\begin{tabular}{|p{3.5cm}|p{11cm}|} 
+		    		\hline
+		    		\rowcolor{bfhblue}
+		    		\textcolor{white}{Funktion} & \textcolor{white}{Beschreibung} \\
+					\hline
+					LCD\_init() &  Initialisiert das RS-, SCK-, MOSI- und CS-Pin, den TIM2-Interrupt und das Display mit Hilfe der im Datenblatt des Displays beschriebenen Instruktionen\\
+					\hline
+					TIM2\_IRQHandler() & Interrupthandler der alle 10 us aufgerufen wird und mittelst einer statemachine die Datenübertragung steuert\\ 
+					\hline
+					LCD\_write\_byte\_ instruction() & Überträgt ein Instruktionsbyte (RS = Low) um das Display zu steuern\\ 
+					\hline
+					LCD\_clear() & Löscht den Inhalt des Displays\\ 
+					\hline
+					LCD\_write\_byte\_ data() & Überträgt ein Datenbyte (RS = Hight)\\
+					\hline
+					LCD\_write\_string() & Überträgt mit Hilfe der LCD\_write\_byte\_data()-Funktion ein ganzer String\\
+					\hline					
+					LCD\_set\_cursor() & Setzt den Cursor (zu schreibender Zielort und/oder Marker) an der gewünschten Stelle auf dem Display\\
+					\hline						
+					LCD\_set\_contrast() & Setzt den Kontrast des Displays mit einer Intensität zwischen 0 und 63, wobei 24 standardmässig eingestellt ist und im Normalfall nicht verändert werden sollte\\
+					\hline				
+				\end{tabular}
+			\label{tab:display-funktionen}
+			\end{table}
+			%
+			Erwähnenswert ist, dass bei der Kommunikation mit einem Display des öfteren Zeitverzögerungen (delays) eingebaut werden müssen, damit der Controller des Displays Zeit für die Verarbeitung hat. Gelöst wurde dieses Problem mit der vTaskDelay()-Funktion von FreeRTOS die mittels einem Funktionspointer beim Aufruf der init\_display()-Funktion übergeben wird und darin in eine private Variable (*Delay) gespeichert wird.
+			\par
+			Bei einer Änderung der GPIO-Pins in der display.h-Datei muss beachtet werden, dass allfällig die Konfiguration des Peripherie-Clocks (RCC\_AHB1PeriphClockCmd()) in der display.c-Datei angepasst werden muss.
+			%
+		\subsection{RoboSetup}\label{ss:robosetup}
+			In der RoboSetup-Datei befindet sich die Menüsteuerung. Damit nicht aus Versehen Konfigurationen vergessen gehen, wurde ein serieller Aufruf der einzelnen Menüstates realisiert (siehe Abbildung \ref{pic:menuabfolge}).\\
+			Es wurde versucht ein möglichst modularer Aufbau umzusetzen, damit wahlweise weitere Menüinhalte (Konfigurationen) hinzugefügt werden können. Erreicht wurde dies mit dem typdef struct menu\_t (Abbildung \ref{pic:menu_t}). Pro benötigte Konfiguration (Menüstate) muss somit zuerst je eine menu\_t-Struktur mit den gewünschten Initialisierungswerten erstellt werden.
+			\par
+			\image{content/image/Bedienpanel/menu_t}{scale=0.8}{htbp}[Typdef structure menu\_t][pic:menu_t]
+			%
+			Damit die erstellten Menüinhalte dargestellt und die mit den Tastern eingestellten Konfigurationen gelesen werden können, wurden die in der folgenden Tabelle (\ref{tab:menu-funktionen}) beschriebenen Funktionen erstellt: 
+	 		\begin{table}[H]
+		    	\centering
+		    	\begin{tabular}{|p{3.6cm}|p{11cm}|} 
+		    		\hline
+		    		\rowcolor{bfhblue}
+		    		\textcolor{white}{Funktion} & \textcolor{white}{Beschreibung} \\
+					\hline
+					initRoboSetupState() &  Definiert den ersten Menüstate und ruft die initUserPanelButtons()-Funktion auf, die in der Datei button.c/.h programmiert wurde. Da sie analog sämtlicher RoboBoard-Buttons funktionieren, wird an dieser Stelle nicht näher darauf eingegangen\\
+					\hline
+					runRoboSetupState() & Enthält die Statemachine, die die einzelnen Menüinhalte (Menüstates) aufrufen und kontrollieren. Die genaue Abfolge ist in der Abbildung \ref{pic:menuabfolge} zu sehen\\ 
+					\hline
+					write\_current\_menu() & Gibt mit der Hilfe der display-Funktionen den momentan aktuellen Menüstate auf das Display aus\\ 
+					\hline
+					menu\_handler() & Beinhaltet die eigentliche Menüsteuerung. Es werden die einzelnen Taster abgefragt und die aktuell ausgewählten Resultate abgespeichert\\ 
+					\hline
+					setConfigRoboSetup-2Default() & Setzt die einzelnen Menüs auf die in der RoboSetup.h definierten Default-Werte zurück. Dies wird bei einem Reset des Roboters (z.B. nach einem Notstop) benötigt\\
+					\hline								
+				\end{tabular}
+			\caption{Menü-Funktionen}
+			\label{tab:menu-funktionen}
+			\end{table}
+			%
+			\par
+			\image{content/image/Bedienpanel/menuabfolge}{scale=1}{htbp}[Menüabfolge der Statemachine][pic:menuabfolge]
+			%
+			In der menu\_handler()-Funktion muss nebst dem momentan aktuellen Menü (menu\_t) die auswählbaren Resultate übergeben werden. Ausserdem muss zwischen zwei Menütypen unterschieden werden: SELECTION\_MENU und ADJUSTING\_MENU.
+			\par
+			Ein SELECTION\_MENU kann zwischen maximal drei Optionen unterscheiden, wobei eine davon ausgewählt werden kann. Zum Beispiel bei der Auswahl der Anzahl der gegnerischen Roboter (0, 1 oder 2).
+			\par
+			Ein ADJUSTING\_MENU enthält nur eine Option (opt2) die jedoch vergrössert oder verkleinert werden kann. Zum Beispiel bei der Konfiguration der Höhe der gegnerischen Roboter (0 bis 50cm).
+			%
+	%
+	%Spielstrategie
+	\section{Spielstrategie}\label{s:speilstrategie}
+		Eine gute Spielstrategie entscheidet schlussendlich über Sieg oder Niederlage. Deshalb wird ein grosses Augenmerk auf eine ausgefeilte Spielstrategie gelegt.
+		%
+		%Anforderungen
+		\subsection{Anforderungen}\label{ss:anforderungen}
+			Ein Roboter kann während einer Spielrunde in viele unvorhersehbare Situationen kommen, in denen er möglichst angemessen handeln muss. Gleichwohl sollte er nicht nur reagieren, sondern auch agieren und damit möglichst viele Punkte sammeln. Die folgenden Aufzählung zeigt was eine Spielstrategie erfüllen muss.
+			%
+			\begin{itemize}
+				\item Spielaufgaben mit höherem Punktegewinn bevorzugen
+				\item Distanzen und damit den Zeitaufwand zwischen den einzelnen Spielaufgaben berücksichtigen
+				\item Zeitaufwand für eine Spielaufgabe beachten
+				\item Position des/der Gegners/Gegner einbeziehen
+				\item Selbständig, mit Berücksichtigung der bisher aufgeführten Punkten, die nächste Spielaufgabe evaluieren
+				\item Der Algorithmus muss so ausgelegt sein, dass eine zyklische Ausführung (im Bereich von 1Hz) möglich ist. 
+			\end{itemize}
+		%
+		%Idee
+		\subsection{Idee}\label{ss:idee}
+			In der Algorithmik im Zusammenhang mit Robotnik stösst man auf zwei weit verbreitete Lösungsmöglichkeiten um einen Weg von A nach B zu finden. Der eine Ansatz hört auf den Namen \gls{g:astar} und der andere nennt sich das \gls{g:tsp}. Gemeinsam habe beide Methoden, dass sie auf der Graphentheorie aufbauen.
+			%
+			\subsubsection{Graphentheorie}
+				Um die Funktionsweise der beiden Algorithmen verstehen zu können, ist es zwingend notwendig die Grundlagen der Graphentheorie verstanden zu haben. Ein Graph ist eine Ansammlung von Knoten, die via Kanten miteinander verbunden sind. Die Definition eines Graphen lautet $$G=(V,E)$$ wobei $V=\{1,2,...,n\}$ die Knotenmenge und $E:=V\times V$ die Kantenmenge darstellt. Weiter ist ein Graph meist gewichtet, was eine Kostenfunktion $c:E\rightarrow\mathbb{N}$, die jeder Kante $(i,j)$ ein Gewicht zuordnet, zur Folge hat \cite[S.2]{lit:tsp_achen}.\par 
+				%
+				Es wird zwischen verschiedenen Graphentypen unterschieden. Einfluss auf das finden einer Spielstrategie haben die Typen symmetrischer / ungerichteter Graph und unsymmetrischer/gerichteter Graph.
+				%
+				\begin{description}
+					\item[symmetrischer Graph] Bei einem symmetrischen Graphen sind die Gewichte der Kanten unabhängig von der Richtung in der sie durchlaufen werden. Soll heissen $c(i,j) = c(j,i)$.
+					%
+					\item[asymmetrischer Graph] Im Gegensatz zum symmetrischen Graphen spielt die Richtung zwischen zwei Knoten eine entscheidende Rolle. Es gilt $c(i,j) \neq c(j,i)$.  
+					%
+					\item[vollständiger Graph] Ein Graph wird als vollständig bezeichnet, wenn alle Knoten via Kanten miteinander verbunden sind.
+				\end{description}
+			%
+			\subsubsection{\gls{g:astar}}
+				Der \gls{g:astar}-Algorithmus ist ein informierter Suchalgorithmus, der das Ziel hat den kürzesten Pfad zwischen zwei Knoten zu finden. Es ist ein optimaler Algorithmus, soll heissen, es wird immer der kürzeste Pfad gefunden (wenn vorhanden)\cite{lit:astar_wiki}. \par 
+				Eine Bedingung an die Spielstratgie ist es selbständig die nächste Spielaufgabe zu finden (siehe \cref{ss:anforderungen}). Durch die Gegebenheit das der \gls{g:astar}-Algorithmus ein bekanntes Ziel braucht um einen Pfad zu bestimmen, ist er daher nicht für die vorliegende Aufgabe geeignet (nächstes Ziel unbekannt).
+			%
+			\subsubsection{\gls{g:tsp}}\label{sss:tsp}
+				Das \gls{g:tsp} ist ein kombinatorisches Optimierungsproblem der theoretischen Informatik. Es geht darum, dass ein Handelsreisender eine gewisse Anzahl Städte besuchen und gleichzeitig den dafür notwendige Zweitaufwand minimieren möchte. Um dies zu erreichen, darf er jede Stadt nur einmal besuchen und muss weiter den optimalen Weg zwischen den Städten finden \cite[S.1]{lit:tsp_achen}.\par 
+				Für das Aufstellen des \gls{g:tsp} muss ein vollständiger Graph vorhanden sein. Ein Startpunkt oder Endpunkt ist nicht zwingend notwendig. Dieser Umstand prädestiniert diesen Ansatz für eine erfolgreiche Spielstrategie.
+		%
+		%Problem des Handlungsreisenden 
+		\subsection{\gls{g:tsp}}\label{ss:tsp}
+			Beim \gls{g:tsp} handelt sich um ein sogenanntes NP-vollständiges Problem \cite{lit:np}. Dies bedeutet, dass die Worst-Case Laufzeit jedes deterministischen Algorithmus mindestens exponentiell von der Anzahl Knoten abhängt. Dieser Umstand ist entscheidend beim finden einer effizienten Rundreise, genannt Hamiltonkreis im Graphen $G$, da nur beschränkt Rechenleistung zur Verfügung steht.\par 
+			%
+			Durch die NP-Vollständigkeit des Problems ist die Anzahl möglicher Lösungen proportional zu $n!$, wobei $n$ die Anzahl Knoten darstellt. Im Falle eines symmetrischen Graphens ergibt sich daraus $\frac{(n-1)!}{2}$ mögliche Lösungen. Der Umstand der Symmetrie ist im vorliegenden Problem jedoch nicht gegeben, da der Aufbau des kleinen Roboters asymmetrisch ist (Schussvorrichtung befindet sich auf der linken Seite) und es daher eine Rolle spielt von welcher Richtung die Konten angefahren werden. Die Anzahl möglicher Lösungen erhöht sich dadurch um den Faktor 2 (ingesamt $(n-1)!$ Lösungen).\par 
+			%
+			Ein Rundreise in einem Graphen kann auf unterschiedliche weise gefunden werden. Die Unterschiede der Methoden reduzieren sich auf die Laufzeit und ihre Exaktheit. In den Abschnitten \ref{sss:brute_force} bis \ref{sss:neighbour} werden geläufige Ansätze aufgezeigt. 
+			%
+			\subsubsection{Brute-Force Methode}\label{sss:brute_force}
+				Die Brute-Force Methode stellt eine exakte Lösungsmöglichkeit des Problems dar. Diese Möglichkeit verfolgt den Ansatz alle vorhanden Routen zu berechnen und die effizienteste als Lösung zu markieren. Durch die in \cref{ss:tsp} erklärte NP-Vollständigkeit des Problems hat dies einen exponentiellen Zeitaufwand zur Folge. Dieser Fakt macht diese Methode unbenutzbar, ist doch einer der Anforderungen einen kurze Laufzeit\footnote{Für 20 Knoten (asym. Graph) braucht ein Computer, der pro Sekunde $10^{24}$ Lösungen generiert, 121ns. Für 30 Knoten sind es bereits 102 Tage \cite[S.11]{lit:tsp_achen}} des Algorithmus (siehe \cref{ss:anforderungen}).
+			%
+			\subsubsection{MST-\gls{g:heuristik}}
+				Erfüllt der Graph die Punkte
+				%
+				\begin{itemize}
+					\item $c(i,j)\geq0$ für alle $i,j\epsilon V$ und $c(i,j)=0$ wenn $i=j$
+					\item $c(i,j)=c(j,i)$ (Symmetrie)
+					\item $c(i,j)+c(j,k) \geq c(i,k)$ (Dreiecksungleichung)
+				\end{itemize}
+				%
+				so handelt es sich um eine metrisches \gls{g:tsp}. Der Vorgang um Reiserouten mit Hilfe eines Minimum-Spanning-Trees zu finden, beinhaltet die folgenden Schritten \cite[S.14]{lit:tsp_achen}:
+				\begin{enumerate}
+					\item Minimaler Spannungsbaum $T$ aufziehen mit den Algorithmen von Prim oder Kruskall
+					\item Jeder Kante verdoppeln in $T$
+					\item Einen Startknoten $v$ bestimmen $T$
+					\item Eulerkreis $K$ in $T$ ermitteln
+					\item Im Eulerkreis alle Kanten entfernen, die bereits zu einem besuchten Knoten führen und ersetze sie durch eine Kante zu einem Konten, der im Eulerkreis an nächster Stelle kommt (ausser Startknoten). 
+				\end{enumerate}	
+				Die sich dadurch ergebende Route ist maximal um den Faktor 2 länger als die optimale. Da die Punkte der Symmetrie und Dreieckungleichung vom vorliegenden Problem nicht erfüllt werden, kann diese Heuristik nicht eingesetzt werden. 	
+			%
+			\subsubsection{Nearest-Neighbour \gls{g:heuristik}}\label{sss:neighbour}
+				Bei der Nearest-Neighbour Heuristik handelt es sich um einen Greedy-Algorithmus, was so viel bedeutet, dass er lokale optimale Lösungen findet, die schlussendlich zu einer globalen Lösung führen. Dadurch ist dieser Ansatz jedoch nicht sehr vorausschauend, dafür relativ einfach umzusetzen.
+				%
+				\begin{enumerate}
+					\item Alle Knoten als unbesucht kennzeichnen
+					\item Einen Startknoten wählen
+					\item Knoten $v$ finden, der mit einem minimalen Gewicht vom Startknoten aus erreichbar ist.
+					\item Den Knoten $v$ als besucht markieren
+					\item Die Schritte 3 bis 4 so lange wiederholen bis alle Knoten als besucht gekennzeichnet sind 
+				\end{enumerate}
+				%
+				Dieser Ansatz ist sehr zeiteffizient, kann jedoch als Resultat die schlechtest mögliche Handelsroute liefern \cite[S.12]{lit:tsp_achen}. Durch seine Einfachheit ist er jedoch prädestiniert für den Einsatz auf einem eingebetteten System. Weiter kann er auch bei asymmetrische Grahpen eingesetzt werden, weshalb diese Heuristik gewählt wird.   	
+		%
+		%Konzept
+		\subsection{Konzept}\label{ss:konzept}
+			Mit dem erkorenen Ansatz \gls{g:tsp} und dem bestimmten Algorithmus Nearest-Neighbour \gls{g:heuristik} wird in den folgenden Abschnitten ein Konzept bezogen auf die Spielstrategie des kleinen Roboters entworfen. Dabei gilt es die zentralen Punkte des Gewichtung der Knoten und deren Variationen zu behandeln. Für den Entwurf und die Validierung wird zum einem Matlab eingesetzt und zum anderen die reale Spielumgebung (Roboter + Spielfeld).
+			%
+			\subsubsection{Graph und Spielfeld}
+				Die Knoten des für das \gls{g:tsp} nötigen Graphen müssen auf das gegebene Spielfeld adaptiert werden. Dabei soll jeder Knoten eine Spielaufgabe repräsentieren. Im Falle des kleinen Roboter sind dies die Aufgaben \gls{g:fresko}, \gls{g:fire} und \gls{g:mammut}. Um die Strategie dynamisch zu gestalten, gibt es, wenn möglich, mehrere Knoten pro Aufgaben. Somit kann während des Match derjenige Knoten einer Aufgabe gelöst werden, der den grössten Erfolg verspricht. In der \cref{pic:spielfeld_knoten} sind die Knoten, 11 an der Zahl (ohne den gelben Startpunkt), ersichtlich. Dabei stellen die blau umrahmten Knoten Abschusspositionen für die Aufgabe \gls{g:mammut} dar. Die magentafarbenen  Rahmen Kennzeichnen Klebepunkte der Aufgabe \gls{g:fresko}. Die übrigen, nicht umrahmten, Knoten lokalisieren Punkte an denen ein Feuer umgekippt werden kann (Aufgabe \gls{g:fire}). 
+				%
+				\image{content/image/14_field_node_pools_red}{scale=1.2}{htbp}[Knoten auf dem Spielfeld (Teamfarbe rot)][pic:spielfeld_knoten]
+				%
+				
+			%
+			\subsubsection{Knotengewichtung}
+				Massgebend für einen brauchbaren Graphen ist eine geschickte Gewichtung der Knoten. Diese besteht aus den Komponenten:
+				%
+				\begin{itemize}
+					\item Kosten eines Knoten
+					\begin{itemize}[parsep=1pt, topsep=-10pt]
+						\item Mögliche Punkte
+						\item Zeit bis zum erfüllen des Knoten
+						\item Prozentualer Anteil an der gesamt Punktzahl
+						\item Anfahrtsrichtung des Knoten (asymmetrischer Roboter)
+					\end{itemize}
+					\item Fahrzeit zum Knoten
+					\item Vergangene Positionen des Gegners (falls sich der Gegner lange in der Nähe eines Knoten aufhält, so ist die Chance gross, dass diese Aufgabe bereits durch den Gegner gelöst wurde) 
+				\end{itemize}
+				%
+				\paragraph{Komponenten Gewichtung} Nicht alle dieser zuvor aufgeführten Komponenten haben jederzeit während des Matchs die gleiche Bedeutung. So ist die Fahrzeit zu Beginn, wenn noch genügend Zeit vorhanden ist, nicht weiter von Bedeutung. Dagegen wäre es sinnvoll am Anfang möglichst Aufgaben mit grossem Punkteertrag zu lösen. Umgekehrt verhält es sich gegen Ende des Matchs. Zu diesem Zeitpunkt interessiert nur noch die Fahrzeit und nicht wie viel Punkte ein Knoten ergeben könnte. Daher werden die einzelnen Komponenten positiv oder negativ linear gewichtet. Die Gewichtung erfolgt dabei in Abhängigkeit der Zeit, ersichtlich in der \cref{eq:gewichtung}.\par
+				%
+				\formula{
+				    &w_{inc} = \frac{t_{current}}{t_{Game}}\\
+				    &w_{dec} = \frac{t_{Game}-t_{current}}{t_{Game}}
+				}{
+				    w_{inc} & Gewichtung zunehmend [0 1]\\
+				    w_{dec} & Gewichtung abnehmend [0 1]\\
+				    t_{Game} & Spielzeit 90 Sekunde\\
+				    w_{dec} & Aktuelle Zeit [0 90]}[eq:gewichtung]
+				%
+				\paragraph{Anfahrtsrichtung} Für die Berücksichtigung der Anfahrtsrichtung des Knoten wird die Komponente \textsf{Kosten eines Knoten} zusätzlich ganzzahlig mit einem Faktor 1 bis 4 multipliziert. Der Faktor 1 entspricht dabei einer optimalen Anfahrt. Die verschiedenen Anfahrtszonen sind der \cref{pic:anfahrt} zu entnehmen. Es wird zwischen 
+				%
+				\begin{enumerate}
+					\item optimale Anfahrt (Fakor 1)
+					\item gute Anfahrt, seitlich (Faktor 2)
+					\item normale Anfahrt, zu nahe beim Knoten, gleiche Höhe (Faktor 3)
+					\item schlechte Anfahrt, auf der gegenüberliegenden Seite (Faktor 4)
+				\end{enumerate}
+				%
+				unterschieden. Der Abstand \textsf{Frame} kann eingestellt werden und beträgt standardmässig 15cm.\par 
+				%
+				\image{content/image/14_node_arrive}{scale=0.4}{htbp}[Anfahrtsrichtung-Gewichtung (Anfahrt aus Norden)][pic:anfahrt] 
+				%
+				\paragraph{Gegner Tracking} Da der Roboter über keine visuellen Sensoren verfügt, mit denen das Vorhanden sein eines Spielelements geprüft werden kann, muss die Position des Gegners aufgezeichnet werden. Mit dieser Aufzeichnung kann anschliessend abgeschätzt werden, ob eine Aufgabe bereits gelöst wurde.\par
+				%
+				Das Tracking wird auf einer sehr einfache weise umgesetzt. Jede empfangene Position eines Gegners wird in einer Gitter-Map mit einer Gewichtung vermerkt. Da die Positionserkennung einer gewissen Ungenauigkeit unterliegt, wird um die effektiv erhaltene Position einen Rahmen mit einer tieferen Gewichtung gelegt\footnote{Die Höhe der Zentrum-/Rahmen-Gewichtung muss während den Tests eventuell modifiziert werden. Aktuell liegen sie bei 3, respektive 4}. Falls eine Position mehrmals empfangen wird, so wird das Gewicht mit dem bereits bestehenden aufaddiert. Ein mögliches Tracking-Resultat zeigt die \cref{pic:tracking}.
+				%
+				\image{content/image/14_enemy_track_red}{scale=0.8}{htbp}[Gegner-Tracking einer möglichen Route][pic:tracking]
+				%
+				\paragraph{Totales Kontengewicht}Das totale Gewicht eines Knoten berechnet sich anschliessend wie in \cref{eq:w_node} ersichtlich. Je tiefer das Gewicht ausfällt, des höher ist der Wert des Knoten.
+				%
+				\formula{
+					w_{Node}&=w_{dec}*c_{dest}+w_{dec}*c_{enemy}\\
+					&+w_{inc}*c_{src/dest}
+					}{
+					w_{Node} & Gewicht des gesamten Knoten\\
+					c_{dest} & Kosten des Knoten\\
+					c_{enemy} & Kosten vergangene Gegner-Positionen\\
+					c_{src/dest} & Kosten Fahrzeit\\
+					w_{inc} & Gewichtung zunehmend [0 1]\\
+					w_{dec} & Gewichtung abnehmend [0 1]}[eq:w_node]
+				%
+			%
+			\subsubsection{Gruppierung von Knoten}
+				Der kleine Roboter hat die Möglichkeiten
+				%
+				\begin{itemize}
+					\item 3x 2 Bälle abzufeuern.
+					\item 1x 2 Fresko zu kleben.
+					\item 3x 1 Feuer umzukippen.
+				\end{itemize}
+				%
+				Um der Strategie möglichst grossen Freiraum zu bieten, werden mehre Knoten für dieselbe Aufgabe definiert (z.B. 6 Abschusspositionen für die Bälle anstatt der 3 nötigen). Dieser Umstand kann in der \cref{pic:spielfeld_knoten} nachvollzogen werden. Dabei sind die zusammenhängenden Knoten stets gleichfarbig umrahmt. Eine Gruppe von Knoten wird als Pool bezeichnet. Im Graphen des kleinen Roboters sind somit 2 Pools vorhanden.\par 
+				%
+				Jedes Pool besteht aus einer gewissen Anzahl von Knoten und einem zuvor definierten Pool-Level. Dieses Level kennzeichnet die Anzahl abzuarbeitenden Knoten, die für die Erfüllung des Pools nötig sind. Ist ein Pool als abgeschlossen markiert, so werden alle übrigen Knoten des Pools ebenfalls als erledigt betrachtet.
+				
+			%
+			\subsubsection{Ablauf}\label{sss:ablauf_strategie}
+				Das Vorgehen um von einem Knoten $x$ den nächsten Knoten $y$ auszumachen gestaltet sich, dank des Nearest-Neighbour Ansatzes, sehr effizient und einfach. Es muss lediglich das Gewicht jedes Knotens (darf noch nicht erledigt sein) ermittelt und mit den anderen Gewichten verglichen werden. Damit erhält man schlussendlich den Knoten mit der tiefsten Gewichtung, was gleichbedeutend mit dem nächste zu erledigen Knotens ist. Die \cref{pic:ablauf_knoten} illustriert dieses Vorgehen. 
+				%
+				\image{content/image/14_ablauf_strategie}{scale=0.4}{htbp}[Ablauf Knotenbestimmung][pic:ablauf_knoten]
+		%
+		%Spielablauf
+		\subsection{Spielablauf}\label{ss:spielablauf}
+			Der vorliegende Abschnitt zeigt das zuvor in \cref{ss:konzept} erstellte Konzept in einer Matlab-Simulation angewandt. Dabei herrschten die folgend aufgeführten Bedingungen vor:
+			%
+			\begin{itemize}
+				\item Teamfarbe rot
+				\item 1 eigener Roboter mit den Aufgabe \gls{g:mammut}, \gls{g:fresko} und \gls{g:fire}
+				\item kein gegnerischer Roboter
+			\end{itemize}
+			%
+			\paragraph{Match-Start}Am Anfang einer Partie muss festgelegt werden, welcher Knoten zuerst behandelt werden soll. Nach dem erfüllen dieses Knotens sucht der Stratgie-Algorithmus (siehe \cref{sss:ablauf_strategie}) selbstständig den nächsten. Für die Identifizierung der Knoten wird jedem einen ID zugeordnet. Je nach Teamfarbe können sich diese unterscheiden, wie die \cref{abb:node_id} zeigt.\par 
+			\begin{figure}[htbp] %htbp
+				\centering
+				\begin{subfigure}[b]{0.49\textwidth}
+					\centering
+					\includegraphics[height=4.95cm]{content/image/14_knoten_IDs_red_small}       
+					\caption{Teamfarbe rot}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.49\textwidth}
+					\centering
+					\includegraphics[height=4.95cm]{content/image/14_knoten_IDs_yellow_small}    
+					\caption{Teamfarbe gelb}     
+				\end{subfigure}
+				\caption{Knoten ID's}
+				\label{abb:node_id}
+	    	\end{figure}
+	    	%
+	    	Ist der Startknoten ausgewählt und der Match gestartet, so präsentiert sich die Situation wie in \cref{pic:match_start} dargestellt. Der grün markierte Knoten referenziert dabei den Startknoten.
+	    	%
+	    	\image{content/image/14_field_node_pools_red}{scale=0.6}{htbp}[Spielfeldsituation bei Match-Start Teamfarbe rot][pic:match_start]
+	    	%
+	    	\paragraph{Match-Ende} Am Ende eines Matchs sollten alle Knoten abgearbeitet sein. Ist dies der Fall, so ist eine mögliche Route der Strategie in der \cref{pic:match_ende} ersichtlich (grüne Linien).\par 
+	    	%
+	    	\image{content/image/14_field_end_red}{scale=0.6}{htbp}[Spielfeldsituation bei Match-Ende Teamfarbe rot][pic:match_ende]
+	    	%
+			Der Knoten-Gewicht-Verlauf ändert während der gesamten Match-Dauer in Abhängigkeit des aktuellen Knotens (siehe \cref{pic:match_weight}). Zu beachten ist, dass dieses Diagramm ohne Berücksichtigung eines Gegners aufgezeichnet wurde. Ein allfälliger Gegner würde eine Horizontaltverschiebung nach oben des Gewichtsverlaufes zur Folge haben. Weiter kann im Diagramm der Wert einzelner Spielaufgaben erkannt werden. Die Aufgaben \gls{g:mammut} und \gls{g:fresko} liegen sehr nahe beieinander, wohingegen die Aufgabe \gls{g:fire} zu Beginn kaum ins Gewicht fällt.
+	    	%
+	    	\image{content/image/14_weight_end_red}{scale=0.6}{htbp}[Knoten-Gewichte während eines Matchs][pic:match_weight]
+	    	
+		
+			
+	%
+	%
+	%Spielaufgaben
+	\section{Spielaufgaben}\label{s:spielaufgaben}{kasen1}
+		

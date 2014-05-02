@@ -1,0 +1,331 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Bericht - Admin
+% Autoren: gross10
+% Datum:   04.01.2014
+% Version: 1.0.0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+%
+% 0.0.1       Erstellung der Datei
+%
+%:::Hinweis:::
+% Indexerstellung: makeindex -s report.ist report.idx
+%   Umlaute müssen separat behandelt werden!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[version=last,fleqn,pointlessnumbers,openright,twoside]{scrreprt}  %first: Ergebniss Kompatibel zu ersten Version; last: Ergebniss entspricht den aktuellen Paketen; fleqn: Formeln linksbündig; pointlessnumbers: Kapitelnummerierung ohne Punkt; twoside: Doppelseitiger Druck
+
+%Dokumentangaben
+\newcommand{\Titel}{Anhang PA1 \& PA2}
+\newcommand{\Uebertitel}{Eurobot 2014 Kernteam}
+\newcommand{\AutorA}{Hannes Roth}
+\newcommand{\AutorB}{Patrick Rohrbach}
+\newcommand{\AutorC}{Tobias Meerstetter}
+\newcommand{\AutorD}{Simon Grossenbacher}
+\newcommand{\AutorE}{Jascha Haldemann}
+\newcommand{\AutorF}{Nikolas K\"aser}
+\newcommand{\DozentA}{Daniel Lanz}
+\newcommand{\DozentB}{Ivo Oesch}
+\newcommand{\DozentC}{Walter Güller}
+\newcommand{\FachbereichA}{Maschinenbau}
+\newcommand{\FachbereichB}{Technik und Informatik}
+\newcommand{\Datum}{\the\day.\the\month.\the\year}
+\newcommand{\Ort}{Burgdorf}
+\newcommand{\Version}{1.0.0}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Pakete
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{packages}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Funktionen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{functions}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Farben
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{color}                        	% Color (not xcolor!)
+%Allgemein
+\definecolor{grey}{gray}{0.7}
+\definecolor{lightgrey}{gray}{0.9}
+
+%BFH
+\definecolor{bfhred}{rgb}{0.776,0,0.066}
+\definecolor{brickred}{cmyk}{0,0.89,0.94,0.28}	% Brickred
+\definecolor{bfhblue}{rgb}{0.396,0.49,0.56}  		% Blue
+\definecolor{bfhorange}{rgb}{0.961,0.753,0.196}  	% Orange
+\definecolor{bfhorangelight}{RGB}{246,216,136}  	% Orange Light
+
+%Listing
+\definecolor{hellgelb}{rgb}{1,1,0.8}
+\definecolor{listingbackground}{RGB}{246,216,136} 
+\definecolor{colKeys}{rgb}{0,0,1}
+\definecolor{colIdentifier}{rgb}{0,0,0}
+\definecolor{colComments}{rgb}{0.2,0.8.3}
+\definecolor{colString}{rgb}{0,0.5,0}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Schrift
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Standardschriftgrösse
+\KOMAoptions{fontsize=11pt}
+
+%Zeilenabstand
+%\onehalfspacing %1.5 Zeilenabstand
+
+%Schrift eines bestimmten Elements anpassen/erstellen z.B. captionlabel
+%\setkomafont{captionlabel}{\itshape}  %definert Schriftart für captionlabel
+%\addkomafont{captionlabel}{\itshape}  %fügt Eigenschaft zu captionlabel hinzu
+
+%Formatvorlage anpassen
+\setkomafont{pageheadfoot}{\footnotesize\sffamily} %Kopf-/Fusszeile \normalfont
+\setkomafont{pagenumber}{\normalfont\sffamily\bfseries} %Seitennummer
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Gleitobjekte (Bilder/Tabellen/Formeln)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Formelneinzug = wie Aufzählungseinzug
+\setlength{\mathindent}{0.6\leftmargini}
+
+%Gleitobjekte
+\setlength{\intextsep}{8mm +2mm -2mm}%\intextsep10mm plus3mm minus2mm
+%\setlength{\textfloatsep}{100mm plus5pt minus3pt}
+
+%Bild-Tabellen Beschriftung linksbündig
+%\KOMAoptions{captions=nooneline}  %linksbündig
+\setcaphanging  %Mehrzeilige Beschriftung erhält Einzug
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Seiteneinstellungen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Dokumentstadium
+\KOMAoptions{draft=false}  %Erleichert das erkennen von Fehlern im Entwurfsstadium
+
+%Papierformat
+\KOMAoptions{paper=A4}  %Format (Bei direkten Massangaben: 5cm:3cm)
+%\KOMAoptions{paper=landscape} %Ausrichtung  (Standard Portrait)
+\KOMAoptions{pagesize=automedia}  %Angabe für Ausgangstreiber
+
+%Bindekorrektur
+%\KOMAoptions{BCOR=0.1cm}  %Bindekorrektur (Bereich der durchs Binden verloren geht)
+
+%Grösse des Satzspiegels
+\KOMAoptions{DIV=11}  %grösse des Satzspiegels (Faktor ab 4), siehe S.38 scrguide.pdf; nur für A4 existieren Voreinstellungen, sonst calc o. classic als Option
+
+%Randbereich
+\KOMAoptions{mpinclude=false} %Definiert ob der Randbereich zum Textkörper hinzugezählt werden soll oder nicht -> TRUE nur bei Sonderfällen
+
+%Doppelspaltiges Dokument
+\KOMAoptions{twocolumn=false}
+
+%Absatzabstand
+\KOMAoptions{parskip=true}
+
+%Seitenstyle
+\pagestyle{scrheadings} %myheadings scrheadings
+
+%Platzierzung letzte Zeile
+\raggedbottom %Letze Zeile liegt dort wo sie gerade ist -> unterschiedlicher vertikaler Abstand zu Blatt Ende (unerwünscht bei doppelseitigem Druck)
+%\flushbottom  %Letze Zeile immer am Schluss -> evtl. unterschiedliche Absatzabstände
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Kopf-/Fusszeile
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Kopfzeile
+%\clearscrheadfoot %Alle Vorgaben löschen (plain und scrheadings)
+%\renewcommand*{\chaptermarkformat}{% headmark ohne Kapitelnummer
+%\chapappifchapterprefix{\ }\thechapter\autodot\enskip
+%}
+%\renewcommand*{\sectionmarkformat}{}
+%\automark[section]{chapter}
+\ihead[]{\textcolor{bfhblue}{\headmark}} %Chapter Titel in Kopfzeile \textcolor{bfhblue}{\headmark}
+\chead[]{}
+\ohead[]{\textcolor{bfhblue}{Berner Fachhochschule}} %Titel in Kopfzeile \textcolor{bfhblue}{Berner Fachhochschule}
+
+%Fusszeile
+\ifoot[\textcolor{bfhblue}{\Uebertitel, Version \Version, \Datum}]{\textcolor{bfhblue}{\Uebertitel, Version \Version, \Datum}} %plain und scrheadings mit Dokumenttitel versehen
+\cfoot[]{}
+\ofoot[\textcolor{bfhblue}{\pagemark}]{\textcolor{bfhblue}{\pagemark}} %plain und scrheadings mit Seitennummer versehen
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fussnote
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Fussnote
+%\KOMAoptions{footnotes=multiple} %Fussnotennummern durch "," trennen
+
+
+
+%Satzspiegel neu berechnen -> falls andere Schriftengeladen werden und/oder Zeilenabstand verändert wird
+\recalctypearea  
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Paket Listings Konfiguration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%XML
+\lstdefinestyle{XML}{numbers=left, 
+    basicstyle=\scriptsize\ttfamily,
+    numberstyle=\tiny, 
+    xleftmargin=0.5\leftmargin,
+    xrightmargin=\rightmargin,
+    numbersep=5pt,
+    backgroundcolor=\color{listingbackground}, 
+    breaklines=true,
+    captionpos=b,
+    language=XML}
+
+%MATlAB
+\lstdefinestyle{Matlab}{numbers=left, 
+    basicstyle=\scriptsize\ttfamily,
+    numberstyle=\tiny, 
+    xleftmargin=0.5\leftmargin,
+    xrightmargin=\rightmargin,
+    numbersep=5pt,
+    backgroundcolor=\color{listingbackground}, 
+    identifierstyle=\color{colIdentifier}, %
+    keywordstyle=\color{colKeys}, %
+    stringstyle=\color{colString}, %
+    commentstyle=\color{colComments}, %
+    breaklines=true,
+    captionpos=b,
+    language=Matlab}
+
+%ANSI C
+\lstdefinestyle{C}{numbers=left, 
+    basicstyle=\scriptsize\ttfamily,
+    numberstyle=\tiny, 
+    xleftmargin=0.5\leftmargin,
+    xrightmargin=\rightmargin,
+    numbersep=5pt,
+    backgroundcolor=\color{listingbackground}, 
+    identifierstyle=\color{colIdentifier}, %
+    keywordstyle=\color{colKeys}, %
+    stringstyle=\color{colString}, %
+    commentstyle=\color{colComments}, %
+    breaklines=true,
+    captionpos=b,
+    language=[ANSI] C}
+    
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Glossar / Abkürzungsverzeichnis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{glossary}
+\input{acronyms}
+
+
+
+\makeindex %Ab hier Indexieren
+\makeglossaries %Ab hier Glossar verwenden
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dokument Anfang
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titelseite
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{titlepage/titlepage}
+\thispagestyle{empty}
+\cleardoublepage %Leere Seite nach Titelseite einfügen
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Abstract + Selbstaendige Arbeit
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{Roman} %Römisch Nummerieren
+%\input{abstract/abstract}
+%\input{abstract/self}
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Verzeichnisse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Inhaltsverzeichnis Inhalt
+%\KOMAoptions{toc=listof}  %Abbildungs- und Tabellenverzeichnis ins Inhaltsverzeichnis
+%\KOMAoptions{toc=index} %Stichwortverzeichnis ins Inhaltsverzeichnis
+%
+%Tiefe der Gliederung
+\setcounter{secnumdepth}{3}
+\addtocounter{tocdepth}{3}  
+%
+%Inhaltsverzeichnis linksbündig
+%\KOMAoptions{toc=flat}
+%
+%Verzeichnisse mit einer Kapitelnummer versehen
+%\KOMAoptions{toc=listofnumbered}
+%
+%Inhaltsverzeichnis
+\tableofcontents
+%
+%Abbildungsverzeichnis
+%\listoffigures
+%
+%Tabellenverzeichnis
+%\listoftables
+%
+\clearpage %Seite beenden
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dokumentinhalt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Dokument arabisch Nummerieren
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Anhang
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\appendix %Umschalten auf alphabetisches Nummerieren
+%
+%Anhang A
+\input{appendix/B_pflichtenheft}
+%Anhang B
+\input{appendix/C_strategie}
+%Anhang C
+\input{appendix/D_konzeptphase_mechanik}
+%Anhang D
+\input{appendix/E_zeichnung_cad}
+%Anhang E
+\input{appendix/F_datenblaetter_bestellliste}
+%Anhang F
+\input{appendix/G_funktionstest_testprotokolle_pa2}
+%Anhang G
+\input{appendix/H_doxygen}
+%%Anhang H
+\input{appendix/I_can_summary}
+%Anhang A
+%\input{appendix/A_versionierung}
+%
+%
+%
+\end{document}

@@ -1,0 +1,27 @@
+
+
+kern:Kernknoten[a]
+antrieb:Antriebknoten[a]
+navi:Navigationsknoten[a]
+nah:Naherkennungsknoten[a]
+
+
+*1 kern
+Kernknoten löst die
+Kommunikation aus
+*1
+(1)kern
+
+
+
+*3 kern
+Notaus-Pilz wird betätigt
+*3
+kern:{antrieb,navi,nah}.Emergency Stop
+(3)kern
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+
+
+main:Main[ax]
+modul1:Modul1[a]
+modul2:Modul2[a]
+gatekeeper:CANGatekeeper[a]
+
+
+
+*1 main
+Start der Applikation
+*1
+(1)main
+
+main:modul1.initModul1
+*2 modul1
+Modul 1 trägt Queue ein
+*2
+modul1:gatekeeper.setQueueCANListener
+(2)modul2
+
+main:modul2.initModul2
+*3 modul2
+Modul 2 trägt Funktion ein ein
+*3
+modul2:gatekeeper.setFunctionCANListener
+(3)modul2
+
+main:gatekeeper.initCANGatekeeper[x]
+*4 gatekeeper
+CANGatekeeper Initialisieren
+*4
+(4)gatekeeper
+
+

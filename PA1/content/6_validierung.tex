@@ -1,0 +1,53 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Testkonzept
+% Autor:   
+% Datum:   15.01.2014
+% Version: 0.0.2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+% 0.0.2       Text und Kapitel hinzugefügt.
+% 0.0.1       Erstellung der Datei
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+\chapter{Testkonzept}\label{ch:validierung}
+	Die Testdurchläufe sind ein wichtiger Teil im Werdegang eines Projekts. Nur mit klaren, möglichst alle Fälle abdeckenden und klar messbaren Testdurchläufen kann die Funktion sichergestellt werden. Es ist jedoch nicht möglich alle Fehler in einem Projekt zu finden, sie können allerdings stark minimiert werden. Die Testphase wurde in zwei Teile unterteilt:
+	%
+	\begin{description}
+		\item[Review Test] Beim Review Test wird eine optische Kontrolle des Codes durchgeführt, bei welchem unter anderem auf die festgelegten Code-Richtlinien oder auf die Qualität des Kommentars geachtet wird.
+		%
+		\item[Funktionstest] Der Funktionstest ist, wie der Name es bereits erahnen lässt, für das Testen der Funktionen des Roboters zuständig. Es werden klare Ziele / Funktionen festgelegt, welche anschliessend getestet werden. Funktionstest sollen nicht nur Testfälle beinhalten, von denen man erwartet, dass sie funktionieren, sondern es wird auch auf absichtlich herbeigeführte Fehler getestet.
+	\end{description}
+	%
+	Auf Grund der bereits erwähnten Verzögerungen in der  \gls{ac:pa1} konnten die Test noch nicht durchgeführt werden. Die bereits definierten Tests sind im Anhang E \textit{Funktionstests Testprotokolle PA2} beigelegt.
+	%
+    %Review Test
+    \section{Review Test}\label{s:review_test}
+    	Der Review Test wird für jedes Modul einzeln durchgeführt. Dabei soll darauf geachtet werden, dass nicht der Verantwortliche des jeweiligen Moduls den Review Test selber durchführt. Anschliessend an den Test, werden die nicht erfüllten Punkte vom Modulzuständigen korrigiert. Der Review Test ist in vier Teile gegliedert:
+    	%
+   		\begin{description}
+   			\item[Kommentarköpfe] Beinhaltet alle Tests bezüglich der Header- und Funktionsköpfe.
+   			%
+   			\item[Namensgebung] In diesem Abschnitt werden die Code-Richtlinien, die zu Beginn des Projekts festgelegt wurden.
+   			%
+   			\item[Kommentar] Hier wird der Kommentar auf die festgelegten Richtlinien getestet.
+   			%
+   			\item[Kommentarstil] Beim Kommentarstil wird einerseits darauf geachtet, ob der Kommentar sinnvoll ist und ob er verständlich ist, andererseits wird auch die Formatierung noch ein wenig angeschaut.
+   		\end{description}
+    %
+    %Funktionstest
+    \section{Funktionstest}\label{s:funktionstest}
+    	Im Gegensatz zum Review Test wurde nur ein Funktionstest für das gesamte Projekt entworfen. Der Funktionstest ist zum momentanen Zeitpunkt in vier Kategorien unterteilt:
+    	%
+   		\begin{description}
+   			\item[Bilderkleben] Beinhaltet alle Test, die zur erfolgreichen Ablauf des Bilderklebens nötig sind.
+   			%
+   			\item[Ballspicken] Test die den reibungslosen Vorgang des Ballspickens gewährleisten sollen. 
+   			%
+   			\item[CAN Test] In diese Kategorie gehören alle Tests, die die Kommunikation zwischen den einzelnen Knoten im Roboter sicherstellen.
+   			%
+   			\item[Gesamttests] Am Ende wird ein Gesamttest durchgeführt um auch das Zusammenspiel der einzelnen Komponenten testen zu können.
+   		\end{description}
+    	%

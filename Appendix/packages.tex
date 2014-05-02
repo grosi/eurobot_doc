@@ -1,0 +1,144 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Bericht - Pakete
+% Autor: Simon Grossenbacher  
+% Datum:   27.09.2013
+% Version: 1.0.0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+%
+% 0.0.0       Erstellung der Datei
+%
+%:::Hinweis:::
+% Indexerstellung: makeindex -s report.ist report.idx
+%   Umlaute müssen separat behandelt werden!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Sprach-Optionen
+\usepackage[ngerman]{babel} %neue deutsche Rechtschreibung
+\usepackage[T1]{fontenc}  %richtige Worttrennung
+%\usepackage[applemac]{inputenc}				% Mac - load extended character set (ISO 8859-1)
+\usepackage[latin1]{inputenc}  				% Unix/Linux - load extended character set (ISO 8859-1)
+%\usepackage[ansinew]{inputenc}  				% Windows - load extended character set (ISO 8859-1)
+%\usepackage[utf8]{inputenc}  					% UTF-8 encoding
+
+%Zeilenabstand
+\usepackage{setspace}
+
+%Mehr Tabellenoptionen
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{rotating}
+\usepackage{multirow}
+
+%Listen
+\usepackage{enumitem}
+
+%Besserer Flattersatz
+\usepackage{ragged2e}
+
+%Gleiten verhindern
+\usepackage{float}
+\usepackage{placeins}
+
+%Ueberschriften anpassen
+\usepackage{titlesec} 
+
+%Farben
+\usepackage{color}
+\usepackage{colortbl} %Für farbige Tabellen
+
+%PDF zu Dokument hinzufuegen
+\usepackage[final]{pdfpages}
+
+%Grafiken verwalten
+\usepackage{graphicx}
+\usepackage[absolute]{textpos}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+
+%Zeichnen
+%\usepackage{pst-pdf}
+%\usepackage{pst-all}
+
+%Listnings verwalten
+\usepackage{listings}
+
+%Kopf- Fusszeile (Optionen müssen direkt übergeben werden)
+\usepackage[automark, %Automatisches aktualisieren der Chapter-Titel
+%            headsepline,  %Linie Kopfzeile
+%            footsepline,  %Linie fusszeilezeile
+%            markuppercase,
+            plainfootsepline  %Plain-Style auch mit Linie versehen
+            ]{scrpage2}
+
+%Flexible Argumente bei Funktionen
+\usepackage{xargs}
+
+%erweiterte Steuerfunktionen
+\usepackage{ifthen}
+
+%Index für Stichwortverzeichnis
+\usepackage{makeidx}
+
+%Index für Literaturverzeichnis
+\usepackage[babel,german=quotes]{csquotes}
+%\usepackage[backend=biber,style=numeric,defernumbers=true,sorting=nyt]{biblatex}
+\usepackage[backend=bibtex,defernumbers=true]{biblatex}
+\bibliography{bibliography}
+\defbibheading{lit}{\section{Literatur}}
+\defbibheading{pic}{\section{Abbildungen}}
+
+%Zusaetzliche Symbole direkt im Text
+\usepackage{textcomp}
+\usepackage{amssymb}
+
+%Einheit kontrolliert eingeben
+\usepackage{units}
+
+%dynamische Datumsausgabe
+\usepackage[german]{isodate}
+
+%Zusaetzlich Mathemtiksymbole
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+%Besser Handling von internen Countern und Berechnungen
+\usepackage{calc}
+
+%TODOs anbringen am Rand
+\usepackage{todonotes}
+
+%Hyperlinks (Muss das letzte geladene Paket sein)
+\usepackage[bookmarks=true, %Verzeichnis generieren
+            bookmarksopen=true, %Verzeichnis öffnen
+            bookmarksopenlevel=3, %Tiefe der Verzeichnisöffnung
+            unicode=false, %non-Latin Zeichen
+            pdftoolbar=true, %PDF-Viewer Toolbar
+            pdfmenubar=true, %PDF-Viewer Menü?
+            pdffitwindow=true, %Fenster an Seite anpassen beim Öffnen
+            pdftitle={\Titel}, %Titel
+            %pdfauthor={\Autor1, \Autor2, \Autor3}, %Autor
+            pdfsubject={\Uebertitel}, %Thema
+%            pdfcreator={\Autor1, \Autor2, \Autor3}, %Ersteller des Dokuments
+%            pdfproducer={\Autor1, \Autor2 \Autor3}, %Produzent des Dokuments
+            pdfnewwindow=true, %Links in neuem Fenster
+            colorlinks=true, %false: Boxen-Links; true: Farben-Links
+            linkcolor=red, %Farbe von internen Links
+            citecolor=red, %Farbe von Links zu Bibliography
+            filecolor=magenta, %Farbe von Links zu Dateien
+            urlcolor=blue %Farbe von externen Links
+            ]{hyperref}
+   
+%Querverweise
+\usepackage[german]{cleveref}
+\usepackage{xr}  %Verweise uber Dokument hinweg
+
+%Besseres Zeichensetzen
+\usepackage{microtype}
+            
+%Glossar/Abkürzungsverzeichnis
+\usepackage[acronym,makeindex]{glossaries}

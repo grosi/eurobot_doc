@@ -1,0 +1,27 @@
+
+
+kern:Kernknoten[a]
+antrieb:Antriebknoten (mit Kalman)[a]
+navi:Navigationsknoten[a]
+
+
+
+*1 kern
+Kernknoten löst die
+Kommunikation aus
+*1
+(1)kern
+
+*2 kern
+Kernknoten fragt Position ab
+*2
+kern:>navi.Laser/Ultrasonic Position Request
+(2)kern
+navi:>antrieb.Laser/Ultrasonic Position Response
+navi:stop
+
+
+
+
+
+

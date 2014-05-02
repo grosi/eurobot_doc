@@ -1,0 +1,786 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Software
+% Autor:   gross10, mert1
+% Datum:   22.09.2013
+% Version: 0.0.1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+%
+% 0.0.1       Erstellung der Datei
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+\chapter{Software}\label{ch:software}\mpar{Dieser Abschnitt entspricht nicht vollständig dem Stand der \gls{ac:pa2}}
+	Die Software wird auf einem \textsf{STM32F4 Discovery} von \textsf{STMicroelectronics} implementiert, welches auf einem \gls{g:roboboard} aufgesteckt wird. Das \gls{g:roboboard} ist eine Arbeit des Eurobotteams vom Vorjahr, mit welchem diverse Peripherie angesteuert werden kann.
+	%
+	%
+	%Gliederung
+	\section{Gliederung}\label{s:gliederung}
+	Die Software wird, wie in Abbildung \ref{abb:structed_design} strukturell dargestellt, in vier Kategorien unterteilt.	
+		\image{content/image/5_Structed_Design}{scale=0.5}{htbp}[Structed Design][abb:structed_design]
+		%
+		\begin{description}
+			\item[Applikation] In der Kategorie Applikation werden alle Softwaremodule abgelegt, die zur Steuerung des Roboters benötigt werden. Dieser Code greift auf die von den anderen drei Kategorien bereitgestellten Funktonen zu. 
+			%
+			\item[Lib] In dieser Library werden die Firmware-Funktionen für das \gls{g:roboboard} zusammengefasst. Weiter sind auch Funktionen für die Kommunikation mit dem Debugger von Atollic\footnote{Atollic TrueSTUDIO ist das von uns benötigte Programm für die Softwareprogrammierung.} vorhanden, um das Testen von Software zu erleichtern. Mehr dazu im Kapitel \ref{ss:swd} \textit{SWD} ab Seite \pageref{ss:swd}.
+			%   
+			\item[FreeRTOS] Das Framework \gls{g:rtos} bietet alle Funktionalitäten, um ein Real Time Operating System auf dem Mikrocontroller realisieren zu können. Mit Hilfe dessen ist es möglich quasi parallele Prozesse schreiben zu können.
+			%
+			\item[BSP] Im \gls{ac:bsp} ist jener Code zu finden, um die Low Level Funktionen des Mikrocontrollers nutzen zu können.
+		\end{description}
+	%
+  	%
+  	%Applikation
+  	\section{Applikation}\label{s:applikation}
+  	Alle in der Applikation geschriebenen Module sind als Tasks umgesetzt. Sie dienen vorwiegend der Steuerung und Kommunikation des Roboters. Das Main-Modul startet nach Programmstart alle benötigten Tasks und übergibt die Kontrolle dem Betriebssystem.
+  		%Uebersicht
+  		\subsection{Übersicht}\label{ss:uebersicht}
+  		In Abbildung \ref{abb:task_diagramm} auf Seite \pageref{abb:task_diagramm} ist das Task-Diagramm der Applikationskategorie abgebildet. Dem Diagramm ist das grobe Zusammenspiel der einzelnen Tasks grafisch dargestellt. Es wurden insgesamt fünf Tasks implementiert. 
+  		%
+  		\image{content/image/5_Taskdiagramm}{scale=0.75}{htbp}[Task-Diagramm][abb:task_diagramm]
+  		%
+  		\begin{description}
+			\item[Strategy] Der Strategy-Task ist für den Ablauf, so wie die Spielmanipulationen zuständig.
+			%
+			\item[Timer] Im Timer-Task wird die Zeitmessung für ein Spiel realisiert.
+			%
+			\item[ELP] Der \acrfull{ac:elp}-Task ruft regelmässig die Positionsinformationen der anderen knoten im Roboter ab.
+			%
+			\item[Rangefinder] Die Naherkennung, welche nicht vom Kernteam umgesetzt wurde, wird in der \gls{ac:pa2} in den Rangefinder-Task implementiert.
+			%
+			\item[CANGatekeeper] Mit diesem Task kann zwischen den Knoten Kommuniziert werden.
+		\end{description}
+  		%
+  		%Strategie
+  		\subsection{Strategy}\label{ss:strategie}
+  		Der \texttt{Strategy}-Task ist für die Strategie und den Ablauf eines Spiels zuständig. In diesem Task werden vordefinierte Spielabläufe und Strategien implementiert, welche vor oder auch während des Spiels abgerufen werden können. Dies ist notwendig, da der Spielablauf auf Grund der Gegnerroboter nicht  immer gleich ist.
+  		%
+  		\subsubsection{Design}\label{sss:strategie_design}
+  		\image{content/image/5_CRC_Strategy}{scale=0.75}{htbp}[CRC \texttt{Strategy}-Task][abb:crc_strategy]
+  		Da der Roboter zum momentanen Zeitpunkt noch nicht besteht, wurde im \texttt{Strategy}-Task noch nicht Alles implementiert. Es werden lediglich einzelne Abläufe und Unit Test vorgenommen.
+  		%
+ 		%Zeitmanagement
+  		\subsection{Timer}\label{ss:zeitmanagement}
+  		Der \texttt{Timer}-Task ist für die Spielzeit zuständig. Der Task hat als Aufgabe das Messen der bereits vergangenen Spielzeit. Der \texttt{Timer} stellt eine Funktion zur Verfügung, mit welcher die Zeitmessung gestartet werden kann. Nach Ablauf der 90 Sekunden löst der \texttt{Timer} eine Flag aus und sendet den Stoppbefehl an den Antrieb.
+  		%
+  		\subsubsection{Design}\label{sss:timer_design}
+  		\image{content/image/5_CRC_Timer}{scale=0.75}{htbp}[CRC Timer-Task][abb:crc_timer]
+  		Der Timer-Task besteht zum momentanen Zeitpunkt aus einem Task für die Zeitmessung welcher jede Sekunde Ausgerufen wird und zwei Funktionen:
+  		\begin{description}
+  			\item[\texttt{startTimer()}] Diese Funktion Startet den 90 sec Timer
+  			\item[\texttt{getRemainingTime()}] Liefert die Verbleibende Spielzeit in Sekunden zurück
+  		\end{description}
+  		%
+  		Der \texttt{Timer} benötig den \texttt{CANGatekeeper}, um die Stoppnachricht an die anderen Module zu senden. Dies ist wichtig, da sich der Roboter nach Ablauf der 90 sec nicht mehr bewegen darf.\par
+  		%
+  		Um die Zeit genau messen zu können, muss der \texttt{Timer}-Task die höchste Priorität von allen Tasks besitzt. Nur so ist gewährleistet, dass die Zeit möglichst genau gemessen werden kann, da die Verzögerung zwischen Delay-Ablauf und Taskaufruf möglichst klein ist. Gäbe es einen anderen Task mit höherer Priorität, so würde der \texttt{Timer} erst nach diesem an die Reihe kommen und so eine falsche Zeitmessung bewirken.
+  		%
+  		\subsubsection{Defines}\label{sss:timer_defines}
+  		Im \texttt{Timer.h} File sind folgende Timerspezifische Defines vorhanden:
+  		%
+		\begin{description}
+	  		\item[\texttt{TIMER\_STOP\_TIME}] Mit diesem Define kann die zu stoppende Zeit eingestellt werden.
+	  	\end{description}
+  		%
+  		%Datenkommunikation
+  		\subsection{ELP}\label{ss:datenkommunikation}
+  		Der \texttt{ELP}-Task ist für die Abfrage der ELP's der anderen Knoten im Roboter zuständig. Da Die \gls{ac:can}-Kommunikation als Master Slave implementiert wurde\footnote{siehe Abschnitt \ref{ss:variantenentscheid_ms_mm} \textit{Variantenentscheid Master-Slave Multi-Master} auf Seite \pageref{ss:variantenentscheid_ms_mm}}, muss der Kernknoten alle anderen Informationen der übrigen Knoten regelmässig abfragen, so dass die Slaves mithören könne, um an die entsprechenden Infos zu gelangen.
+  		%
+  		\subsubsection{Design}\label{sss:datenkommunikation_design}
+  		\image{content/image/5_CRC_ELP}{scale=0.75}{htbp}[CRC ELP-Task][abb:crc_elp]
+  		Um die ELP's der anderen Knoten im Roboter abfragen zu können, muss der \texttt{CANGatekeeper} in den \texttt{ELP}-Task eingebunden werden. Es werden insgesamt sechs ELP's angefragt:
+  		%
+  		\begin{itemize}
+	  		\item Laser ELP
+	  		\item Ultraschall ELP
+	  		\item Kalman ELP
+	  		\item Gegner Roboter 1 ELP
+	  		\item Gegner Roboter 2 ELP
+	  		\item Befreundeter Roboter ELP
+  		\end{itemize}
+  		%
+  		\subsubsection{Defines}\label{sss:datenkommunikation_defines}
+  		Da die ELP's der verschiedenen Knoten nicht alle gleich häufig abgefragt werden können oder müssen, kann in der \texttt{ELP.h} Datei mittels Defines eingestellt werden, wir oft das jeweilige ELP abgefragt werden soll. Es sind folgende Defines Implementiert worden:
+  		%
+  		\begin{description}
+	  		\item [\texttt{ELP\_LASER\_POSITION\_REQUEST\_RATE}]
+	  		\item [\texttt{ELP\_ULTRASONIC\_POSITION\_REQUEST\_RATE}]
+	  		\item [\texttt{ELP\_KALMAN\_POSITION\_REQUEST\_RATE}]
+	  		\item [\texttt{ELP\_ENEMY1\_POSITION\_REQUEST\_RATE}]
+	  		\item [\texttt{ELP\_ENEMY2\_POSITION\_REQUEST\_RATE}]
+	  		\item [\texttt{ELP\_CONFEDERATE\_POSITION\_REQUEST\_RATE}]
+  		\end{description}
+  		%
+  		Mit diesen Defines kann nun eingestellt werden, beim wievielten Durchlaufen des \texttt{ELP}-Tasks welches ELP abgefragt werden soll. Weiter kann durch ein Define das Delay des \texttt{ELP}-Tasks eingestellt werden und somit die Geschwindigkeit der mit der der Task wieder aufgerufen wird.
+  		%
+  		\begin{description}
+	  		\item [\texttt{ELP\_TASK\_SPEED}] Updaterate in Millisekunden
+  		\end{description}
+  		\newpage
+  		%
+  		%Naherkennung
+  		\subsection{Rangefinder}\label{ss:naherkennung}
+  		Der \texttt{Rangefinder}-Task übernimmt die Aufgabe der Naherkennung. Die genaue Dokumentation hierzu ist dem Entsprechenden Teilprojekt von Nicolas Käser zu entnehmen.
+  		%
+  		\subsubsection{Design}\label{sss:naherkennung_design}
+  		\image{content/image/5_CRC_Rangefinder}{scale=0.75}{htbp}[CRC \texttt{Rangefinder}-Task][abb:crc_rangefinder]
+  		Um mit den Sensoren zu interagieren, müssen die Firmwaredateien \texttt{i2c.h} und \texttt{gpio.h} importiert werden. 
+  		%
+  		%Feldbus
+  		\subsection{CANGatekeeper}\label{ss:cangatekeeper}\mpar{Für Informationen zum aktuellen Stand der \gls{ac:pa2} sei auf den Anhang G verwiesen}
+  			In Applikationen in denen mehrere neben läufigen Threads Tasks vorkommen, kann das Zugreifen auf gemeinsame Ressourcen problematisch sein. Die als Critical Section bezeichneten Codesegmente müssen deshalb von Mehrfachzugriffen, respektive Ausführungen geschützt werden. Dazu stehen drei gängige Möglichkeiten zur Verfügung:
+  			%
+  			\begin{description}
+  				\item[Semaphore] Eine Semaphore kann als Schlüsselbund der Informatik verstanden werden. Sie wird vom Betriebssystem zur Verfügung gestellt. Will eine Parallelitätseinheit auf eine Critical Section zugreifen, so muss sie zu erst eine Semaphore anfordern. Nach dem Zugriff wird die Semaphore freigegeben und die Ressource ist wieder verfügbar. Eine Critical Section kann mehrere Semaphoren haben \cite[S.65]{lit:es}.
+  				\item[\acrshort{ac:mutex}] Eine \gls{ac:mutex} kann als Semaphore  der Länge '1' verstanden werden \cite{lit:mutex_vs_semaphore}.
+  				\item[Gatekeeper] Ein Gatekeeper ist kein vom Betriebssystem bereitgestelltes Konstrukt\footnote{Dies bezieht sich auf das eingesetzte \gls{g:rtos}}, sondern stellt ein Software Designpattern dar. Dazu wird ein Thread Task erzeugt, der eine Critical Section verwaltet. Ein Datentransfer erfolgt via eines Queues zum Gatekeeper.
+  			\end{description}
+  			%
+  			Die \gls{ac:can}-Schnittstelle stellt eine solche Critical Section dar, weshalb eine der vorangehenden Varianten angewandt werden muss. Da aufbauend auf dem \gls{ac:can}-Protokoll mehrere Kommunikation-Protokolle eingesetzt werden\footnote{siehe dazu Abschnitt \ref{s:kommunikation} ab Seite \pageref{s:kommunikation}} und es keinen Sinn ergibt wenn jede Parallelitätseinheit diese beinhaltet, scheiden die beiden erst genannten Methoden (\textsf{Semaphore} und \gls{ac:mutex}) aus. Mithilfe eines \texttt{Gatekeepers} können protokollspezifische Anpassungen an einem zentralen Ort verwaltet werden.\par 
+  			%
+  			Der \texttt{CANGatekeeper} übernimmt die folgenden Aufgaben:
+  			\begin{itemize}
+  				\item Initialisierung des \gls{ac:can}-Interfaces
+  				\item Stellt einfache anzuwenden Sendefunktionen zur Verfügung
+  				\item Konvertiert Daten in die entsprechende Kommunikationsprotokolle um\footnote{\acrfull{ac:goto} und \acrfull{ac:elp}}
+  				\item Das Verteilen empfangener Daten an eingetragene Empfänger
+  			\end{itemize}
+  			%
+  			Für die Funktion werden die Module \texttt{app\_config}, \texttt{can} (siehe Abschnitt \ref{ss:Control_area_network} \textit{Control Area Network} auf Seite \pageref{ss:Control_area_network}), \texttt{queue} (\textsf{FreeRTOS}) und \texttt{stm32f4xx\_can} (\textsf{BSP}) vorausgesetzt. Der \texttt{CANGatekeeper} wird der Sektion der \textsf{HW-Tasks} zugeordnet, sprich er enthält Abhängigkeiten zu Bereichen \textsf{FreeRTOS}, \textsf{Firmware} und \textsf{\gls{ac:bsp}}. Eine Übersicht über das Modul \texttt{CANGatekeeper} bietet die Abbildung \ref{abb:crc_cangatekeeper}.
+  			\image{content/image/5_CRC_CANGatekeeper}{scale=0.75}{htbp}[CRC-Karte \texttt{CANGatekeeper}][abb:crc_cangatekeeper]
+  			%
+  			\subsubsection{Design}\label{sss:design_cangatekeeper}
+  				Die Funktion des Gatekeepers baut, wie bereits in Abschnitt \ref{ss:uebersicht} auf Seite \pageref{ss:uebersicht} \textit{Übersicht} erwähnt, auf zwei Tasks und Queues auf:
+  				\begin{description}
+  					\item[vCANTx] Der Transmitter-Task wartet auf anliegende Daten im \texttt{qCANTx}-Queue und sendet diese wenn das \gls{ac:can}-Interface bereit ist. Dies wiederum ist von den drei Mailboxen des \textsf{STM32F407} abhängig, von denen mindestens eine leer sein muss\cite[S.1054 - S.1098]{lit:cortexm4_reference}. Sollte innerhalb von einer voreingestellten Zeit\footnote{Kann mit Hilfe des \textsf{defines} \texttt{CAN\_TX\_MAX\_WAIT\_TIME} in 10 ms Schritten eingestellt werden} keine Mailbox frei werden, so wird der Sendevorgang abgebrochen und die Daten verworfen.
+  					%
+  					\item[qCANTx] Mit Hilfe des \texttt{qCANTx}-Queues können Daten zum \texttt{vCANTx}-Task übergeben werden. Der Queue wird nicht direkt von Transmit-Funktionen angesprochen (siehe dazu den folgenden Absatz), sondern von der Funktion \texttt{createCANMessage}. Diese erweitert die Daten mit den nötigen Informationen für das \gls{ac:can}-Interface\footnote{\gls{ac:can}-Protokoll 2.0A und \textsf{Data Frame}-Bit} und fügt die neue Nachricht am Ende der Queue ein. Dabei wird nicht zwischen den verschieden Identifier-Prioritäten unterschieden.
+  					%
+  					\item[vCANRx] Im Empfangs-Task \texttt{vCANRx} wird auf Daten in der \texttt{qCANRx}-Queue gewartet. Ist eine \gls{ac:can}-Nachricht eingegangen, so wird derer Identifier auf vorhanden sein in der Listener-Liste überprüft (siehe den folgenden Abschnitt \ref{sss:listener} \textit{Nachrichten-Listener}). Falls vorhanden, werden die Daten ins jeweilige Protokoll konvertiert (\gls{ac:goto} oder \gls{ac:elp}) und der/die eingetragenen Listener benachrichtigt. 
+  					%
+  					\item[qCANRx] Die vom \gls{ac:can}-Interface empfangenen Daten werden via der Callback-Funktion \texttt{catchCANRx} in den \texttt{qCANRx}-Queue übertragen. Dabei werden die Prioritäten wiederum aussen vor gelassen.
+  				\end{description}
+  				%
+  				Der Vorgang des Sendens, respektive des Empfangens von \gls{ac:can}-Nachrichten ist in den Abbildungen \ref{abb:gatekeeper_tx} und \ref{abb:gatekeeper_rx} ersichtlich. Bezüglich möglicher Transmit-Funktionen sei auf die Tabelle \ref{tab:can_kommunikation} auf Seite \pageref{tab:can_kommunikation} verwiesen.
+  				\image{content/image/5_cangatekeeper_tx}{scale=.6}{htbp}[Vorgang beim Senden einer \gls{ac:can}-Nachricht via \texttt{CANGatekeeper}][abb:gatekeeper_tx]
+  				\image{content/image/5_cangatekeeper_rx}{scale=.6}{htbp}[Vorgang beim Empfangen einer \gls{ac:can}-Nachricht via \texttt{CANGatekeeper}][abb:gatekeeper_rx]
+  			%
+  			\subsubsection{Nachrichten-Listener}\label{sss:listener}
+  				Alle Module der Applikation (ersichtlich in der Abbildung \ref{abb:structed_design} auf Seite \pageref{abb:structed_design}) die \gls{ac:can}-Nachrichten empfangen wollen, müssen sich im Gatekeeper eintragen. Diese Listener (Zuhörer) werden anschliessend beim Eintreffen einer entsprechenden Nachricht vom Gatekeeper benachrichtigt.\par 
+  				%
+  				Den Module stehen zwei verschieden Arten von Listener zur Verfügung:
+  				\begin{description}
+  					\item[setQueueCANListener] Die erste Möglichkeit besteht darin, auf eine spezifische Nachrichten-ID\footnote{ein Übersicht über die möglichen Nachrichten bietet die Tabelle \ref{tab:can_kommunikation} auf Seite \pageref{tab:can_kommunikation}} eine Queue einzutragen. Die Definition der Queue muss dabei im entsprechenden Modul erfolgen\footnote{die Queue muss den Datentyp \texttt{CAN\_data\_t} aufnehmen können. Für weitere Informationen zum Datentyp sei auf die \textsf{Doxygen}-Dokumentation verwiesen (siehe Anhang \ref{ch:doxygen} \textit{Doxygen} auf Seite \pageref{ch:doxygen})}. Beim Eintreffen einer Nachricht wird die Queue nach dem FIFO-Prinzip mit den Daten befüllt.
+  					%
+  					\item[setFunctionCANListener] Neben der Queue kann als zweite Möglichkeit auch eine Callback-Funktion im Gatekeeper eingetragen werden. Diese Funktion\footnote{Die Funktion muss die Form \texttt{static void foo(uint16\_t id, CAN\_data\_t* data)} aufweisen} wird beim Eintreffen der richtigen Nachricht direkt vom Gatekeeper ohne Verzögerung aufgerufen. Zu Beachten ist, dass sie weder blockierend noch zu lange ausfallen darf.
+  				\end{description}	
+  				%
+  				Die Anzahl der nötigen Listener-Plätze muss mit dem define \texttt{CAN\_LISTENER\_BUFFER\_SIZE} eingestellt werden.\par 
+  				%
+  				Beide Listener-Funktionen sind identisch aufgebaut. Sie unterscheiden sich lediglich beim setzen der Queue-, respektive Callback-Funktions-Adresse. Für das eigentliche einstellen der Indentifier-Filter ist die Funktion \texttt{setCANFilter} des Firmware-Moduls \texttt{can} zuständig (für detailliertere Funktionen sie Abschnitt \ref{ss:Control_area_network} \textit{Control Area Network} ab Seite \pageref{ss:Control_area_network}).
+  			%
+  			\subsubsection{Anwendung}\label{sss:anwendung_cangatekeeper}
+  				Für das erfolgreiche Einsetzten des Moduls nötig sind nur zwei Schritte nötig:
+  				\begin{enumerate}
+	  				\item Bevor das Scheduling des Taskmanagers beginnt, müssen in der Initialisationsphase alle Listener im Gatekeeper eingetragen werden (siehe dazu den vorherigen Abschnitt). Wichtig: Der Gatekeeper selber darf zu dieser Zeit noch \textbf{nicht} initialisiert sein!
+	  				%
+	  				\item Als letztes Modul der Applikation muss der Gatekeeper mit der Funktion \\\texttt{initCANGatekeeper} initialisiert werden.
+  				\end{enumerate}
+  				Die Abbildung \ref{abb:cangatekeeper} zeigt die Anwendung zur Verdeutlichung anhand von zwei Beispielmodulen.
+  				\image{content/image/5_cangatekeeper_init}{scale=0.6}{htbp}[Anwendung des \texttt{CANGatekeepers} Moduls][abb:cangatekeeper]
+  	%
+  	%
+  	% Firmware
+  	\section{Firmware}\label{s:firmware}
+  		Die \textsf{Firmware} Sektion der Software enthält hardwarenahe Bibliotheken, die das Verwenden von Peripherien des \textsf{STM32F407} vereinfachen. Dazu werden Funktionen der \textsf{STM Peripheral Firmware}\footnote{Die Bibliothek kann gratis heruntergeladen werden: \url{http://www.st.com/web/catalog/tools/FM147/CL1794/SC961/SS1743/PF257904}; Sie steht unter dem \textsf{STM SOFTWARE LICENSE AGREEMENT}}(\textsf{BSP}) verwendet. Alle Bestandteile dieser Sektion beinhalten lediglich Abhängigkeiten zum \textsf{BSP}. Damit ist gewährleistet, dass alle Bibliotheken unabhängig vom verwendeten Betriebssystem eingesetzt werden können.
+  		%
+  		% Control Area Network
+  		\subsection{Control Area Network}\label{ss:Control_area_network}
+  			Die Bibliothek \texttt{can} stellt alle Funktionen für den in Abschnitt \ref{ss:cangatekeeper} \textit{CANGatekeeper} ab Seite \pageref{ss:cangatekeeper} beschrieben \texttt{CANGatekeeper} zu Verfügung. Dies Beinhaltet die Initialisierung und das Empfangen von Nachrichten. Die Abhängigkeiten zu anderen Modulen beschränken sich auf Funktionen der \textsf{BSP} Sektion, speziell auf das Modul \texttt{stm32f4xx\_can}. Ein Überblick verschafft die Abbildung \ref{abb:crc_can}.
+  			\image{content/image/5_CRC_CAN}{scale=0.75}{htbp}[CRC-Karte \textsf{can}][abb:crc_can]
+  			%
+  			\subsubsection{Design}\label{sss:design_can}
+  				Der Aufbau des Moduls wurde so ausgelegt, dass alle Bereiche des Systems die gleiche Sourcen verwenden können\footnote{Voraussetzung ist ein ARM Mikrocontroller der Serie M von \textsf{STM}}. Dies betrifft speziell die Knoten Antrieb und Kommunikation\footnote{siehe Abschnitt \ref{s:gliederung} \textit{Gliederung} auf Seite \pageref{s:gliederung}}, die allesamt nicht auf dem \textsf{STM Discovery-Board} basieren.\par 
+  				%
+  				In der Header-Datei des Moduls können hardwarespezifische Einstellungen vorgenommen werden:
+  				\begin{itemize}
+	  				\item Einstellung der Pins, respektive Port
+	  				\item Baudrate (256kBit/s, 500kBit/s oder 1MBit/s)
+	  				\item Anzahl Filterbänke (siehe folgender Abschnitt \ref{sss:identifier_filterung} \textit{Identifier-Filterung})
+  				\end{itemize}
+  				Die nötigen Einstellungen werden anschliessend mit Hilfe von Präprozessoren ermittelt.\par 
+  				%
+  				Das Initialisieren und Empfangen sind die einzigen Aufgaben, die das \texttt{can} Modul erfüllen muss.
+  				\begin{description}
+  					\item[Initialisierung] Die Initialisierung des Moduls beinhaltet das Setzen der Filterbänke für eine effizienten Umgang mit Nachrichten und das Einstellen der Richtigen Register\footnote{Für detaillierte Informationen sei auf die Dokumentation des Quellcodes verwiesen}. Für das Konfigurieren der Filter steht die Funktion \texttt{setCANFilter} bereit. Alle Filter müssen \textbf{vor} dem eigentlichen Initialisierungsprozess gesetzt werden!
+  					\item[Empfangen] Bei der Initialisierung muss dem Modul eine Callback-Funktion übergeben werden. Diese wird beim Empfangen einer Nachricht ausgeführt. Damit ist eine saubere Trennung zwischen den Sektionen \textsf{Applikation} und \textsf{Firmware} gewährleistet.
+  				\end{description}
+  			%
+  			\subsubsection{Identifier-Filterung}\label{sss:identifier_filterung}
+  				Speziell zu Beachten gilt es die Identifier-Filterung. Sie dient dazu nur Nachrichten zu Empfangen, die den betreffenden Knoten im Feldbus auch benötigt. Diese Filterung erfolgt auf Hardwareebene, was die CPU während des Betriebs stark entlasten kann.\par 
+  				%
+  				\newpage
+  				Der eingesetzte Mikrocontroller \textsf{STM32F407} besitzt eine vielfältige Konfigurationsmöglichkeiten betreffend des \gls{ac:can}-Interfaces. Folgenden Features können eingesetzt werden \cite[ab S.1064]{lit:cortexm4_reference}:
+  				\begin{itemize}
+	  				\item 14 Filterbänke à 32Bit oder 28 Bänke à 16Bit
+	  				\item Filterungen mit Hilfe von Masken (\textsf{Mask Mode}) oder Identifier bezogen (\textsf{Identifier List Mode})
+	  				\item Priorisieren von Filter 
+  				\end{itemize}
+  				%
+  				Ein Identifier nach dem Protokoll 2.0A hat die Grösse von 11 Bit, weshalb ein Filter von 16Bit ausreicht. In Anbetracht der 19 definierten Nachrichten (siehe Tabelle \ref{tab:prioritaeten_kommunikation} auf Seite \pageref{tab:prioritaeten_kommunikation}) kann somit eine selektive Filterung auf Basis des \textsf{Identifier List Mode} durchgeführt werden. Somit entfällt eine Softwarefilterung vollkommen und es kann jede empfangene Nachricht direkt als relevant betrachtet werden, was das Softwaredesign stark vereinfacht. Weiter stehen 9 freie Filter für spätere Erweiterungen zur Verfügung. 	
+  		%
+  		% Servo
+  		\subsection{Servo}\label{ss:servo}
+  			Die in \acrfull{ac:pa1} erarbeitete Peripherie zur Spielmanipulation\footnote{siehe Abschnitt \ref{s:ausarbeitungsphase} \textit{Ausarbeitungsphase} ab Seite \pageref{s:ausarbeitungsphase}} benötigt für den Betrieb ausschliesslich Servomotoren. Daher muss eine entsprechende C-Bibliothek bereit gestellt werden.
+  			%
+  			\subsubsection{Ansteuerung}
+  				Servos werden mit Hilfe von \gls{ac:pwm} angesteuert. Dabei ist ein Signal mit einer Frequenz von 50 Hz und einem Tastgrad von 0.05 bis 0.1 von Nöten. Der Tastgrad bestimmt die Position des Servomotors (0.05 entspricht dem linken Anschlag, 0.1 dem rechten). Die Abbildung \ref{abb:servo_pwm} auf Seite \pageref{abb:servo_pwm} verdeutlicht dies.
+  				\image{content/image/5_servo}{scale=0.6}{htbp}[Servo \acrshort{ac:pwm}][abb:servo_pwm]
+  				
+  			%
+  			\subsubsection{Design}
+  				Das Design wurde spezifisch für das \gls{g:roboboard} entworfen und eignet sich nicht für andere Konfiguration, respektive muss dementsprechend angepasst werden.\par
+  				%
+  				Für die Realisierung des \gls{ac:pwm} wird der Timer 1 verwendet und im \gls{ac:pwm}-Output-Compare Modus betrieben. Weiter muss der Prescaler für die gewünschten 50 Hz mit Hilfe der Formel \ref{eq:pwm} berechnet werden. Für eine möglichst genau Ausrichtung des Servos wird zudem die Periodendauer von 20 ms in 20000 Schritte unterteilt. Damit stehen dem Benutzer 2000 Schritte zwischen dem linken und rechten Anschlag zur Verfügung, was bei einem 180°-Servo eine Auflösung von 0.09° ergibt.
+  				%
+  				\formula{
+  					\text{Prescaler}&=\frac{\text{SysClk}/\text{Periode}}{\text{Frequenz}}-1\\[2ex]
+  					&=\frac{168MHz/20000}{50Hz}-1=\underline{167}
+  				}{
+  				}[eq:pwm] 
+  				%
+  				Angewandt kann die Bibliothek auf insgesamt vier unabhängige Servos. Dazu stehen die folgenden Funktionen bereit:
+  				\begin{description}
+  					\item[\textbf{\texttt{initServo\_x}}] Mit dieser Funktion wird ein Servo initialisiert. Sie muss vor der ersten Verwendung, am besten zu beginn der Applikation, aufgerufen werden.
+  					\item[\textbf{\texttt{setServo\_x}}] Für das Ausrichten der Servos dient die Funktion \texttt{setServo\_x}. Sie nimmt als Parameter einen Wert von 0 bis 20000 entgegen. Wird die Limit von 20000 überschritten, so wird das Maximum gesetzt.
+  				\end{description}
+  				%
+  				Für weiterführende Informationen sei auf die Doxygen-Dokumentation verwiesen (Anhang F \textit{Doxygen}).
+  		%
+  		% SWD
+  		\newpage
+  		\subsection{SWD}\label{ss:swd}
+  		Serial Wire Debugging kurz SWD wird verwendet um Daten zu Laufzeiten an den Compiler zu senden. Im Debugger kann anschliessend mit dem Serial Wire Viewer die gesendeten Daten angezeigt werden. Der Code für das SWD wurde nicht selber geschrieben, sondern von der Internetseite \href{http://virtual-shed.blogspot.ch/2012/07/debugging-stm32f4-discovery-part-1.html?m=1}{The Virtual Shed} übernommen und in das Projekt importiert.
+  		%
+%  		\subsubsection{Kurzanleitung}\label{ss:swd_kurzanleitung}
+%  		Um das SWD nutzen zu können müssen nebst dem einbinden des Codes auch noch ein paar Einstellungen in der Entwicklungsumgebung vorgenommen werden, auf welche hier kurz eingegangen wird.
+%  		\todo{Kurz-anleitung schreiben}
+  		%
+  		\subsubsection{Funktionen}\label{ss:swd_funktionen}
+  		Sind die Einstellungen gemacht stehen drei Funktionen zur Verfügung, mit denen auf die Konsole im Debugger geschrieben werden kann:
+  		\begin{description}
+	  		\item [\texttt{SWV\_puts(const char *s )}] Schreibt Text auf die Konsole
+	  		\item [\texttt{SWV\_printnum(long number)}] Gibt eine Zahl aus
+	  		\item [\texttt{SWV\_printfloat(double number, int digits)}] Gibt eine floatingpoint Zahl aus
+  		\end{description}
+    %
+    %
+    % Kommunikation
+    \section{Kommunikation}\label{s:kommunikation}\mpar{Dieser Abschnitt enthällt nicht alle Ergäntzungen der \gls{ac:pa2}. Daher sei auf den Anhang G verwiesen.}
+        Die in Abschnitt \ref{s:module_roboter} \textit{Module Roboter} definierten Knoten müssen in der Lage sein miteinander über einen Feldbus\footnote{Aus vergangen \gls{g:eurobot}-Projekten wurde der \gls{ac:can}-Bus übernommen. Dies auch weil die vorhandene Peripherie schon für diesen Bus ausgelegt wurde.} Informationen auszutauschen. Dazu sind mehrere Protokolle nötig, die in den folgenden Seiten beschreiben werden. Zuvor muss jedoch noch die Art der Verwaltung gemeinsamer Ressourcen geklärt werden, sprich \textsf{Master-Slave-} oder \textsf{Mutli-Master-Aufbau}.
+        %
+        %
+        \subsection{Variantenentscheid Master-Slave, Multi-Master}\label{ss:variantenentscheid_ms_mm}
+            Der Aufbau des Feldbus folgt der Bustopologie. Die Kommunikation kann dabei auf zwei in der Praxis übliche Arten stattfinden\cite[S. 20]{lit:can}.
+            %
+            \begin{description}
+                \item[Master-Slave] Im Bus wird zwischen einem Master-Knoten und mehreren Slave-Knoten unterschieden. Alle Aktionen haben dabei den Ursprung beim Master, der alle Vorgänge auf dem Bus steuert.
+                \item[Multi.Master] Jeder Busteilnehmer ist ein Master-Knoten und kann selbständig und unabhängig mit den anderen Knoten interagieren.
+            \end{description}
+            %
+            Beide Systeme weisen Vorteile sowie auch eklatante Schwächen auf, die in der Tabelle \ref{tab:variantenentscheid_ms_mm} Zusammengefasst sind.
+            %
+            \begin{table}[htbp]
+                \centering
+                \begin{tabularx}{\textwidth}{|l|X|X|} 
+                    \hline
+                    \rowcolor{bfhblue}
+                    \textcolor{white}{Varianten} & \textcolor{white}{Master-Slave} & \textcolor{white}{Multi-Master}\\
+                    \hline
+                    Vorteile 
+                    &
+                    \tableitemize 
+                    \begin{itemize} 
+                        \item Einfaches Software-Design 
+                        \item Keine Zugriffskonflikte
+                    \end{itemize} 
+                    & 
+                    \tableitemize
+                    \begin{itemize} 
+                        \item Jeder Busteilnehmer kann selbständig interagieren
+                        \item Kein Polling nötig 
+                    \end{itemize} \\
+                    \hline
+                    Nachteile
+                    &
+                    \tableitemize 
+                    \begin{itemize} 
+                        \item Slaves können untereinander nicht kommunizieren
+                        \item Polling nötig
+                    \end{itemize} 
+                    & 
+                    \tableitemize
+                    \begin{itemize} 
+                        \item Zugriffskonflikte
+                        \item Schweres Software-Design
+                    \end{itemize} \\
+                    \hline
+                \end{tabularx}
+                \caption{Variantenentscheid Master-Slave, Multi-Master }
+                \label{tab:variantenentscheid_ms_mm}  
+            \end{table}
+            %
+            \subsubsection*{Entscheid}\label{sss:entscheid_ms_mm}
+                Die Vorteile des \textsf{Master-Slave} Prinzips werden höhere gewertet, da eine möglichst sichere Kommunikation angestrebt wird und diese durch ein kompliziertes Software-Design negativ beeinflusst werden könnte.\par 
+                Um jedoch das Polling auf ein Minimum reduzieren zu können, wird der Knoten \textsf{Naherkennung} auch über eine eingeschränkte Masterberechtigung verfügen. Dies auf Grund von möglichen Kollisionen mit anderen Robotern, die vermieden werden müssen. Die Berechtigung wird jedoch auf ein Kommando des \textsf{GoTo-Protokolls}\footnote{siehe Abschnitt \ref{sss:goto_protokoll} \textit{GoTo-Protokoll} auf Seite \pageref{sss:goto_protokoll}} beschränkt.
+        %
+        %        
+        \subsection{Protokolle}\label{ss:protokolle}
+            Für die Kommunikation zwischen den Knoten des Feldbus werden drei Protokolle festgelegt. Zum einen muss innerhalb des Roboters mit den verschiedenen Knoten (siehe Abbildung \ref{abb:gliederung_kleiner_roboter} auf Seite \pageref{abb:gliederung_kleiner_roboter}) kommuniziert und zum anderen sollen Daten zwischen den Robotern ausgetauscht werden (ersichtlich in Abbildung \ref{abb:kommunikation_uebersicht}). Die Art der Kommunikation wird in die Bereiche Steuerung und Information  aufgeteilt.
+            %
+            \begin{description}
+            	\item[Steuerung] Das Protokoll für die Steuerung hört auf den Namen \acrfull{ac:goto} und wird ausschliesslich innerhalb des Roboters zum Einsatz kommen. Es wird im Abschnitt \ref{sss:goto_protokoll} \textit{GoTo-Protokoll} näher beschrieben.
+            	%
+            	\item[Information] Die Informationen sind Positionsangaben der eigenen Roboter (untereinander/innerhalb des Roboters) und diejenige der Gegner. Das \acrfull{ac:elp} genannte Protokoll wird so ausgelegt, dass alle Fälle abgedeckt sind. Im Abschnitt \ref{sss:el_protokoll} \textit{Estimated Location-Protokoll} folgt eine genaue Beschreibung. Weiter befindet sich das Protokoll \acrfull{ac:gip} im Informationsteil. Es beinhaltet Kommandos zur Übertragung genereller Informationen wie Teamfarbe und Strategie. Der \cref{sss:gip} beinhaltet weitere Angaben dazu. 
+            \end{description}\par
+            %
+            \image{content/image/5_kommunikation_uebersicht}{scale=0.6}{htbp}[Mögliche Kommunikationen zwischen den Robotern][abb:kommunikation_uebersicht]
+            %
+            Jedes dieser Protokolle soll möglichst universell einsetzbar und erweiterbar sein.
+            %
+            \subsubsection{GoTo-Protokoll}\label{sss:goto_protokoll}
+                Das \acrfull{ac:goto} dient hauptsächlich der Kommunikation mit dem \textsf{Antriebsknoten}. Die möglichen Befehle des Protokolls, sowie deren Aufbau sind in der Tabelle \ref{tab:goto_befehlssatz} ersichtlich.
+                %
+                \begin{sidewaystable}
+                    \centering
+                    \begin{tabularx}{\textwidth}{|l|l|l|X|l|l|} 
+                    \hline
+                    \rowcolor{bfhblue}
+                    \textcolor{white}{Befehl} & \textcolor{white}{Parameter} & \textcolor{white}{Breite}& \textcolor{white}{Bemerkung} & \textcolor{white}{Sender} & \textcolor{white}{Empfänger}\\
+                    \hline
+                    Goto & X-Position & 12bit & 
+                        \tableitemize 
+                        \begin{itemize}[noitemsep]
+                         \item 1bit $\cong$ 1mm
+                         \item Endposition, Standardabweichung 5mm
+                        \end{itemize} & Kern & Antrieb \\
+                    & Y-Position & 12bit & 
+                        \tableitemize 
+                        \begin{itemize}[noitemsep]
+                         \item 1bit $\cong$ 1mm
+                         \item Endposition, Standardabweichung 5mm
+                        \end{itemize} & &\\
+                    & Winkel & 10bit & 
+                        \tableitemize 
+                        \begin{itemize}[noitemsep]
+                         \item 1bit $\cong$ 1° 
+                         \item Endposition, Standardabweichung 1°
+                        \end{itemize} & &\\
+                    & Soll-Geschwindigkeit & 8bit & 
+                        \tableitemize 
+                        \begin{itemize}[noitemsep]
+                         \item 1bit $\cong$ 1\%
+                         \item Durch Regelung kann die Geschwindigkeit variieren
+                        \end{itemize} & &\\
+                    & Barrieren-Flags & 16bit & 
+                        \tableitemize 
+                        \begin{itemize}[noitemsep]
+                         \item optional
+                         \item 2bit pro Barriere (LSB für Normal, MSB+LSB für forciert)
+                        \end{itemize} & &\\
+                    \hline
+                    Goto ACK & \multicolumn{3}{l|}{Keine Daten} & Antrieb & Kern\\
+                    \hline
+                    Stop & \multicolumn{3}{l|}{Keine Daten} & Kern & Alle\\
+                    \hline
+                    Extended Stop & Hindernis & 1bit & 
+                        \tableitemize 
+                        \begin{itemize}[noitemsep]
+                            \item 0 $\cong$ Gegenstand; 1 $\cong$ Gegner
+                        \end{itemize} & Kern  & Antrieb\\
+                    \hline
+                    State Request & \multicolumn{3}{l|}{Keine Daten} & Kern & Antrieb\\
+                    \hline
+                    State Response & Zeit & 24bit & 
+                    \tableitemize 
+                        \begin{itemize}[noitemsep]
+                         \item 1bit $\cong$ 1ms
+                         \item 0 $\rightarrow$ Ziel erreicht
+                         \item 0xFFFFFF $\rightarrow$ Zeit unbekannt
+                        \end{itemize} & Antrieb & Kern\\
+                    \hline
+                \end{tabularx}
+                \caption{\gls{ac:goto} Befehlssatz }
+                \label{tab:goto_befehlssatz}  
+            \end{sidewaystable}    
+            %
+            \begin{description}
+                \item[GoTo-Befehl] Der \textsf{GoTo-Befehl} dient der Antriebssteuerung, respektive Wegbestimmung\footnote{Die Daten beziehen sich auf das festgelegte Koordinatensystem in Abschnitt \ref{ss:spielfeld} \textit{Spielfeld} auf Seite \pageref{ss:spielfeld}}. Wird vor dem erreichen der Endposition ein neuer \textsf{GoTo-Befehl} an den Antrieb gesendet, so wird dieser übernommen und der vorherige verworfen. Die genaue Wegfindung übernimmt die Antriebseinheit, ebenso die Regelung der Geschwindigkeit. Für das Beeinflussen der Wegfindung können zu den Grunddaten (Endposition, Geschwindigkeit und Endwinkel) noch Barrieren gesetzt werden. Die Barrieren, die mit einer ID identifiziert werden (ersichtlich in \cref{abb:barrier_id}), werden vom Wegfindealgorithmus der Antriebseinheit gemieden.
+                \image{content/image/5_goto_barrier_ids.png}{scale=0.8}{htbp}[ID's der Barrieren][abb:barrier_id]
+                %
+                \item[Goto ACK-Befehl] Mit dem \textsf{Goto ACK-Befehl} wird das Empfangen des zuvor erhalten \textsf{GoTo-Befehls} bestätigt.
+                %
+                \item[Stop-Befehl] Der \textsf{Stop-Befehl} löst ein definiertes Bremsen aus. Der anfällige zuvor erhaltene \textsf{GoTo-Befehl} wird verworfen.
+                %
+                \item[Extended Stop-Befehl] Der \textsf{Extenden stop-Befehl} beinhaltet im Gegensatz zum \textsf{Stop-Befehl} noch Informationen zum Stopp-Grund. Er wird vom Naherkennungsknoten gesendet und veranlasst einen Stopp des Roboters. Die Knoten der Navigation sind von diesem Befehl nicht betroffen. Es ist der einzige Umstand indem das Master-Slave-Prinzip nicht eingehalten wird (Naherkennungsknoten wird temporär zum Master).\mpar{Ergäntzung \gls{ac:pa2}: Durch die Tatsache, dass die Naherkennung im Kern integriert wird, wird das Master-Slave Prinzip nicht mehr verletzt}
+                %
+                \item[State Request-Befehl] Ist ein reiner Polling-Befehl und dient der Kontrolle ob die gewünschte Position bereits erreicht wurde.
+                %
+                \item[State Response-Befehl] Folgt direkt auf den \textsf{State request-Befehl} und teilt dem Kernknoten die geschätzte verbleibende Zeit bis zum erreiche der Endposition mit.
+            \end{description}
+            %
+            %
+            \subsubsection{Estimated Location-Protokoll}\label{sss:el_protokoll}  
+                Um den Transfer von Navigationdaten zu vereinheitlichen, wird ein entsprechendes Protokoll namens \acrfull{ac:elp} definiert. Der Aufbau ist der Tabelle \ref{tab:elp_befehlssatz} zu entnehmen.
+                %
+                \begin{sidewaystable}
+                    \centering
+                    \begin{tabularx}{\textwidth}{|l|l|l|X|p{3cm}|l|} 
+                    \hline
+                    \rowcolor{bfhblue}
+                    \textcolor{white}{Befehl} & \textcolor{white}{Parameter} & \textcolor{white}{Breite}& \textcolor{white}{Bemerkung} & \textcolor{white}{Sender} & \textcolor{white}{Empfänger}\\
+                    \hline
+                    Estimated Location Request & \multicolumn{3}{l|}{Keine Daten} & Kern & Antrieb o. Navigation\\
+                    \hline
+                    Estimated Location Response & X-Position & 12bit & 
+                    \tableitemize 
+                    \begin{itemize}[noitemsep]
+                         \item 1bit $\cong$ 1mm
+                         \item Standardabweichung 5mm
+                         \item -1 wenn Position unbekannt
+                    \end{itemize} & Antrieb, Extern o. Navigation & Kern o. Navigation\\
+                    & Y-Position & 12bit & 
+                    \tableitemize 
+                    \begin{itemize}[noitemsep]
+                         \item 1bit $\cong$ 1mm
+                         \item Standardabweichung 5mm
+                         \item -1 wenn Position unbekannt
+                    \end{itemize} & &\\
+                    & Winkel & 10bit & 
+                    \tableitemize 
+                    \begin{itemize}[noitemsep]
+                         \item 1bit $\cong$ 1°
+                         \item Standardabweichung 1°
+                         \item -1 wenn Position unbekannt
+                    \end{itemize} & &\\
+                    & ID-Quelle & 4bit & 
+                    \tableitemize 
+                    \begin{itemize}[noitemsep]
+                        \item Identifikation der Koordinatenquelle
+                    \end{itemize} &  & \\
+                    \hline
+                \end{tabularx}
+                \caption{\gls{ac:elp} Befehlssatz }
+                \label{tab:elp_befehlssatz}  
+            \end{sidewaystable}
+            %
+            \begin{description}
+                \item[Estimated Location request-Befehl] Dieser Befehl dient lediglich der Anfrage von Positionsdaten und wird pollend eingesetzt. %Er wird verwendet um Daten vom den Navigationsknoten zum Antriebsknoten zu transferieren (Kernknoten macht die Anfrage, wertet die Anfrage aber nicht aus). Weiter kommt er zum Einsatz wenn genaue Positionen vom Antriebsknoten (beinhaltet Kalmann-Filter) benötigt werden (Kommunikation zwischen Kern- und Antriebsknoten). Schlussendlich dient er auch der externen Kommunikation zwischen den einzelnen Robotern.
+                \item[Estimated Location response-Befehl] Folgt direkt auf einen \textsf{Estimated Location request-Befehl} und beinhaltet alle relevanten Positionsdaten\footnote{Bezogen auf das festgelegte Koordinatensystem in Abbildung \ref{abb:spielfeld} auf Seite \pageref{abb:spielfeld}}.
+            \end{description} 
+            %
+            \subsubsection{General Information Protocol}\label{sss:gip}
+            	Zu Beginn einer Spielrunde ist es wichtig das alle Komponenten des Roboters in einem definierten Zustand gebracht werden. Dieser Zustand ist abhängig von der Teamfarbe, wie auch von der Anzahl zu erwartenden Gegner und Verbündeten. Diese Faktoren können sich von Spiel zu Spiel unterscheiden, weshalb zur Austausch dieser Informationen das \acrfull{ac:gip} definiert wird. Die genaue Struktur des Protokolls ist der \cref{tab:gip_befehlssatz} zu entnehmen.
+            	%
+				\begin{sidewaystable}
+					\centering
+					\begin{tabularx}{\textwidth}{|l|l|l|X|p{3cm}|p{3cm}|} 
+					\hline
+					\rowcolor{bfhblue}
+					\textcolor{white}{Befehl} & \textcolor{white}{Parameter} & \textcolor{white}{Breite}& \textcolor{white}{Bemerkung} & \textcolor{white}{Sender} & \textcolor{white}{Empfänger}\\
+					\hline
+					Start Configuration Set & Teamfarbe & 1bit &
+					\tableitemize 
+					\begin{itemize}[noitemsep]
+						\item 0 entspricht gelb
+						\item 1 entspricht rot
+					\end{itemize} & Kern & Antrieb/Navigation\\
+					& Anzahl Gegner & 2bit &
+					\tableitemize 
+					\begin{itemize}[noitemsep]
+						\item 0 entspricht 0 Gegnern
+						\item 1 entspricht 1 Gegner
+						\item 2 entspricht 2 Gegner
+					\end{itemize} &  & \\
+					& Anzahl Verbündete & 1bit &
+					\tableitemize 
+					\begin{itemize}[noitemsep]
+						\item 0 entspricht keinem Verbündeten
+						\item 1 entspricht einem Verbündeten
+					\end{itemize} &  & \\
+					& Durchmesser Gegner 1 & 6bit &
+					\tableitemize 
+					\begin{itemize}[noitemsep]
+						\item 0-50cm in cm-Schritten
+						\item 0 entspricht keinem Gegner 1
+					\end{itemize} &  & \\
+					& Durchmesser Gegner 2 & 6bit &
+					\tableitemize 
+					\begin{itemize}[noitemsep]
+						\item 0-50cm in cm-Schritten
+						\item 0 entspricht keinem Gegner 2
+					\end{itemize} &  & \\
+					\hline
+					Start Configuration Confirm & \multicolumn{3}{l|}{Keine Daten} & Antrieb/Navigation & Kern\\
+					\hline
+					Node Check Request & \multicolumn{3}{l|}{Keine Daten} & Kern & Antrieb/Navigation\\
+					\hline
+					Node Check Response & \multicolumn{3}{l|}{Keine Daten} & Antrieb/Navigation & Kern\\
+					\hline
+					\end{tabularx}
+					\caption{\gls{ac:gip} Befehlssatz }
+					\label{tab:gip_befehlssatz}  
+				\end{sidewaystable}
+				%
+				\begin{description}
+				    \item[Start Configuration Set-Befehl] Mit diesem Kommando werden die 5 Informationen Teamfarbe, Anzahl Gegner, Anzahl Verbündete und Durchmesser der Gegner gesendet.
+				    %
+				    \item[Start Configuration Confirm-Befehl] Dieser Befehl dient lediglich der Bestätigung das alle Daten erfolgreich empfangen wurden.
+				    %
+				    \item[Node Check Request] Mit dem Kommando kann ein spezifischer Busteilnehmer (Knoten) auf seine Verfügbarkeit geprüft werden. Die ID der Nachricht referenziert dabei auf einen bestimmten Knoten und deshalb einmalig sein.
+				    %
+				    \item[Node Check Response] Um die Verfügbarkeit zu bestätigen muss der Knoten eine entsprechende Nachricht quittieren.
+				\end{description}           
+        %
+        %
+        \newpage
+        \subsection{CAN-Protokoll}\label{ss:can_protokoll}
+            Auf Basis der in den Abschnitten \ref{sss:goto_protokoll} \textit{GoTo-Protokoll} und \ref{sss:el_protokoll} \textit{Estimated Location-Protokoll} definierten Protokollen wird ein CAN-Protokoll erstellt. Folgende Dinge gilt es dabei zu beachten:
+            %
+            \begin{itemize}
+                \item Es soll die Version 2.0A (Base Frame Format) verwendet werden um den Protokoll-Overhead möglichst gering halten zu können.
+                \item Es soll eine Datenrate kleiner 500 kBit/s verwendet werden (geringere Störanfälligkeit)
+                \item Wenn möglich die Nachrichtenfilterung mit Hilfe der Indentifier-Maskierung erledigen (spart Softwareaufwand sowie Rechenzeit)
+                \item Die Verwendung von \textsf{Remote Frames} soll vermieden werden\cite{lit:can_remote_frame}
+            \end{itemize}
+            %
+            \subsubsection{Mögliche Kommunikation}\label{sss:moegliche_kommunikationen}
+                Während des Betriebs können die in Tabelle \ref{tab:can_kommunikation} aufgeführten Kommunikationen stattfinden. Für detaillierte Erläuterungen bezüglich Prioritäten sei auf den nächsten Abschnitt \ref{sss:prioritaeten} \textit{Prioritäten} verwiesen.
+                %                
+                \begin{sidewaystable}
+                    \centering
+                    \begin{tabular}{|l|l|l|l|l|} 
+                    \hline
+                    \rowcolor{bfhblue}
+                    \textcolor{white}{Bezeichnung} & \textcolor{white}{Protokoll} & \textcolor{white}{Befehl} & \textcolor{white}{Sender} & \textcolor{white}{Empfänger}\\
+                    \hline
+                    Emergency Shutdown & \gls{ac:goto} & Stop & Kern & Antrieb \& Navigation\\
+                    \hline
+                    Emergency Stop & \gls{ac:goto} & Extended Stop & Kern & Antrieb \\
+                    \hline
+                    Stop Drive & \gls{ac:goto} & Stop & Kern & Antrieb \\
+                    \hline
+                    Goto XY & \gls{ac:goto} & Goto & Kern & Antrieb \\
+                    \hline
+                    Goto Confirm & \gls{ac:goto} & Goto ACK & Antrieb & Kern \\
+                    \hline
+                    Goto State Request & \gls{ac:goto} & State Request & Kern & Antrieb \\
+                    \hline
+                    Goto State Response & \gls{ac:goto} & State Response & Antrieb & Kern \\
+                    \hline 
+                    Navi Position Request & \gls{ac:elp} & Estimated Location Request & Kern & Navigation \\ 
+                    \hline
+                    Navi Position Response & \gls{ac:elp} & Estimated Location Response & Navigation & Antrieb \\
+                    \hline
+                    Kalmann Position Request & \gls{ac:elp} & Estimated Location Request & Kern & Antrieb \\
+                    \hline
+                    Kalmann Position Response & \gls{ac:elp} & Estimated Location Response & Antrieb & Kern \\
+                    \hline
+                    Enemy 1 Position Request & \gls{ac:elp} & Estimated Location Request & Kern & Navigation \\  
+                    \hline
+                    Enemy 1 Position Response & \gls{ac:elp} & Estimated Location Response & Navigation & Kern \\
+                    \hline
+                    Enemy 2 Position Request & \gls{ac:elp} & Estimated Location Request & Kern & Navigation \\  
+                    \hline
+                    Enemy 2 Position Response & \gls{ac:elp} & Estimated Location Response & Navigation & Kern \\      
+                    \hline
+                    Confederate Position Request & \gls{ac:elp} & Estimated Location Request & Kern & Navigation \\
+                    \hline
+                    Confederate Position Response & \gls{ac:elp} & Estimated Location Response & Navigation & Kern \\            
+                    \hline     
+                    Start Configuration Set & \gls{ac:gip} & Start Configuration Set & Kern & Antrieb \& Navigation \\
+                    \hline
+                    Start Configuration Confirm & \gls{ac:gip} & Start Configuration Confirm & Antrieb \& Navigation & Kern \\
+                    \hline
+                    Check Navi Request & \gls{ac:gip} & Check Node Request & Kern & Navigation \\
+                	\hline
+                	Check Navi Response & \gls{ac:gip} & Check Node Response & Navigation & Kern \\
+                	\hline
+                	Check Drive Request & \gls{ac:gip} & Check Node Request & Kern & Antrieb \\
+                	\hline
+                	Check Drive Response & \gls{ac:gip} & Check Node Response & Antrieb & Kern \\
+                	\hline
+                \end{tabular}
+                \caption{CAN-Kommunikation }
+                \label{tab:can_kommunikation}  
+            \end{sidewaystable}   
+            %
+            \subsubsection{Prioritäten}\label{sss:prioritaeten}
+                Es wird zwischen drei Nachrichten-Prioritäten unterschieden:
+                %
+                \begin{enumerate}
+                    \item \textbf{Notfall} $\rightarrow$ Nachricht muss schnellst möglich gesendet werden.
+                    \item \textbf{Normalbetrieb} $\rightarrow$ Nachricht wird benötigt. Kommt bei der Antriebssteuerung zum Einsatz.
+                    \item \textbf{Information} $\rightarrow$ Zusätzliche Informationen. Wird bei der Navigation verwendet.       
+                \end{enumerate}
+                %
+                Dazu wird der 11bit lange \textsf{Identifier} des \textsf{CAN-Protokolls} in drei Bereiche unterteilt (siehe Abbildung \ref{abb:can_identifier}).\par
+                \image{content/image/5_can_prioritaet}{scale=0.3}{htbp}[Identifier-Aufteilung][abb:can_identifier]
+                % 
+                Jede definierte Kommunikation\footnote{siehe Abschnitt \ref{sss:moegliche_kommunikationen} \textit{Mögliche Kommunikationen} auf Seite \pageref{sss:moegliche_kommunikationen}} bekommt innerhalb der Priorität-Klasse eine Unterpriorität zugewiesen (siehe Tabelle \ref{tab:prioritaeten_kommunikation}).\par
+                %
+                %                
+                \begin{table}[htbp]
+                    \centering
+                    \begin{tabular}{|l|l|l|l|} 
+                    \hline
+                    \rowcolor{bfhblue}
+                    \textcolor{white}{Bezeichnung} & \textcolor{white}{Priorität} & \textcolor{white}{Identifier Binär} & \textcolor{white}{Identifier Hex} \\
+                    \hline
+                    Emergency Shutdown & Notfall & \texttt{000 0000 0001} & \texttt{0x001} \\
+                    \hline
+                    Emergency Stop & Notfall & \texttt{000 0000 0010} & \texttt{0x002}\\
+                    \hline
+                    \hline
+                    Stop Drive & Normalbetrieb & \texttt{000 0000 0100} & \texttt{0x004}\\
+                    \hline
+                    Goto XY & Normalbetrieb & \texttt{000 0000 1000} & \texttt{0x008}\\
+                    \hline
+                    Goto Confirm & Normalbetrieb & \texttt{000 0000 1100} & \texttt{0x00C}\\
+                    \hline
+                    Goto State Request & Normalbetrieb & \texttt{000 0001 0000} & \texttt{0x010}\\
+                    \hline
+                    Goto State Response & Normalbetrieb & \texttt{000 0001 0100} & \texttt{0x014} \\
+                    \hline
+                    \hline 
+                    Navi Position Request & Information & \texttt{000 0100 0000} & \texttt{0x040}\\ 
+                    \hline
+                    Navi Position Response & Information & \texttt{000 1000 0000} & \texttt{0x080}\\
+                    \hline
+                    Kalmann Position Request & Information & \texttt{000 1100 0000} & \texttt{0x0C0}\\
+                    \hline
+                    Kalmann Position Response & Information & \texttt{001 0000 0000} & \texttt{0x100}\\
+                    \hline
+                    Enemy 1 Position Request & Information & \texttt{001 0100 0000} & \texttt{0x140}\\  
+                    \hline
+                    Enemy 1 Position Response & Information & \texttt{001 1000 0000} & \texttt{0x180}\\
+                    \hline
+                    Enemy 2 Position Request & Information & \texttt{001 1100 0000} & \texttt{0x1C0}\\
+                    \hline
+                    Enemy 2 Position Response & Information & \texttt{010 0000 0000} & \texttt{0x200}\\
+                    \hline
+                    Confederate Position Request & Information & \texttt{010 0100 0000} & \texttt{0x240}\\
+                    \hline
+                    Confederate Position Response & Information & \texttt{010 1000 0000} & \texttt{0x280}\\
+                    \hline     
+                    Start Configuration Set & Information & \texttt{010 1100 0000} & \texttt{0x2C0} \\
+                    \hline
+                    Start Configuration Confirm & Information & \texttt{011 0000 0000} & \texttt{0x300} \\
+                    \hline
+                    Check Navi Request & Information & \texttt{011 0100 0000} & \texttt{0x340} \\
+                    \hline
+                    Check Navi Response & Information & \texttt{011 1000 0000} & \texttt{0x380} \\
+                    \hline
+                    Check Drive Request & Information & \texttt{011 1100 0000} & \texttt{0x3C0} \\
+                    \hline
+                    Check Drive Response & Information & \texttt{100 0000 0000} & \texttt{0x400} \\
+                    \hline    
+                \end{tabular}
+                \caption{Kommunikation Prioritäten}
+                \label{tab:prioritaeten_kommunikation}  
+            \end{table}   
+                %                   
+                Um die CPU-Ressourcen einzusparen wird eine umfangreiche \textsf{Identifier-Filterung} eingesetzt. Dazu werden die im \textsf{CortexM4} vorhandenen Filtern-Banken im Modus \textsf{Identifier List} verwendet\footnote{Für ausführliche Information \cite[ab S. 1064]{lit:cortexm4_reference}}. Die genau Implementierung der Filterung ist im Abschnitt \ref{sss:identifier_filterung} \textit{Identifier-Filterung} beschrieben.
+            %
+            \newpage
+            \subsubsection{Kommunikationsablauf}\label{sss:kommunikationsablauf}
+                Es kann zwischen fünf verschieden Kommunikationsabläufe auf dem CAN-Bus unterschieden werden.
+                \begin{description}
+                    \item[Position anfahren] Mit Hilfe des \gls{ac:goto} kann der Roboter von A nach B navigiert werden. Dabei stehen dem Kernknoten zum einen der \textsf{Goto XY-Befehl} zur Steuerung um zum anderen der \textsf{State Request-Befehl} zur Verfügung\footnote{siehe Abschnitt \ref{sss:goto_protokoll} \textit{GoTo-Protokoll} auf Seite \pageref{sss:goto_protokoll}}. Der Ablauf der Kommunikation ist der Abbildung \ref{abb:kommunikationsablauf_position_fahren} zu entnehmen.
+                    \image{content/image/5_goto}{scale=0.3}{htbp}[Kommunikationsablauf Position anfahren][abb:kommunikationsablauf_position_fahren]
+                    \item[Notaus-Pilz] Wird der Notaus-Pilz betätigt, so nimmt das System einen zuvor definierten Zustand an. Dazu wird das \textsf{Emergency Shutdown-Kommando} broadcast an alle Knoten des Bus versendet. Der Vorgang ist in der Abbildung \ref{abb:kommunikationsablauf_notaus} ersichtlich
+                    \image{content/image/5_goto_emergency_shutdown}{scale=0.5}{htbp}[Kommunikationsablauf Notaus-Pilz][abb:kommunikationsablauf_notaus]
+                    \newpage
+                    \item[Hindernis] Ein Hindernis kann entweder ein gegnerischer Roboter oder ein Element des Spielfelds sein. Wird ein solches detektiert, so hat dies einen sofortigen Stopp zu Folge. Der dazu nötige Befehl \textsf{Emergency Stop} wird vom Naherkennungsknoten broadcast an die Kern- und Antriebseinheit gesendet. Siehe dazu die Abbildung \ref{abb:kommunikationsablauf_hindernis}.
+                    \image{content/image/5_goto_emergency_stop}{scale=0.45}{htbp}[Kommunikationsablauf Hindernis][abb:kommunikationsablauf_hindernis]
+                    \item[Navigation] Für die Kalman-Filterung der Koordinationsdaten der beiden Navigationseinheiten Laser und Ultraschall müssen die Rohdaten zum Antriebskonten\footnote{Für Erläuterung warum der Kalman-Filter im Antriebskonten implementiert ist, sie Abschnitt \ref{s:module_roboter} \textit{Module Roboter} auf Seite \pageref{s:module_roboter}} transferiert werden. Dafür sendet der Kernknoten ein entsprechendes \textsf{Request}, das von der Navigation entgegen genommen und beantwortet wird. Der Antriebskonten empfängt den \textsf{Response} und erhält auf diesen Weg die benötigten Daten. Der Ablauf ist in der Abbildung \ref{abb:kommunikationsablauf_navigation} aufgezeigt.
+                    \image{content/image/5_elp_navigation_kalman}{scale=0.5}{htbp}[Kommunikationsablauf Navigation][abb:kommunikationsablauf_navigation]
+                    \newpage
+                    \item[Position] Die genaue Position des Roboters wird vom Kalman-Filter errechnet. Die Daten müssen anschliessend zum Kernknoten transferiert werden. Der Kommunikationsablauf wird in der Abbildung \ref{abb:kommunikationsablauf_position} grafisch dargestellt.
+                    \image{content/image/5_elp_kalman_kern}{scale=0.35}{htbp}[Kommunikationsablauf Position][abb:kommunikationsablauf_position]
+                \end{description}         
+            %
+            \subsubsection{Fehlerfall}\label{sss:fehlerfall}
+            	Grundsätzlich kann davon ausgegangen werden, dass die Kommunikation auf Hardwareebene fehlerfrei funktionieren wird. Trotzdem könnten folgende Fehlerfälle auftreten:
+            	%
+            	\begin{enumerate}
+	            	\item Durch eine Kollision könnte die Kommunikation zwischen den Knoten unterbrochen werden
+	            	\item Externe Störungen könnten zu fehlerhaften Übertragungen führen
+            	\end{enumerate} 
+            	%
+            	Der erste Fall wird nicht weiter berücksichtigt, da angenommen wird, dass bei einem derart schweren Systemausfall der Roboter an sich funktionsunfähig wäre.\par 
+            	%
+            	Im Falle von Punkt zwei wird das Prüfen der Prüfsumme des \gls{ac:can}-Protokoll\footnote{\gls{ac:crc} weitere Erläuterungen zum Protokoll siehe \cite[S.96]{lit:es}} einen Fehler ergeben. Daraufhin wird der zuvor gesendete Datensatz wiederholt gesendet. Weitere Fehlerbehandlungen werden nicht umgesetzt.
+            %
+            \subsubsection{Datenrate}\label{sss:datenrate}
+            	Um eine möglichst sichere Verbindung sicherstellen zu können muss die Datenrate pro Sekunde möglichst tief gehalten werden. Die in Abschnitt \ref{ss:can_protokoll} \textit{CAN-Protokoll} gestellte Limit von 500 kBit/s gilt es nicht zu überschreiten.\par
+            	%
+            	Für eine ungefähre Schätzung der maximal vorkommenden Datenrate werden in der Tabelle \ref{tab:datenrate} alle  Kommunikationen auf ihr Häufigkeit innerhalb einer Sekunde angegeben. Bei den  Werten handelt es sich um vorläufig festgesetzte Grössen, die zu einem späteren Zeitpunkt evtl. noch angepasst werden. Zu beachten ist der \gls{ac:can}-Protokoll bedingte Overhead von 44 Bit pro Kommunikation.\par
+            	%
+            	\begin{table}[t]
+					\centering
+					\begin{tabularx}{\textwidth}{|X|l|r|} 
+						\hline
+						\rowcolor{bfhblue}
+						\textcolor{white}{Bezeichnung} & \textcolor{white}{Aufruf pro Sekunde} & \textcolor{white}{Bit insgesamt}\\
+						\hline
+						Emergency Shutdown & 0.1 & $0.1\cdot(44+0)=5 \text{ Bit/s}$\\
+						\hline
+						Emergency Stop & 1 & $1\cdot(44+8)=52 \text{ Bit/s}$\\
+						\hline
+						Stop Drive & 1 & $1\cdot(44+0)=44 \text{ Bit/s}$\\
+						\hline
+						Goto XY & 3 & $3\cdot(44+64)=324 \text{ Bit/s}$\\
+						\hline
+						Goto Confirm & 3 & $3\cdot(44+0)=132 \text{ Bit/s}$\\
+						\hline
+						Goto State Request & 5 & $5\cdot(44+0)=220 \text{ Bit/s}$\\
+						\hline
+						Goto State Response & 5 & $5\cdot(44+24)=340 \text{ Bit/s}$\\
+						\hline
+						Laser Position Request & 1 & $1\cdot(44+0)=44 \text{ Bit/s}$\\
+						\hline
+						Laser Position Response & 1 & $1\cdot(44+40)=84\text{ Bit/s}$\\
+						\hline 
+						Ultrasonic Position Request & 3.3 & $3.3\cdot(44+0)=146 \text{ Bit/s}$\\ 
+						\hline
+						Ultrasonic Position Response & 3.3 & $3.3\cdot(44+40)=278 \text{ Bit/s}$\\
+						\hline
+						Kalmann Position Request & 5 & $5\cdot(44+0)=220 \text{ Bit/s}$\\
+						\hline
+						Kalmann Position Response & 5 & $5\cdot(44+40)=420 \text{ Bit/s}$\\
+						\hline
+						Enemey 1 Position Request & 1.25 & $1.25\cdot(44+0)=55 \text{ Bit/s}$\\  
+						\hline
+						Enemey 1 Position Response & 1.25 & $1.25\cdot(44+40)=105 \text{ Bit/s}$\\
+						\hline
+						Enemey 2 Position Request & 1.25 & $1.25\cdot(44+0)=55 \text{ Bit/s}$\\
+						\hline
+						Enemey 2 Position Response & 1.25 & $1.25\cdot(44+40)=105 \text{ Bit/s}$\\
+						\hline
+						Confederate Position Request & 2 & $2\cdot(44+0)=88 \text{ Bit/s}$\\
+						\hline
+						Confederate Position Response & 2 & $2\cdot(44+40)=168 \text{ Bit/s}$\\
+						\hline    
+						\hline
+						\multicolumn{3}{r}{Total: $2885\text{ Bit/s}$}\\
+						\cline{3-3}    
+					\end{tabularx}
+					\caption{Maximale Datenrate pro Sekunde}
+					\label{tab:datenrate}  
+				\end{table} 
+				%
+				Die maximal zu erwartende Datenrate beläuft sich auf 2885 Bit/s, was weit unter dem Maximum von 500 kBit/s liegt. Es wird deshalb voraussichtlich eine Busgeschwindigkeit von 256 kBit/s angestrebt.
+            %

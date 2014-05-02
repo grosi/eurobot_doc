@@ -1,0 +1,408 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Projektmanagement
+% Autor:   meert1
+% Datum:   05.01.2014
+% Version: 0.2.0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+%
+% 0.2.0       Erstellung der Kapitel und Unterkapitel
+% 0.0.1       Erstellung der Datei
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+\chapter{Projektmanagement}\label{ch:projektmanagement}
+	\section{Ressourcen}\label{s:ressourcen}
+	   Das Projekt wird in mehrere Teilgruppen aufgeteilt\footnote{Für detaillierte Informationen siehe Abschnitt \ref{ss:team}}. Jeder dieser Teilgruppen bekommt eine spezifische Aufgabe zugewiesen, womit ein effizientes Arbeiten sichergestellt werden kann. Dem Gesamtteam übergeordnet ist die administrative Projektleitung, die zum einen eine beratende und zum anderen eine kommunikative\footnote{Abteilungsübergreifend zwischen den beteiligten Dozenten} Funktion einnimmt. Fachlich unterstützt wird das Team von einem Fachausschuss, bestehend aus den betreuenden Dozenten.\par 
+		%
+		\subsection{Team}\label{ss:team}
+		    Das Gesamtteam besteht aus 12 Personen (8 Elektroabteilung, 4 Mechanikabteilung), die in insgesamt fünf Teilteams aufgeteilt sind. Die genau Aufteilung sind in der Tabelle \ref{tab:gesamtteam} zu finden.\par
+		    %
+		    \begin{table}[htbp]
+		        \centering
+		        \begin{tabular}{|l|l|l|l|l|l|} 
+		            \hline
+		            \rowcolor{bfhblue}
+		            \textcolor{white}{Name} & \textcolor{white}{Vorname} & \textcolor{white}{Kürzel} & \textcolor{white}{E-Mail} & \textcolor{white}{Klasse} & \textcolor{white}{Team}\\
+		            \hline
+		            Grossenbacher & Simon & gross10 & \href{mailto: gross10@bfh.ch}{gross10@bfh.ch} & E3b & Kernteam\\
+		            \hline
+		            Meerstetter & Tobias & meert1 & \href{mailto: meert1@bfh.ch}{meert1@bfh.ch} & E3b & Kernteam\\
+		            \hline
+		            Rohrbach & Patrick & rohrp1 & \href{mailto: rohrp1@bfh.ch}{rohrp1@bfh.ch} & M3a & Kernteam\\
+		            \hline
+		            Roth & Hannes & rothh3 & \href{mailto: rothh3@bfh.ch}{rothh3@bfh.ch} & M3a & Kernteam\\
+		            \hline
+		            Balz & Kilian & balzk1 & \href{mailto: balzk1@bfh.ch}{balzk1@bfh.ch} & M3a & Antrieb\\
+		            \hline
+		            Haldemann & Jascha & haldj3 & \href{mailto: haldj3@bfh.ch}{haldj3@bfh.ch} & E3a & Antrieb\\
+		            \hline
+		            Heimsch & Gunnar & heimg1 & \href{mailto: heimg1@bfh.ch}{heimg1@bfh.ch} & E3b & Navigation\\
+		            \hline
+		            Plattner & Simon & plats1 & \href{mailto: plats1@bfh.ch}{plats1@bfh.ch} & E3a & Navigation\\
+		            \hline
+		            Zurschmiede & Reto & zursr1 & \href{mailto: zursr1@bfh.ch}{zursr1@bfh.ch} & E3a & Navigation\\
+		            \hline
+		            Käser & Nicola & kasen1 & \href{mailto: kasen1@bfh.ch}{kasen1@bfh.ch} & E3a & Naherkennung\\
+		            \hline
+		            Greiler & Roland & greir1 & \href{mailto: greir1@bfh.ch}{greir1@bfh.ch} & M3a & Verdrahtung-/Volumen\\
+		            \hline
+		            Reust & Ralph & reusr6 & \href{mailto: reusr6@bfh.ch}{reusr6@bfh.ch} & M3a & Verdrahtung-/Volumen\\
+		            \hline
+		        \end{tabular}
+		        \caption{Übersicht Eurobotteam}
+		        \label{tab:gesamtteam}  
+		    \end{table}
+		    %
+		    Die einzelnen Aufgaben der Teilteams setzen sich wie folgt zusammen:
+		    %
+			\begin{description}
+			    \item[\acrfull{ac:kernteam}] Das \gls{ac:kernteam} übernimmt das Projektmanagement und die Koordination des Projekts. Weiter ist es zuständig für die Fertigstellung eines lauffähigen Roboters am Ende der \gls{ac:pa1}. Dies beinhaltet ebenfalls die Werkzeuge zur Spielmanipulation.
+			    \item[\gls{ac:navigationsteam}] Das \gls{ac:navigationsteam} teilt sich in drei Bereiche: Ultraschall- und Lasernavigation, sowie Kalmannfilter. Ziel ist die Realisierung einer zuverlässigen und genauen Navigationseinheit.
+			    \item[\gls{ac:antriebsteam}] Der Antrieb wird vom Vorjahresteam übernommen, wird durch das \gls{ac:antriebsteam} aber noch verfeinert. Zusätzlich werden erweiterte Regelmöglichkeiten implementiert.
+			    \item[\gls{ac:volumenteam}] Das \gls{ac:volumenteam} erarbeitet ein entsprechendes Konzept und setzt dieses anschliessend um.
+			    \item[\gls{ac:naherkennungsteam}] Die Naherkennung muss Objekte in unmittelbarer Umgebung des Roboters zuverlässig erkennen. Ziel dieses Team ist es, eine Kollision mit dem Gegner verhindern zu können.
+			\end{description}
+			%
+			Jedes dieser Teilteams organisiert sich weitestgehend selber, ist aber über die gesamte Projektdauer in enger Verbindung zu den übrigen Arbeitsgruppen.
+		%
+		\subsection{Projektleitung}\label{ss:projektleitung}
+		Die Projektleitung besteht aus einer Person (nähere Information dazu in Tabelle \ref{tab:projektleitung}). Sie übernimmt administrative Aufgaben wie das Verwalten von externen Bestellungen und Austausch von wichtigen Informationen zwischen der Elektro- und Maschinentechnikabteilung. Weiter berät sie das Gesamtteam bei anstehenden Problemen und hilft bei der Lösungsfindung.
+		    %    
+		\begin{table}[htbp]
+		\centering
+		\begin{tabular}{|l|l|l|l|l|l|} 
+		    \hline
+		    \rowcolor{bfhblue}
+		    \textcolor{white}{Name} & \textcolor{white}{Vorname} & \textcolor{white}{Kürzel} & \textcolor{white}{E-Mail}\\
+		    \hline
+		    Schmutz & Reto & sur7 & \href{mailto: sur7@bfh.ch}{sur7@bfh.ch}\\
+		    \hline
+		\end{tabular}
+		\caption{Zusammenstellung Projektleitung}
+		\label{tab:projektleitung}  
+		\end{table}
+		%
+		\newpage
+		\subsection{Fachausschuss}\label{ss:fachausschuss}
+		Der Fachausschuss setzt sich aus den betreuenden Dozenten zusammen. Jedes Teilteam bekommt einen oder mehrere Dozenten zugeteilt, die in beratender Funktion zur Seite stehen. Die Zuteilung richtet sich nach den jeweiligen Aufgaben und den Fachgebieten der Dozenten. Durch die enge Betreuung sollen Fehler und Probleme schneller erkannt und behoben werden. Angaben zu den Dozenten sind in der Tabelle \ref{tab:fachausschuss} zu finden.
+		    %
+		\begin{table}[H]
+		  \centering
+		  \begin{tabular}{|l|l|l|l|l|l|} 
+		      \hline
+		      \rowcolor{bfhblue}
+		      \textcolor{white}{Name} & \textcolor{white}{Vorname} & \textcolor{white}{Kürzel} & \textcolor{white}{E-Mail} & \textcolor{white}{Team}\\
+		      \hline
+		      Brun & Roland & brr1 & \href{mailto: roland.brun@bfh.ch}{roland.brun@bfh.ch} & \gls{ac:volumenteam} \\
+		      \hline
+		      Güller & Walter & glw1 & \href{mailto: walter.gueller@bfh.ch}{walter.gueller@bfh.ch} & \gls{ac:kernteam}, \gls{ac:volumenteam}\\
+		      \hline
+		      Hungerbühler & Roland & hlr2 & \href{mailto: roland.hungerbuehler@bfh.ch}{roland.hungerbuehler@bfh.ch} & \gls{ac:antriebsteam}\\
+		      \hline
+		      Kucera & Martin & kem4 & \href{mailto: martin.kucera@bfh.ch}{martin.kucera@bfh.ch} & \gls{ac:naherkennungsteam}\\
+		      \hline
+		      Lanz & Daniel & lad1 & \href{mailto: daniel.lanz@bfh.ch}{daniel.lanz@bfh.ch} & \gls{ac:kernteam}\\
+		      \hline
+		      Oesch & Ivo & osi1 & \href{mailto: ivo.oesch@bfh.ch}{ivo.oesch@bfh.ch} & \gls{ac:kernteam}, \gls{ac:antriebsteam}, \gls{ac:navigationsteam}\\
+		      \hline
+		      Vetter & Rolf & vtr1 & \href{mailto: rolf.vetter@bfh.ch}{rolf.vetter@bfh.ch} & \gls{ac:navigationsteam}\\
+		      \hline
+		      Wandel & Jasmin & wdj1 & \href{mailto: jasmin.wandel@bfh.ch}{jasmin.wandel@bfh.ch} & \gls{ac:navigationsteam}\\
+		      \hline
+		      Weber & Roger & wbr1 & \href{mailto: roger.weber@bfh.ch}{roger.weber@bfh.ch} & Software alg.\\
+		      \hline
+		  \end{tabular}
+		  \caption{Zusammenstellung Projektleitung}
+		  \label{tab:fachausschuss}  
+		\end{table}
+	%
+	\section{Projektplanung}\label{s:projektplanung}
+	Zu Beginn der Projektarbeit musste vor allem viel für die \gls{ac:pa1} geplant werden. Da nicht von Anfang an bekannt war, welches die genauen Aufgaben für den Wettbewerb sind, wurde zuerst ein grober Ablauf des Projektes Erarbeitet.\par
+	%
+	Nach der Bekanntgabe der Regeln wurde schliesslich ein Zeitplan über die ganze \gls{ac:pa1} gemacht, um auch die erwarteten Ergebnisse überprüfen zu können. Dazu jedoch mehr im Kapitel \ref{s:controlling} \textit{Controlling} auf Seite \pageref{s:controlling}.
+		%
+		\subsection{Projektablauf}\label{ss:projektablauf}
+		Der Projektablaufplan in Abbildung \ref{abb:ablaufdiagramm} auf Seite \pageref{abb:ablaufdiagramm} zeigt systematisch den groben Ablauf des Projektes. Grundsätzlich wurde der Ablauf in fünf Phasen unterteilt, welche jeweils die entsprechenden Tätigkeiten der Phase enthalten. 
+		\image{content/image/2_ablaufdiagramm}{scale=1}{htbp}[Ablaufdiagramm][abb:ablaufdiagramm]
+		%
+		\subsection{Zeitplanung}\label{ss:Zeitplanung}
+		Der Zeitplan in Abbildung \ref{abb:zeitplan} auf Seite \pageref{abb:zeitplan} wurde in drei Teile unterteilt:
+		%
+		\begin{description}
+			\item[Meilensteine Eurobot] Die Meilensteine für das gesamte Eurobot Team wurden in dieser Kategorie angelegt, da diese auch für die anderen Teams wichtige Meilensteine sind.
+			%
+			\item[Allgemein] In diesem Abschnitt werden allgemeine Tätigkeiten für das Eurobot Team definiert. In diese Kategorie fallen z.B. das Tisch- und Spielelementbebauen hinein.
+			%
+			\item[Kernteam] Im Abschnitt Kernteam werden die Meilensteine, so wie die Tätigkeiten des Kernteams selbst fest gehalten. 
+		\end{description}
+		%
+		Die Eurobot Meilensteine, die allgemeinen Tätigkeiten und die Meilensteine des Kernteams wurden bereits früh kommuniziert. Die anderen Teams konnten mit Hilfe dieser Zeiten ihre Zeitplanung erstellen oder gegebenen falls anpassen, da manche Termine des Kernteams auch wesentliche Einflüsse oder Forderungen an die anderen Teams mit sich führen. 
+		%
+		\image{content/image/2_Zeitplanung}{scale=1, angle=90}{htbp}[Zeitplanung Kernteam][abb:zeitplan]
+		%
+		\subsubsection{Ist-Aufnahme}\label{sss:istaufnahme}
+		Grundsätzlich wurden die meisten Arbeiten pünktlich fertig gestellt. Gegen Ende der \gls{ac:pa1} ergaben sich gewisse Verzögerungen, da die mechanischen Teilsysteme nicht termingerecht fertig gestellt werden konnten. Dies hatte auch Auswirkungen auf die Implementierung der Aufgabenlösung in der Software. Im Kapitel \ref{s:weiteres_vorgehen} \textit{Weiteres Vorgehen} auf Seite \pageref{s:weiteres_vorgehen} sind die ausstehenden Arbeiten aufgelistet. 
+	%
+	\section{Koordination}\label{s:koordination}
+	Für die Koordination eines Teilprojektes sind die in Tabelle \ref{tab:gesamtteam} auf Seite \pageref{tab:gesamtteam} auflisteten Personen jeweils zuständig. Innerhalb des Kernteams wurde hauptsächlich zwischen Mechanik und Elektronik unterschieden, damit klarer ist, wer für welche Arbeiten verantwortlich ist. Zusätzlich hat eine Person aus dem Kernteam die Aufgabe des Controlling des gesamten Eurobotteams übernommen. Dazu jedoch mehr im folgenden Kapitel auf Seite \pageref{s:controlling}.\par
+	%
+	Als Unterstützung für die Koordination der Teams Stehen die Projektleitung\footnote{Namentlich Reto Schmutz - Mehr da zu auf Seite \pageref{ss:projektleitung} Projektleitung} und der Fachausschuss\footnote{Weitere Informationen im Kapitel \ref{ss:fachausschuss} \textit{Fachausschuss} auf Seite \pageref{ss:fachausschuss}  } jeder zeit mit Rat und Tat zur Verfügung.
+	%
+	\section{Controlling}\label{s:controlling}
+	Zur Überwachung des Projektablaufs wurden nebst den Rückmeldungen der anderen Teams auch noch drei Kontrollmittel definiert, mit denen ein möglichst reibungsloser Ablauf der \gls{ac:pa1} gewährleistet werden soll. Da die Aufgabe des Projektcontrolling vom Kernteam übernommen werden muss, kann dieser Task lediglich teil zeitlich erledigt werden. \par
+	%
+	Es wurden folgende drei Kontrollmittel eingeführt:
+	\begin{description}
+		\item[Meilensteine] Jedes Team hatte zu Beginn des Projektes einen Zeitplan mit Meilensteine zu erstellen, die dem Kernteam abzugeben waren.
+		%
+		\item[Zwischenpräsentation] In der Mitte der \gls{ac:pa1} hat jedes Team eine kleine Präsentation gehalten, in welcher die bereits erreichten und die noch zu erledigenden Arbeiten aufgezeigt wurden. Diese Präsentation diente so gleich als Wissensaustausch zwischen den einzelnen Teams. 
+		%
+		\item[Stand der Dinge] Gegen Ende der \gls{ac:pa1} hat jedes Team dem Kernteam ein Beschrieb des aktuellen Projektstandes eingereicht. Darin enthalten waren die erreichten Ziele und Meilensteine, so wie die noch ausstehenden Arbeiten, welche in der \gls{ac:pa2} fertig gemacht werden müssen.
+	\end{description}
+		%
+		\subsection{Meilensteine}\label{ss:meilensteine}
+		Die Meilensteine der anderen Teams wurden in ein Gesamtzeitplan eingefügt, um jeder Zeit einen guten Überblick zu haben. Jeden Donnerstag konnte so mit jedem Team, welches einen Meilenstein ausstehend hatte, Rücksprache gehalten werden, um die Erreichung dieses zu überprüfen.  
+		%
+		\subsection{Zwischenpräsentation}\label{ss:zwischenpräsentation}
+		Die Zwischenpräsentation fand am Donnerstag dem 21.11.2013 statt. Dabei war das Ganze Team, Der Projektleiter und alle Dozenten, die das Eurobotteam betreuen. Anschliessend stand noch etwas Zeit für Fragen und Diskussionen zur Verfügung.
+		%
+		\subsection{Stand der Dinge}\label{ss:stand_der_dinge}
+		Mit den Informationen der Projektstände und den voraussichtlich auftretenden Aufgaben für den Bau des zweiten Roboters, konte das weitere Vorgehen geplant werden.
+	%
+	\section{Weiteres Vorgehen}\label{s:weiteres_vorgehen}
+		Die noch verbleibenden Arbeiten der \gls{ac:pa1} gehen fliesend in die \gls{ac:pa2} über, in der auch der 2. Roboter gebaut wird. Dies bedeutet, dass die noch anstehenden Arbeiten aus der \gls{ac:pa1} eine Zusatzbelastung für die \gls{ac:pa2} darstellen. Ein grober Ablauf ist in der Abbildung \ref{abb:ablaufdiagramm_pa2} ersichtlich.\par
+		\image{content/image/2_Ablaufdiagramm_PA2_Eurobot_2014_v1}{scale=.82}{htbp}[Ablaufdiagramm \gls{ac:pa2}][abb:ablaufdiagramm_pa2]
+		%
+		\newpage
+		Durch den unterschiedlichen Fortschritt der einzelnen Teams werden einige Umstrukturierungen vorgenommen. In den Abschnitten \ref{ss:arbeiten_kernteam} bis \ref{ss:arbeiten_naherkennungsteam} ist dies dargestellt.\par
+		%
+		%Um eine sinnvolle Planung zu ermöglichen, wurde in diesem Abschnitt pro Team eine Auflistung der anstehenden Arbeiten für die \gls{ac:pa2} erstellt.
+		%
+		%\subsection{Umstrukturierung PA2}
+		%
+		\subsection{Arbeiten Kernteam}\label{ss:arbeiten_kernteam}
+			\begin{table}[htbp]
+			\centering
+			\begin{tabular}{|l|l|l|l|l|l|} 
+				 \hline
+				 \rowcolor{bfhblue}
+				 \textcolor{white}{Name} & \textcolor{white}{Vorname} & \textcolor{white}{Kürzel} & \textcolor{white}{Arbeit \%}\\
+				 \hline
+				 Grossenbacher & Simon & gross10 & 100\\
+				 \hline
+				 Haldemann & Jascha & haldj3 & 100\\
+				 \hline
+				 Rohrbach & Patrick & rohrp1 & 100\\
+				 \hline
+ 				 Roth & Hannes & rothh3 & 100\\
+ 				 \hline
+ 				 Balz & Kilian & balzk1 & 50\\
+				 \hline
+			\end{tabular}
+			\caption{Ressourcen Kernteam in \gls{ac:pa2}}
+			\label{tab:ressourcen_kernteam_pa2}  
+			\end{table}
+			%
+			\begin{description}
+				\item[Aus \gls{ac:pa1}] Folgende Arbeiten stehen noch aus:
+					\begin{itemize}
+						\item Alle Funktionstest Roboter 1
+						%
+						\item Ball spicken und Bilder kleben zum laufen bringen
+						%
+						\item Strategie-Task schreiben
+					%
+					\end{itemize}
+				%
+				\item[Für \gls{ac:pa2}] Neue dazu kommende Arbeiten:
+					\begin{itemize}
+						\item Netz werfen und Feueraufgabe
+						%
+						\item Strategie für zweiten Roboter
+						%
+						\item Naherkennung einbinden und Testen
+						%
+						\item Evtl. Bedienpanel entwerfen
+						%
+						\item Plakate und Teambeschreibung erstellen
+						%
+						\item Sponsoring
+						%
+						\item Ersatzteile für Wettbewerb organisieren 
+					%
+					\end{itemize}
+			%
+			\end{description}
+			
+		%
+		\newpage
+		\subsection{Arbeiten Navigationsteam} \label{ss:arbeiten_navigationsteam}
+			\begin{table}[htbp]
+			\centering
+			\begin{tabular}{|l|l|l|l|l|l|} 
+				 \hline
+				 \rowcolor{bfhblue}
+				 \textcolor{white}{Name} & \textcolor{white}{Vorname} & \textcolor{white}{Kürzel} & \textcolor{white}{Arbeit \%}\\
+				 \hline
+				 Heimsch & Gunnar & heimg1 & 100\\
+				 \hline
+				 Zurschmiede & Reto & zursr1 & 100\\
+				 \hline
+				 Käser & Nicola & kasen1 & 80\\
+				 \hline
+			\end{tabular}
+			\caption{Ressourcen Navigationsteam in \gls{ac:pa2}}
+			\label{tab:ressourcen_navigationsteam_pa2}  
+			\end{table}
+			%
+			\begin{description}
+				\item[Aus \gls{ac:pa1}:] Folgende Arbeiten stehen noch aus
+					\begin{itemize}
+						\item Endgültiger Entscheid über Einsatz des Navigationssystems
+					%
+					\end{itemize}
+				%
+				\item[Für \gls{ac:pa2}:] Neue dazu kommende Arbeiten
+					\begin{itemize}
+						\item Implementierung Kalman-Filter
+						%
+						\item Kommunikation zwischen Robotern
+						%
+						\item Evaluation des gekauften Ultraschallsystems
+						%
+						\item Design des gewählten Navigationssystems
+						%
+						\item Mechanik und Elektronik des Navigationssystems herstellen
+						%
+						\item Beacons - Funktion und Mechanik
+					%
+					\end{itemize}
+			%
+			\end{description}
+		%
+		\newpage
+		\subsection{Arbeiten Antriebsteam} \label{ss:arbeiten_antriebsteam}
+			\begin{table}[htbp]
+			\centering
+			\begin{tabular}{|l|l|l|l|l|l|} 
+				 \hline
+				 \rowcolor{bfhblue}
+				 \textcolor{white}{Name} & \textcolor{white}{Vorname} & \textcolor{white}{Kürzel} & \textcolor{white}{Arbeit \%}\\
+				 \hline
+				 Plattner & Simon & plats1 & 100\\
+				 \hline
+				 Meerstetter & Tobias & meert1 & 100\\
+				 \hline
+				 Balz & Kilian & balzk1 & 50\\
+				 \hline
+			\end{tabular}
+			\caption{Ressourcen Antriebsteam in \gls{ac:pa2}}
+			\label{tab:ressourcen_antriebsteam_pa2}  
+			\end{table}
+			%
+			%
+			\begin{description}
+				\item[Aus \gls{ac:pa1}:] Folgende Arbeiten stehen noch aus
+					\begin{itemize}
+						\item Strommessung
+						%
+						\item Drehzahlregelung Testen
+						%
+						\item Korrekte Ansteuerung der Motoren
+						%
+						\item Odometrie einlesen
+					%
+					\end{itemize}
+				%
+				\item[Für \gls{ac:pa2}:] Neue dazu kommende Arbeiten
+					\begin{itemize}
+						\item Positionsregelung
+						%
+						\item Routenplanung
+						%
+						\item Antriebsmechanik Roboter 2
+						%
+						\item Testen
+					%
+					\end{itemize}
+			%
+			\end{description}
+		%
+		\subsection{Arbeiten Volumen- und Verdrahtungsteam} \label{ss:arbeiten_volumen_verdrahtung}
+			\begin{table}[htbp]
+			\centering
+			\begin{tabular}{|l|l|l|l|l|l|} 
+				 \hline
+				 \rowcolor{bfhblue}
+				 \textcolor{white}{Name} & \textcolor{white}{Vorname} & \textcolor{white}{Kürzel} & \textcolor{white}{Arbeit \%}\\
+				 \hline
+				 Greiler & Roland & greir1 & 100\\
+				 \hline
+				 Reust & Ralph & reusr6 & 100\\
+				 \hline
+			\end{tabular}
+			\caption{Ressourcen Volumen- und Verdrahtungsteam in \gls{ac:pa2}}
+			\label{tab:ressourcen_volumen_verdrahtung_pa2}  
+			\end{table}
+			%
+			\begin{description}
+				\item[Aus \gls{ac:pa1}:] Folgende Arbeiten stehen noch aus
+					\begin{itemize}
+						\item Verschalung des ersten Roboters 
+						%
+						\item Mechanik für Spielstartauslösung
+					%
+					\end{itemize}
+				%
+				\item[Für \gls{ac:pa2}:] Neue dazu kommende Arbeiten
+					\begin{itemize}
+						\item Volumenkonzept und Verkabelung Roboter 2
+						%
+						\item Testen und prüfen der Speisung und Masse der beiden Roboter.
+						%
+						\item Gesamttest entwickeln und Gegnerroboter in Betrieb nehmen.
+					%
+					\end{itemize}
+			%
+			\end{description}
+		%
+		\subsection{Arbeiten Naherkennungsteam} \label{ss:arbeiten_naherkennungsteam}
+			\begin{table}[htbp]
+			\centering
+			\begin{tabular}{|l|l|l|l|l|l|} 
+				 \hline
+				 \rowcolor{bfhblue}
+				 \textcolor{white}{Name} & \textcolor{white}{Vorname} & \textcolor{white}{Kürzel} & \textcolor{white}{Arbeit \%}\\
+				 \hline
+				 Käser & Nicola & kasen1 & 20\\
+				 \hline
+			\end{tabular}
+			\caption{Ressourcen Naherkennungsteam in \gls{ac:pa2}}
+			\label{tab:ressourcen_naherkennungsteam_pa2}  
+			\end{table}
+			%
+			\begin{description}
+				\item[Aus \gls{ac:pa1}:] Folgende Arbeiten stehen noch aus
+					\begin{itemize}
+						\item Software in Kernknoten implementieren
+						%
+						\item Sensorprinte für zweiten Roboter herstellen
+						%
+						\item Hardware montieren 
+						%
+						\item Im Roboter verkabeln
+						%
+						\item Gesamttest mit verbauter Naherkennung 
+					%
+					\end{itemize}
+			%
+			\end{description}
+
+	
+
+	
+    
+    

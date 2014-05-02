@@ -1,0 +1,486 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Mechanik
+% Autor:   rohrp1, roth3
+% Datum:   13.12.2013
+% Version: 0.0.1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+%
+% 0.0.1       Erstellung der Datei
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+\chapter{Mechanik}\label{ch:mechanik}
+	%Im folgenden Kapitel wird auf den Teilbereich der Mechanik eingegangen.
+	%
+	%
+	% Konzeptphase
+	\section{Konzeptphase}\label{s:konzeptphase}
+		Die Lösungsansätze der Aufgaben Mammut und Fresko werden in einem Morphologischen Kasten festgehalten. Die \acrfull{ac:pa1} beinhaltet primär die Aufgaben Mammut und Fresko. Die Funny-Action (Netzaufgabe) wird allerdings nicht ausseracht gelassen, da eventuell Synergien entstehen. Die Aufgabe Netz wird grundsätzlich in der \gls{ac:pa2} erarbeitet und wird deshalb nicht weiter dokumentiert. 
+		%
+		%
+		\subsection{Morphologischer Kasten}\label{ss:morph_kasten}
+			Die Gesamtaufgabe wurde in Teilfunktionen aufgeteilt. Dabei ist die Mammutaufgabe in vier und die Freskoaufgabe in drei Teilfunktionen aufgeteilt (Tabelle \ref{tab:teilfunktionen_mammut} und \ref{tab:teilfunktionen_fresko}). Die Teilfunktionen sind zu diesem Zeitpunkt in sich unabhängig und beliebig kombinierbar. Für die einzelnen Teilfunktionen sind mehrere Lösungsprinzipien erarbeitet.
+			%
+			%\subsubsection*{Mammut}
+				\begin{table}[htbp]
+	               \centering
+	               \begin{tabularx}{\textwidth}{|l|X|} 
+	                   \hline
+	                   \rowcolor{bfhblue}
+	                   \textcolor{white}{Teilfunktion} & \textcolor{white}{Erläuterung}\\
+	                   \hline
+	                   Speicher & Speicherung der Speere (Tischtennisbälle) innerhalb des Roboter\\
+	                   \hline
+	                   Vereinzler & Vereinzelung und Zuführung von Speicher zu Wurfmechanismus\\
+	                   \hline
+	                   Führung & Geschossführung nach Abschuss\\
+	                   \hline
+	                   Wurfmechanismus & Abschussmechanismus mit deren Auslösung\\
+	                   \hline
+	               \end{tabularx}
+	               \caption{Teilfunktionen Mammut}
+	               \label{tab:teilfunktionen_mammut}  
+	           \end{table}
+           %
+           %\subsubsection*{Fresko}
+           		\begin{table}[htbp]
+	          		\centering
+	          		\begin{tabularx}{\textwidth}{|l|X|} 
+		              \hline
+		              \rowcolor{bfhblue}
+		              \textcolor{white}{Teilfunktion} & \textcolor{white}{Erläuterung}\\
+		              \hline
+		              Speicher & Speicherung der Bilder innerhalb des Roboters\\
+		              \hline
+		              Ankleben & Mechanismus zum Ausfahren, sowie Ausgabe der Bilder aus Speicher\\
+		              \hline
+		              Positionieren & Positionierung der Bilder am Fresko\\
+		              \hline
+	          		\end{tabularx}
+	          		\caption{Teilfunktionen Fresko}
+	          		\label{tab:teilfunktionen_fresko}  
+	      		\end{table}	
+	      		\newpage
+		%
+		%
+		\subsection{Testreihe}\label{ss:testreihe}
+			Um eine gute Abschätzung und Beurteilung der Wurfmechanismen zu erzielen, sind einfache Prototypen der einzelnen Lösungsprinzipien erarbeitet worden. Diese sind auf ihre Funktionalität und Treffsicherheit mit verschiedenen Parametern zu prüfen. Die Resultate sind ein wichtiger Bestandteil der Nutzwertanalyse (siehe Tabelle \ref{tab:resultate_testreihe} auf Seite \pageref{tab:resultate_testreihe}). Die weiteren Teilfunktionen sind explizit zu testen.
+			%
+			\subsubsection{Resultate}\label{sss:resultate}
+				Im Vorfeld wurden Lösungen über einen Hubmagnet und mittels Druckluft in Betracht gezogen. Diese wurde nach ersten Tests sofort wieder verworfen.  Die Testprotokolle sind im Anhang \ref{ch:konzeptphase_mechanik} \textit{Konzeptphase Mechanik} ab Seite \pageref{ch:konzeptphase_mechanik} zu finden.
+				%
+				\begin{table}[htbp]
+                \centering
+                \begin{tabularx}{\textwidth}{|l|X|c|} 
+                    \hline
+                    \rowcolor{bfhblue}
+                    \textcolor{white}{Lösungsprinzip} & \textcolor{white}{Resultat} & \textcolor{white}{Versuchsaufbau}\\
+                    \hline
+                    Reibrad
+                    &
+                    \tableitemize 
+                    \begin{itemize} 
+                        \item Grosse Streuung
+                        \item Schwingungen
+                        \item Velcro wird abgenutzt
+                    \end{itemize} 
+                    & 
+                    \multirow{1}{*}{\imagetotab[width=4cm]{content/image/4_reibrad}}\\
+                    &&\\
+                    \hline
+                    %
+                    Impeller
+                    &
+                    \tableitemize 
+                    \begin{itemize} 
+                        \item Kleine Streuung
+                        \item Vereinzelung nötig
+                        \item Elektrische Leistung
+                        \item Lärmentwicklung
+                    \end{itemize} 
+                    & 
+                    \multirow{1}{*}{\imagetotab[width=4cm]{content/image/4_impeller}}\\
+                    %
+                    \hline
+                    %
+                    Blattfeder Spickspiel
+                    &
+                    \tableitemize 
+                    \begin{itemize} 
+                        \item Kleine Streuung
+                        \item Vereinzelung nötig
+                        \item Fehleranfälligkeit
+                    \end{itemize} 
+                    & 
+                    \multirow{1}{*}{\imagetotab[width=4cm]{content/image/4_blattfeder_spickspiel}}\\
+                    &&\\
+                    \hline
+                    %
+                    Hubbalken mit Rohrführung
+                    &
+                    \tableitemize 
+                    \begin{itemize} 
+                        \item Klein Speicher nötig
+                        \item Keine Fahrwege
+                        \item Grosse Spannkraft
+                        \item Schlag
+                    \end{itemize} 
+                    & 
+                    \multirow{1}{*}{\imagetotab[width=4cm]{content/image/4_hubbalken_mit_rohrfuehrung}}\\
+                    %&&\\
+                    \hline
+                    %
+                    Hubbalken mit Stabführung
+                    &
+                    \tableitemize 
+                    \begin{itemize} 
+                        \item Klein Speicher nötig
+                        \item Keine Fahrwege
+                        \item Grosse Spannkraft
+                        \item Schlag
+                        \item evtl. nicht Regelkonform
+                    \end{itemize} 
+                    & 
+                    \multirow{1}{*}{\imagetotab[width=4cm]{content/image/4_hubbalken_mit_stabfuehrung}}\\
+                    %&&\\
+                    \hline
+                    %
+                    Blattfeder
+                    &
+                    \tableitemize 
+                    \begin{itemize} 
+                        \item Kleine Streuung
+                        \item Keine Vereinzelung
+                        \item Kompakt
+                        \item Fahrwege nötig
+                    \end{itemize} 
+                    & 
+                    \multirow{1}{*}{\imagetotab[width=4cm]{content/image/4_blattfeder}}\\
+                    %
+                    \hline
+                \end{tabularx}
+                \caption{Resultate Testreihe}
+                \label{tab:resultate_testreihe}  
+            \end{table}
+            \FloatBarrier
+     	%
+     	%
+     	\subsection{Bewertung}\label{ss:bewertung}
+     		Die Bewertung der verschiedenen Lösungsprinzipien beider Aufgaben erfolgt durch eine gewichtete Nutzwertanalyse. Um eine möglichst gute und fundierte Bewertung zu erlangen, definiert das \acrfull{ac:kernteam}, dass mehrere Personen eine Bewertung abgeben.
+     		%
+     		Eine erste Bewertung erarbeiten die beiden Maschinenbaustudenten des \gls{ac:kernteam} und der Assistent Reto Schmutz. Eine zweite Bewertung erfolgt durch die Elektrostudenten des \gls{ac:kernteam}. Daraus generiert eine Gesamtbewertung seitens \gls{g:eurobot}-Team.
+     		%
+     		Um Vorurteile sowie Entwicklungsblindheit ausschliessen zu können, ist eine Bewertung durch die beiden Herren Walter Güller, Dozent für Produktentwicklung und zuständiger Betreuer, und Bruno Niklaus Technischer Mitarbeiter HTI erfolgt. Die Bewertungen sind im Plenum diskutiert und verglichen worden. 
+     		%
+     		Die Bewertung ist mit den in den Tabellen \ref{tab:kriterien_und_gewichtung_mammut} und \ref{tab:kriterien_und_gewichtung_fresko} definierten Kriterien erfolgt.\par 
+     		%
+     		\begin{table}[htbp]
+          		\centering
+          		\begin{tabular}{|l|c|} 
+					\hline
+					\rowcolor{bfhblue}
+					\textcolor{white}{Technische Aspekte} & \textcolor{white}{Gewichtung}\\
+					\hline
+					Treffsicherheit & 3\\
+					\hline
+					Fehleranfälligkeit & 2\\
+					\hline
+					Baugrösse & 1\\
+					\hline
+					Zuführung/Speicherung & 2\\
+					\hline
+					Wurfauslösung & 2\\
+					\hline
+					\rowcolor{bfhblue}
+					\textcolor{white}{Wirtschaftliche Aspekte} & \textcolor{white}{Gewichtung}\\
+					\hline
+					Konstruktiver Aufwand & 3\\
+					\hline
+					Herstellungsaufwand & 2\\
+					\hline
+					Elektronischer Aufwand & 2\\
+					\hline
+					Kosten & 1\\
+					\hline
+					Zeitaufwand (Spiel) & 2\\
+					\hline
+				\end{tabular}
+          		\caption{Kriterien und Gewichtung Mammut}
+          		\label{tab:kriterien_und_gewichtung_mammut}  
+      		\end{table}	
+      		%
+      		\begin{table}[htbp]
+          		\centering
+          		\begin{tabular}{|l|c|} 
+					\hline
+					\rowcolor{bfhblue}
+					\textcolor{white}{Technische Aspekte} & \textcolor{white}{Gewichtung}\\
+					\hline
+					Zugänglichkeit Nachladen & 3\\
+					\hline
+					Fehleranfälligkeit & 2\\
+					\hline
+					Baugrösse & 1\\
+					\hline
+					Flexibilität & 2\\
+					\hline
+					\rowcolor{bfhblue}
+					\textcolor{white}{Wirtschaftliche Aspekte} & \textcolor{white}{Gewichtung}\\
+					\hline
+					Konstruktiver Aufwand & 3\\
+					\hline
+					Herstellungsaufwand & 2\\
+					\hline
+					Elektronischer Aufwand & 2\\
+					\hline
+					Kosten & 1\\
+					\hline
+				\end{tabular}
+          		\caption{Kriterien und Gewichtung Fresko}
+          		\label{tab:kriterien_und_gewichtung_fresko}  
+      		\end{table}	
+      		%
+      		\FloatBarrier
+      		Die Nutzwertanalyse sind im Anhang \ref{ch:konzeptphase_mechanik} \textit{Konzeptphase Mechanik} ab Seite \pageref{ch:konzeptphase_mechanik} zu finden.
+		%
+		%
+		\subsection{Entscheid}\label{ss:entscheid}
+			\paragraph{Mammut}
+			%\subsubsection{Mammut}
+				Die Nutzwertanalyse ergibt eine klare Führung des Blattfedersystems (Abbildung \ref{abb:abschussmechanismus}). Die Blattfeder zeichnet sich insbesondere durch eine sehr gute Treffsicherheit, die geringe Fehleranfälligkeit und eine einfache Zuführung ohne Vereinzelung aus (Abbildung \ref{abb:speicherung}). Dieses System wird nun weitergezogen.
+				%
+				%
+				\begin{figure}[htbp] %htbp
+					\centering
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[scale=0.3]{content/image/4_speicher_speer}  
+						\caption{Speicherung}
+						\label{abb:speicherung}          
+					\end{subfigure}
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[scale=0.3]{content/image/4_abschussmech_blattfeder}  
+						\caption{Abschlussmechanismus Blattfeder} 
+						\label{abb:abschussmechanismus}         
+					\end{subfigure}
+					\caption{Entscheid Mammut}
+					\label{abb:entscheid_mammut}
+		    	\end{figure}
+		   	%
+		   	%\newpage
+			%\subsubsection{Fresko}
+			\paragraph{Fresko}
+				Nach der Nutzwertanalyse zeigt sich, dass die Variante mit dem Drehpunkt (Abbildung \ref{abb:abschussmechanismus_fresko}) als beste Variante bewertet wurde. Die Wahl ist vor allem aus der Anzahl einzusetzende Aktoren und auf deren Einfachheit der Konstruktion zurückzuführen. Diese Variante wird somit weitergezogen und erarbeitet.  	
+      		 	%
+				\begin{figure}[htbp] %htbp
+					\centering
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[scale=0.3]{content/image/4_bilderspeicher}  
+						\caption{Speicherung}
+						\label{abb:speicherung_fresko}          
+					\end{subfigure}
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[scale=0.3]{content/image/4_bildermontagemech}  
+						\caption{Abschlussmechanismus mit Drehpunkt} 
+						\label{abb:abschussmechanismus_fresko}         
+					\end{subfigure}
+					\caption{Entscheid Mammut}
+					\label{abb:entscheid_fresko}
+		    	\end{figure}
+		    	%\FloatBarrier
+	%
+	%
+	% Ausarbeitungsphase
+	\section{Ausarbeitungsphase}\label{s:ausarbeitungsphase}
+		Die Mechanismen für die Fresko- und die Mammutaufgabe müssen beide im kleinen Roboter Platz finden. Aus diesem Grund ist die Baugrösse der Systeme von grosser Bedeutung. Alle Bauteile sind im \textsf{Unigraphic NX8.0} modelliert. Die dazugehörigen Fertigungszeichnungen sind im Anhang \ref{ch:zeichnungen_cad} \textit{Zeichnungen CAD} ab Seite \pageref{ch:zeichnungen_cad} einzusehen.
+		%
+		%
+		\subsection{Fresko}\label{ss:fresko}
+			%
+			%\subsubsection{Allgemeine Beschreibung}	
+				Die Bilder werden vertikal und übereinander in einen Bilderrahmen eingelegt. Der Rahmen wird über ein digitales Servo der Firma Hitec linear ausgefahren. Die Bewegung läuft auf zwei kleinen Führungsschienen der Firma Igus. Aus Platzgründen wird das gesamte Modul auf den Kopf gedreht und an der zweiten Zweischenplatte aufgehängt.(Abbildung \ref{abb:linearmodul})
+				%
+				\image{content/image/4_linearmodul}{scale=.3}{htbp}[Linearmodul][abb:linearmodul]
+			%
+			\subsubsection{Eingekaufte Komponente}
+				\begin{description}
+					\item[Servo] Hitec, digitales Standard Servo HS 5645 (siehe Anhang D \textit{Datenblätter})
+					\item[Führungen] Igus GmbH, N-Flachführung [17] (siehe Anhang D \textit{Datenblätter})
+					\item[Lagerbuchsen] Igus GmbH, iglidur J Gleitlager, Form F (siehe Anhang D \textit{Datenblätter})
+					\item[Tastsensoren] Omron, Snap Action Switch D2F-01L (siehe Anhang D \textit{Datenblätter})
+				\end{description}
+			%
+			\subsubsection{Servo}
+				Die Baugrösse des Sevos ist im vorgesehenen Bereich des Roboters nicht von grosser Bedeutung. Deshalb haben wir uns hier für ein digitales Standard Servo entschieden. Das digitale Servo bringt zu dem gegenüber einem analogen den Vorteil einer einfacheren Kalibrierung.
+			%
+			\subsubsection{Führungen und Lagerbuchsen}
+				Auf das System wirken zu keinem Zeitpunkt grosse Kräfte. Aus diesem Grund setzen wir für die Linearführung kleine N-Führungen der Firma Igus ein. Die Führung zeichnet sich insbesondere durch das niedrige Gewicht und die geringen Reibwerte ohne zusätzliche Schmierung aus.\par 
+				%
+				Auch die Lagerbuchsen dienen lediglich zur Verminderung der Reibwerte.
+			%
+			\subsubsection{Tastsensoren}
+				Die Sensoren der Firma Omron zeichnen sich insbesondere durch die sehr geringe Baugrösse aus. Sie werden pro Sensor über zwei Langlöcher Verschraubt. Das ermöglicht uns ein flexibles einstellen der Position.		
+			%
+			\subsubsection{Mögliche Fehler}
+				Damit grössere Nacharbeitungen vermieden werden können, wird bereits in der Ausarbeitungsphase versucht alle möglichen Fehler aufzudecken und eine Lösung für die Probleme zu konstruieren. Die wichtigsten Fehlerquellen und die Massnahmen um diese zu verhindern, sind aus Tabelle \ref{tab:fehler_fresko} zu entnehmen.	
+				%
+				\begin{table}[t]
+	          		\centering
+	          		\begin{tabularx}{\textwidth}{|p{6cm}|X|} 
+					    \hline
+					    \rowcolor{bfhblue}
+					    \textcolor{white}{Mögliche Fehler} & \textcolor{white}{Massnahmen}\\
+					    \hline
+					    Herausfallen der Bilder aus Rahmen & Damit die Bilder durch Vibrationen gegen das Rausfallen gesichert sind, sind sie mittels zwei Schaumstoffbändern und jeweils zwei Gewindestifte, welche die Klemmkraft im Rahmen einstellbar machen, gesichert (Abbildung \ref{abb:abschussmechanismus}).\\
+					    \hline
+					    Kollision der gegnerischen Bilder auf der Klettwand. (Bilder kleben nicht und bleiben im Rahmen) & Die Bilder werden über einen mechanischen Tastsensor überwacht. Bleibt das Bild nach Anpressen an das Fresko nicht haften und somit immer noch im Rahmen, bleibt der Kontakt über den Tastsensor bestehen. Der Roboter fährt dann eine neue Position an und wiederholt die Montage der Bilder (Abbildung \ref{abb:bildueberwachung}).\\
+					    \hline
+					    Nicht Berühren der Klettwand & Ein mechanischer Tastsensor der sich im Zentrum des Bilderrahmens befindet, gibt an, sobald die Bilder die Wand berühren. Somit muss der Roboter gegen die Wand fahren bis der Tastsensor getätigt wird (Abbildung \ref{abb:absturzsicherung}).\\
+					    \hline
+					    Schräges Anfahren der Klettwand & Der Bilderrahmen wird zentrisch verdrehbar gelagert. Damit kann ein Winkelfehler von beidseitig 10° aufgenommen werden (Abbildung \ref{abb:linearmodul}).\\
+					    \hline
+	          		\end{tabularx}
+	          		\caption{Teilfunktionen Fresko}
+	          		\label{tab:fehler_fresko}  
+	      		\end{table}	
+	      		%
+	      		\FloatBarrier
+				\begin{figure}[htbp] %htbp
+					\centering
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[height=2.5cm]{content/image/4_tastsensoren_absturzsicherung}  
+						\caption{Absturzsicherung}
+						\label{abb:absturzsicherung}          
+					\end{subfigure}
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[height=2.5cm]{content/image/4_tastsensoren_bildueberwachung}  
+						\caption{Bildüberwachung} 
+						\label{abb:bildueberwachung}         
+					\end{subfigure}
+					\caption{Tastsensoren}
+					\label{abb:tastsensoren}
+		    	\end{figure}
+		    	%
+		    %
+		    \newpage
+		    \subsubsection{Bilder}
+		    	Die Abmasse der Bilder ist im Reglement mit minimalen und maximalen Massen genau definiert \cite[]{lit:eurobot}. Der Entscheid fällt sofort auf die kleinstmögliche Abmessung. Dies ermöglicht eine minimale Baugrösse und minimiert das Risiko einer Kollision mit gegnerischen Bildern auf der Klettwand. Um ein optimales Kleben der Bilder zu erreichen, sind die Klettstreifen auf den Bildern vertikal angeordnet. Damit kann garantiert werden, dass jedes Bild mindestens auf zwei der horizontal angeordneten Steifen der Wand haftet.\par 
+		    	%
+		    	Weiter müssen die Bilder in den jeweiligen Team-Farben eingefärbt werden.\par  
+		    	%
+		    	Damit die Bilder an der Wand haften bleiben, dürfen sie nicht zu schwer sein. Die Bilder werden deshalb aus Polyacetal (POM) angefertigt, dies ergibt ein Gewicht von rund 85 Gramm pro Bild. Zudem ist POM einfach zu bearbeiten.
+		%
+		%
+		\newpage
+		\subsection{Mammut}
+			%
+			%\subsubsection{Allgemeiner Beschrieb}
+				Die Speere sind zu je 3 Stück in den zwei Magazinrohren (Abbildung \ref{abb::abschussvorrichtung_mammut_komplett}) vorgängig gespeichert. Dazu sind die Magazine an der oberen Decke des Roboters offen, so dass die Speere einfach in die Magazinrohre zu geben sind. Der unterste Speer ist bereits in Abschussposition. Pro Abschuss werden zwei Speere abgeschossen, somit sind pro Spiel drei Hübe zu tätigen.\par
+				\image{content/image/4_abschussmech_komp}{scale=.35}{htbp}[Abschussvorrichtung Mammut komplett][abb::abschussvorrichtung_mammut_komplett] 
+				%
+				Die Beschleunigungsenergie erfahren die Speere über eine Blattfeder. Eine Blattfeder pro Abschussrampe (Abbildung \ref{abb:abschussvorrichtung_mammut}). Diese wird durch eine Klinke gegriffen und gespannt. Die Auslösung der Blattfeder wird durch die Durchbiegung (Abbildung \ref{abb:abschussvorrichtung_mammut}) der Feder erlangt. Durch die Biegung verliert die Klinke den Eingriff auf die Blattfeder. %\par 
+				%
+				Die Klinke ist in die Klinkenwelle integriert . Die beiden Klinkenwellen sind miteinander verbunden und werden durch ein Servo angesteuert. (Abbildung \ref{abb:abschussvorrichtung_mammut}) %\par 
+				%
+				Nach dem Abschuss der zwei Speere auf der Abschussrampe fallen die nächsten zwei in die Abschussposition.
+				%
+				\image{content/image/4_zeichnung-2}{scale=.3}{htbp}[Abschussvorrichtung Mammut][abb:abschussvorrichtung_mammut]
+			%
+			\subsubsection{Eingekaufte Komponente}
+				\begin{description}
+					\item[Servo] Hitec, Servo HS-5125 MG (siehe Anhang D \textit{Datenblätter})
+					\item[Gleitlager] Igus GmbH, iglidur J Gleitlager (siehe Anhang D \textit{Datenblätter})
+				\end{description}
+			%
+			\subsubsection{Servo}
+				Die Baugrösse ist in diesem Bereich Massgebend, zudem sind die Befestigungsanschlüsse relevant. Deshalb kommt in dieser Anwendung ein flaches digitales Servo zum Einsatz. 
+			%
+			\subsubsection{Gleitlager}
+				Das Gleitlager wird nur in axialer Richtung belastet. Dabei sind keine grossen Belastungen aufzunehmen. Die Standartgleitbuchse kann mit ihren Reibwerten diese Anforderungen erfüllen.
+			%
+			\subsubsection{Einstellmöglichkeiten}
+				\paragraph{Abschusswinkel}
+					Der Abschusswinkel kann zwischen 15° und 25° zur Horizontalen eingestellt werde(Abbildung \ref{abb:abschussvorrichtung_15} und \ref{abb:abschussvorrichtung_25}). Der Abschusswinkel ist nicht variabel von Abschuss zu Abschuss und er gilt für beide Abschussrampen. 
+					%
+					\begin{figure}[htbp] %htbp
+						\centering
+						\begin{subfigure}[b]{0.49\textwidth}
+							\centering
+							\includegraphics[height=4.5cm]{content/image/4_abschussmech_15grad}  
+							\caption{Abschussvorrichtung mit 15° Abschusswinkel}
+							\label{abb:abschussvorrichtung_15}          
+						\end{subfigure}
+						\begin{subfigure}[b]{0.49\textwidth}
+							\centering
+							\includegraphics[height=4.5cm]{content/image/4_abschussmech_25grad}  
+							\caption{Abschussvorrichtung mit 25° Abschusswinkel} 
+							\label{abb:abschussvorrichtung_25}         
+						\end{subfigure}
+						\caption{Einstellmöglichkeiten Abschussvorrichtung}
+						\label{abb:einstellmoeglichkeiten_abschlussvorrichtung}
+			    	\end{figure}
+					%
+					Damit die Abschussposition der Speere nicht durch den Abschusswinkel abhängig ist, wurde das Zentrum der Winkeleinstellung in das Zentrum des Speers an Abschussposition gewählt. (Abbildung \ref{abb:abschussvorrichtung_15} und \ref{abb:abschussvorrichtung_25})
+				\paragraph{Vorspannung Blattfeder}
+					Wie bereits erwähnt verliert die Klinke den Eingriff an der Blattfeder durch die Verbiegung der Blattfeder.  die Verformung der Feder durch Angriff der Kraft an der Eingriffstelle der Klinke ist mit Ansys Workbench simuliert worden. (Abbildung \ref{abb:verfomung_blattfeder})
+					%
+					\begin{figure}[htbp] %htbp
+						\centering
+						\begin{subfigure}[b]{0.49\textwidth}
+							\centering
+							\includegraphics[height=5.5cm]{content/image/4_verformung_blattfeder_ANSYS}  
+							\caption{Verformung der Blattfeder}
+							\label{abb:verfomung_blattfeder}          
+						\end{subfigure}
+						\begin{subfigure}[b]{0.49\textwidth}
+							\centering
+							\includegraphics[height=5.5cm]{content/image/4_verformung_blattfeder}  
+							\caption{Verformung des Eingriffsbereichs der Kinke in X und Z Richtung} 
+							\label{abb:verformung_klinke}         
+						\end{subfigure}
+						\caption{Einstellmöglichkeiten Abschussvorrichtung}
+						\label{abb:einstellmoeglichkeiten_blattfeder}
+			    	\end{figure}	
+					%
+					Die Verformung ist linear und beträgt rund 13.5° zur horizontalen. (Abbildung \ref{abb:verformung_klinke})\par 
+					%
+					\newpage
+					Der Federspannweg wird durch die Änderung des Winkels der Klinkenwellenachse zur Verformungsgeraden realisiert. Die Einstellungen sind vorgängig zu tätigen. (Abbildung \ref{abb:ausgangsposition_0}-\ref{abb:abschussposition_13})
+					\begin{figure}[htbp] %htbp
+						\centering
+						\begin{subfigure}[b]{0.49\textwidth}
+							\centering
+							\includegraphics[height=4.5cm]{content/image/4_abschussmech_federspanner_0grad_vorne}  
+							\caption{Ausgangsposition Federspannwinkel 0°}
+							\label{abb:ausgangsposition_0}          
+						\end{subfigure}
+						\begin{subfigure}[b]{0.49\textwidth}
+							\centering
+							\includegraphics[height=4.5cm]{content/image/4_abschussmech_federspanner_0grad_hinten}  
+							\caption{Auslöseposition Federspannwinkel 0°} 
+							\label{abb:ausloeseposition_0}         
+						\end{subfigure}
+						\begin{subfigure}[b]{0.49\textwidth}
+							\centering
+							\includegraphics[height=4.5cm]{content/image/4_abschussmech_federspanner_13grad_vorne}  
+							\caption{Ausgangsposition Federspannwinkel 13°}
+							\label{abb:ausgangsposition_13}          
+						\end{subfigure}
+						\begin{subfigure}[b]{0.49\textwidth}
+							\centering
+							\includegraphics[height=4.5cm]{content/image/4_abschussmech_federspanner_13grad_hinten}  
+							\caption{Abschussposition Federspannwinkel 13°} 
+							\label{abb:abschussposition_13}         
+						\end{subfigure}
+						\caption{Einstellmöglichkeiten Federspannwinkel}
+						\label{abb:einstellmoeglichkeiten_federspannwinkel}
+			    	\end{figure}	
+				

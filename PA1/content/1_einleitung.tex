@@ -1,0 +1,138 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel:   Einleitung
+% Autor:   
+% Datum:   13.12.2013
+% Version: 0.0.0
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%:::Change-Log:::
+% Versionierung erfolgt auf folgende Gegebenheiten: -1. Release Versionen
+%                                                   -2. Neue Kapitel
+%                                                   -3. Fehlerkorrekturen
+%
+% 0.0.0       Erstellung der Datei
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Einleitung}\label{ch:einleitung}
+	\gls{g:eurobot} ist ein international ausgetragener Wettbewerb für autonome Roboter. Er wird seit 1998 durchgeführt und von der \textsf{Eurobot Association}\footnote{\url{www.eurobot.org}} und den nationalen Vertretungen\footnote{In der Schweiz \textsf{SwissEurobot} \url{www.swisseurobot.ch}} organisiert. Der Wettbewerb richtet sich an junge, motivierte Personen, die in einem Team ein vollkommenes Projekt umsetzen und sich mit anderen gleichgesinnten messen möchten. Dabei kann abhängig von den vorhanden Fertigkeiten in den Kategorien Junior oder \gls{g:eurobot} teilgenommen werden.\par 
+	%
+	Das Thema des Anlasses, sowie die Spielaufgaben werden jedes Jahr neu bestimmt. Für die nächste Durchführung wurde der Oberbegriff \textsf{PREHISTOBOT} gewählt. Die zu erfüllenden Spielaufgaben sind thematisch an diesem Thema ausgerichtet, wodurch sich das Spielfeld prähistorisch präsentiert (ersichtlich in Abbildung \ref{abb:spielfeld_eurobot}).\par  
+	%
+	\image{content/image/1_spielfeld}{scale=1}{htbp}[\gls{g:eurobot}-Spielfeld \cite{pic:eurobot_spielfeld}][\gls{g:eurobot}-Spielfeld][abb:spielfeld_eurobot]
+	%
+	\newpage
+	Die gesamte Veranstaltung wird in zwei Phasen durchgeführt.
+	\begin{description}
+		\item[Nationale Ausscheidungen] Die nationale Ausscheidung entscheidet darüber welche Teams an der Endrunde teilnehmen dürfen. Dabei werden die ersten drei Mannschaften und diejenige Mannschaft mit dem innovativsten Roboter berücksichtigt. Diese Vorrunde wird dieses Jahr zum ersten Mal vom 23. bis 24. Mai 2014 in Burgdorf stattfinden und durch die \gls{ac:bfh} organisiert.
+		\item[Finalrunde] In der Finalrunde wird der Gesamtgewinner des Wettkampfes erkoren. Durchgeführt wird sie vom 6. bis 8. Juni 2014 in Dresden, Deutschland.
+	\end{description}
+	%
+	%
+	% Problemstellung
+	\section{Problemstellung}\label{s:problemstellung}
+		Das diesjährige Reglement definiert 4 Hauptaufgaben und eine Zusatzaufgabe, die während 90 Sekunden (plus 5 Sekunden für die Zusatzaufgabe) gelöst werden können \cite{lit:eurobot}. Jeder dieser Aufgaben gibt eine gewisse Punktzahl. Sie dürfen von maximal zwei Robotern pro Mannschaft gelöst werden. Dabei steht es jedem Team offen, für welche Aufgaben sie sich entscheiden.
+		%
+		\subsection{Spielaufgaben}\label{ss:speilaufgaben}
+			Die Aufgaben teilen sich wie folgt auf.
+			\begin{description}
+				\item[Wandmalerei (\gls{g:fresko})] Die Aufgabe besteht darin, im Roboter gespeicherte Bilder an einer Wand anzubringen. Dabei wird die Haftung zwischen Bild und Wand mit \gls{g:velcro} sichergestellt. Jede Mannschaft darf pro Spielrunde zwei Malereien an der Wand anbringen. Für das erhalten der Punkte müssen die Bilder an der Wand haften bleiben. Die Aufgabe zeigt sich wie in Abbildung \ref{abb:fresko} illustriert.
+				\image{content/image/1_fresko}{scale=0.5}{htbp}[\gls{g:fresko} \cite{pic:eurobot_spielfeld}][\gls{g:fresko}][abb:fresko]
+				%
+				\item[Feuer sammeln (\gls{g:fire})] Über das gesamte Spielfeld hinweg sind dreieckige, dreifarbige Prismas verteilt, die Feuer symbolisieren. Für das bestehen dieser Aufgabe müssen die Feuer entweder mit der richtigen Seite (diejenige der Mannschaftsfarbe) nach oben hingelegt oder an spezifischen Stellen deponiert werden. Gezählt wird nach dem beenden der Spielrunde, soll heissen, der Gegener kann während des Spiels Feuer zurückerobern. Mögliche Feuer-Anordungen sind in den Abbildungen \ref{abb:fire} ersichtlich.
+				\begin{figure}[htbp] %htbp
+					\centering
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[height=3cm]{content/image/1_fire_1}       
+					\end{subfigure}
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[height=3cm]{content/image/1_fire_2}         
+					\end{subfigure}
+					\caption[\gls{g:fresko}]{\gls{g:fresko} \cite{pic:eurobot_spielfeld}}
+					\label{abb:fire}
+		    	\end{figure}
+		    	%
+				\item[Früchte sammeln (\gls{g:fruits})] Auf dem Spielfeld sind insgesamt gesamt vier Bäume verteilt (siehe Abbildung \ref{abb:spielfeld_eurobot}), die jeweils mit 6 Früchten (5 gesunde, eine vergiftet) bestückt sind. Aufgabe ist es die Früchte zu ernten, die giftigen auszusortieren und die restlichen im korrekten Behältnis (Mannschaftsfarbe) zu deponieren. Punkte geben korrekt platzierte und gesunde Früchte. Die Abbildung \ref{abb:fruits} zeigt die beiden Bestandteile Baum und Behältnis. 
+				\begin{figure}[htbp] %htbp
+					\centering
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[height=3cm]{content/image/1_fruits_1}       
+					\end{subfigure}
+					\begin{subfigure}[b]{0.49\textwidth}
+						\centering
+						\includegraphics[height=3cm]{content/image/1_fruits_2}         
+					\end{subfigure}
+					\caption[\gls{g:fruits}]{\gls{g:fruits} \cite{pic:eurobot_spielfeld}}
+					\label{abb:fruits}
+		    	\end{figure}
+		    	%
+		    	\newpage
+				\item[Mammut jagen (\gls{g:mammut})] Die beiden vorhanden Mammuts weisen beide \gls{g:velcro}-Streifen auf. Diese dienen dazu abgefeuerte Bälle der Roboter aufzufangen (Bälle sind auch mit \gls{g:velcro} versehen). Die als Speer dienenden Bälle werden vor dem eigentlichen Spiel in einem Roboter gespeichert und sind sechs an der Zahl. Beide Mammuts dürfen von beiden Mannschaften abgeschossen werden, wobei unter bestimmten Umständen Zusatzpunkte erzielt werden können \cite[S.14]{lit:eurobot}. Punkte geben nur Bälle, die an den Mammuts haften bleiben. Die Abbildung \ref{abb:mammut} zeigt zwei abgeschossene Mammuts.
+				\image{content/image/1_mammut}{scale=0.5}{htbp}[\gls{g:mammut} \cite{pic:eurobot_spielfeld}][\gls{g:mammut}][abb:mammut]
+				%
+				\item[Mammut fangen (\gls{g:mammut_catch})] Bei der Aufgabe \gls{g:mammut_catch} handelt es sich um eine Zusatzaufgabe (Funny Action). Ziel ist es ein Netz über eines der vorhandenen Mammuts zu werfen. Für das erhalten von Punkten ist Bedingung, dass das Netz auf dem Mammut liegen bleibt. Die Aufgabe wird nicht während der eigentlichen Spielrunde durchgeführt, sonder am Schluss innerhalb einer zur Verfügung gestellter Zusatzzeit.
+			\end{description}
+		%
+		%
+		\subsection{Spielfeld}\label{ss:spielfeld}
+			Alle Spielaufgaben werden auf einem vorgegeben Spielfeld ausgetragen. Das Feld weist folgende Eigenschaften auf:
+			\begin{itemize}
+				\item Dimension 3x2 Meter
+				\item Zwei Startbereiche (rote und gelbe Hand)
+				\item Möglichkeit zum Platzieren von bis zu 3 Beacons pro Mannschaft am Rande des Speilfeldes
+				\item Fixe Startpositionen der einzelnen Spielelemente (Ausnahme: Beeren an den Bäumen)
+			\end{itemize}
+			\newpage
+			Alle Farben sowie Dimensionen der Spielelemente sind durch das Reglement vorgegeben \cite[S.32]{lit:eurobot}. Das genaue Aussehen des Spielfeldes ist der Abbildung \ref{abb:spielfeld} zu entnehmen.\par
+			%
+			Die Herstellungen eines regelkonformen Tisches ist eine Zusatzaufgabe des Teams und muss parallel zu den eigentlichen Aufgaben erledigt werden\footnote{Im Zuge der Fertigung wurde ein zusammenfassender Bericht erstellt, der gemachte Erfahrungen aufzeigen soll. Das Dokument ist auf dem Netzlaufwerk hinterlegt: \path{\\boiler.bfh.ch\data\public\projects\Eurobot\2014\20_Kernteam\23_Dokumentation\Tisch_Herstellung_2014.docx}}.  
+			\image{content/image/1_spielfeldnavigation}{scale=.7}{htbp}[Spielfeld \cite{pic:eurobot_spielfeld}][Spielfeld][abb:spielfeld]
+	%
+	%
+	% Motivation
+	\section{Motivation}\label{s:motivation}
+		Die Realisierung eines Roboters in einem Team und die Teilnahme an einem internationalen Wettbewerb an sich beinhaltet ist schon Motivation genug. Weiter kommen die Punkte Mannschaftszugehörigkeit und die Möglichkeit etwas von Grunde heraus selber zu entwickeln hinzu. Hinsichtlich des späteren Berufslebens bietet es zudem Einblick in eine grösser angelegte Projektarbeit, in der abteilungsübergreifend gemeinsam an einem Problem gearbeitet wird.\par 
+		%
+		Dieses Jahr ist so weit noch speziell, da die nationale Ausscheidung in Burgdorf stattfinden wird und somit unsere Mannschaft Heimvorteil geniesst. Natürlich geht damit auch ein gewisser Druck einher, möglichst eine gute Platzierung zu erreichen. Wobei dieser Druck auch ein weiterer Motivationsfaktor ist.
+	%
+	%
+	% Zieldefinition
+	\section{Zieldefinition}\label{s:zieldefinition}
+		Dadurch das die Spielaufgaben erst nach der Fertigstellung des Pflichtenhefts\footnote{siehe Anhang \ref{ch:pflichtenheft} \textit{Pflichtenheft} ab Seite \pageref{ch:pflichtenheft}}bekannt wurden und viele Ziele direkt von ihnen abhängig sind, werden folgend weiterführende und ergänzende Ziele der \gls{ac:pa1} (Teile betreffen auch die \gls{ac:pa2}) definiert.
+		%
+		%
+		\subsection{Spielstrategie}\label{ss:spielstrategie}
+			Die Spielstrategie ist einer der zentralen Aufgaben des \gls{ac:kernteam}s. Sie entscheidet später über Erfolg oder Misserfolg am Wettbewerb. Um möglichst dynamisch auf das Verhalten des Gegners reagieren zu können, müssen mögliche Szenarien erstellt und analysiert werden. Dabei soll zwischen einer optimalen und einer backup Strategie unterschieden werden.
+			\begin{description}
+				\item[Optimale Strategie] Wenn immer möglich soll die optimale Strategie verfolgt werden. Sie hat zum Ziel möglichst die maximale Punktzahl mit den gegebenen Möglichkeiten zu erreichen.
+				\item[Backup Strategie] Sollte es während der Umsetzungsphase zu unvorhersehbaren Problemen kommen, muss eine Alternative zur optimalen Strategie vorhanden sein. Sie soll jedoch nur im äussersten  Notfall zu Zuge kommen und gleichwohl zur Teilnahme beim Wettbewerb berechtigen.
+			\end{description}
+			%
+			Im Abschnitt \ref{s:strategie} \textit{Strategie} ab Seite \pageref{s:strategie} wird die Erarbeitung der Strategien erläutert.
+		%
+		%
+		\subsection{Testkonzept}\label{ss:testkonzept}
+			Wichtig für das Validieren der Umsetzungen sind vordefinierte Testszenarien. Zum einen kann damit im Bereich Projektmanagement\footnote{siehe Abschnitt \ref{ch:projektmanagement} \textit{Projektmanagement} ab Seite \pageref{ch:projektmanagement}} den Fortschritt des Projekts validiert und zum anderen Probleme festgestellt und behoben werden.\par 
+			%
+			\newpage
+			Jeder Teilbereich des Roboters bekommt einer eigene Testreihe zugeordnet. Dabei ist jedes Teilteam für das Testen der erstellten Lösungen selber verantwortlich. Bezüglich des \gls{ac:kernteam}s müssen folgende Bereich abgedeckt werden.
+			\begin{itemize}
+				\item Die definierten Kommunikationsprotokolle und deren Umsetzung in Software
+				\item Peripherien der Spielmanipulation 
+				\item Umsetzung der Spielstrategie
+			\end{itemize}
+			%
+			Die Tests sollen in einem ersten Schritt (falls möglich) unabhängig von anderen Komponenten durchgeführt werden. Abschliessend werden Tests im Verbund des Roboters folgen (siehe Anhang E \textit{Funktionstests Testprotokolle PA2}).
+		%
+		%
+		\subsection{Kommunikation}\label{ss:kommunikation}
+			Die Kommunikation gliedert sich in die Bereiche intern und extern. Die interne Kommunikation dient dem Austausch von Daten zwischen den einzelnen Roboter-Komponenten. Die externe Kommunikation beinhaltet den Austausch von Datensätzen zwischen den beiden Robotern.\par  
+			%
+			Im Zuge der \gls{ac:pa1} sollen entsprechende Protokolle definiert und umgesetzt werden. Die Realisierung soll so erfolgen, dass die übrigen Teilteams durch die Implementierung nicht belastetet werden und den gebotenen Funktionsumfang einfach nutzen können. Die Kommunikation soll genügend Kapazitäten für Erweiterungen offen halten und möglichst sicher erfolgen.\par 
+			%
+			In den Abschnitten \ref{ss:cangatekeeper} \textit{CANGatekeeper}, \ref{ss:Control_area_network} \textit{Control Area Network} und \ref{s:kommunikation} \textit{Kommunikation} wird die Definition und Implementierung aufgezeigt. 
+		%
+		%
+		\subsection{Mechanik}\label{ss:mechanik}
+			Hauptaugenmerk der \gls{ac:pa1} liegt auf dem Fertigstellen des kleinen Roboters, der die Aufgaben \gls{g:fresko} und \gls{g:mammut} erfüllen soll. Dabei soll die Mechanik möglichst einfach und solide konstruiert sein. Ebenfalls soll die Anzahl der nötigen Aktoren auf ein Minimum reduziert werden.
