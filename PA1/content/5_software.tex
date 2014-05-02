@@ -129,7 +129,7 @@
   		Um mit den Sensoren zu interagieren, müssen die Firmwaredateien \texttt{i2c.h} und \texttt{gpio.h} importiert werden. 
   		%
   		%Feldbus
-  		\subsection{CANGatekeeper}\label{ss:cangatekeeper}\mpar{Für Informationen zum aktuellen Stand der \gls{ac:pa2} sei auf den Anhang G verwiesen}
+  		\subsection{CANGatekeeper}\label{ss:cangatekeeper}\mpar{Für Informationen zum aktuellen Stand der \gls{ac:pa2} sei auf den Anhang H verwiesen}
   			In Applikationen in denen mehrere neben läufigen Threads Tasks vorkommen, kann das Zugreifen auf gemeinsame Ressourcen problematisch sein. Die als Critical Section bezeichneten Codesegmente müssen deshalb von Mehrfachzugriffen, respektive Ausführungen geschützt werden. Dazu stehen drei gängige Möglichkeiten zur Verfügung:
   			%
   			\begin{description}
@@ -172,7 +172,7 @@
   				%
   				Den Module stehen zwei verschieden Arten von Listener zur Verfügung:
   				\begin{description}
-  					\item[setQueueCANListener] Die erste Möglichkeit besteht darin, auf eine spezifische Nachrichten-ID\footnote{ein Übersicht über die möglichen Nachrichten bietet die Tabelle \ref{tab:can_kommunikation} auf Seite \pageref{tab:can_kommunikation}} eine Queue einzutragen. Die Definition der Queue muss dabei im entsprechenden Modul erfolgen\footnote{die Queue muss den Datentyp \texttt{CAN\_data\_t} aufnehmen können. Für weitere Informationen zum Datentyp sei auf die \textsf{Doxygen}-Dokumentation verwiesen (siehe Anhang \ref{ch:doxygen} \textit{Doxygen} auf Seite \pageref{ch:doxygen})}. Beim Eintreffen einer Nachricht wird die Queue nach dem FIFO-Prinzip mit den Daten befüllt.
+  					\item[setQueueCANListener] Die erste Möglichkeit besteht darin, auf eine spezifische Nachrichten-ID\footnote{ein Übersicht über die möglichen Nachrichten bietet die Tabelle \ref{tab:can_kommunikation} auf Seite \pageref{tab:can_kommunikation}} eine Queue einzutragen. Die Definition der Queue muss dabei im entsprechenden Modul erfolgen\footnote{die Queue muss den Datentyp \texttt{CAN\_data\_t} aufnehmen können. Für weitere Informationen zum Datentyp sei auf die \textsf{Doxygen}-Dokumentation verwiesen (siehe Anhang G \textit{Doxygen})}. Beim Eintreffen einer Nachricht wird die Queue nach dem FIFO-Prinzip mit den Daten befüllt.
   					%
   					\item[setFunctionCANListener] Neben der Queue kann als zweite Möglichkeit auch eine Callback-Funktion im Gatekeeper eingetragen werden. Diese Funktion\footnote{Die Funktion muss die Form \texttt{static void foo(uint16\_t id, CAN\_data\_t* data)} aufweisen} wird beim Eintreffen der richtigen Nachricht direkt vom Gatekeeper ohne Verzögerung aufgerufen. Zu Beachten ist, dass sie weder blockierend noch zu lange ausfallen darf.
   				\end{description}	
@@ -243,7 +243,7 @@
   			\subsubsection{Design}
   				Das Design wurde spezifisch für das \gls{g:roboboard} entworfen und eignet sich nicht für andere Konfiguration, respektive muss dementsprechend angepasst werden.\par
   				%
-  				Für die Realisierung des \gls{ac:pwm} wird der Timer 1 verwendet und im \gls{ac:pwm}-Output-Compare Modus betrieben. Weiter muss der Prescaler für die gewünschten 50 Hz mit Hilfe der Formel \ref{eq:pwm} berechnet werden. Für eine möglichst genau Ausrichtung des Servos wird zudem die Periodendauer von 20 ms in 20000 Schritte unterteilt. Damit stehen dem Benutzer 2000 Schritte zwischen dem linken und rechten Anschlag zur Verfügung, was bei einem 180°-Servo eine Auflösung von 0.09° ergibt.
+  				Für die Realisierung des \gls{ac:pwm} wird der Timer 1 verwendet und im \gls{ac:pwm}-Output-Compare Modus betrieben. Weiter muss der Prescaler für die gewünschten 50 Hz mit Hilfe der Formel (5.1) berechnet werden. Für eine möglichst genau Ausrichtung des Servos wird zudem die Periodendauer von 20 ms in 20000 Schritte unterteilt. Damit stehen dem Benutzer 2000 Schritte zwischen dem linken und rechten Anschlag zur Verfügung, was bei einem 180°-Servo eine Auflösung von 0.09° ergibt.
   				%
   				\formula{
   					\text{Prescaler}&=\frac{\text{SysClk}/\text{Periode}}{\text{Frequenz}}-1\\[2ex]
@@ -278,7 +278,7 @@
     %
     %
     % Kommunikation
-    \section{Kommunikation}\label{s:kommunikation}\mpar{Dieser Abschnitt enthällt nicht alle Ergäntzungen der \gls{ac:pa2}. Daher sei auf den Anhang G verwiesen.}
+    \section{Kommunikation}\label{s:kommunikation}\mpar{Dieser Abschnitt enthällt nicht alle Ergäntzungen der \gls{ac:pa2}. Daher sei auf den Anhang H verwiesen.}
         Die in Abschnitt \ref{s:module_roboter} \textit{Module Roboter} definierten Knoten müssen in der Lage sein miteinander über einen Feldbus\footnote{Aus vergangen \gls{g:eurobot}-Projekten wurde der \gls{ac:can}-Bus übernommen. Dies auch weil die vorhandene Peripherie schon für diesen Bus ausgelegt wurde.} Informationen auszutauschen. Dazu sind mehrere Protokolle nötig, die in den folgenden Seiten beschreiben werden. Zuvor muss jedoch noch die Art der Verwaltung gemeinsamer Ressourcen geklärt werden, sprich \textsf{Master-Slave-} oder \textsf{Mutli-Master-Aufbau}.
         %
         %
@@ -343,7 +343,7 @@
             \begin{description}
             	\item[Steuerung] Das Protokoll für die Steuerung hört auf den Namen \acrfull{ac:goto} und wird ausschliesslich innerhalb des Roboters zum Einsatz kommen. Es wird im Abschnitt \ref{sss:goto_protokoll} \textit{GoTo-Protokoll} näher beschrieben.
             	%
-            	\item[Information] Die Informationen sind Positionsangaben der eigenen Roboter (untereinander/innerhalb des Roboters) und diejenige der Gegner. Das \acrfull{ac:elp} genannte Protokoll wird so ausgelegt, dass alle Fälle abgedeckt sind. Im Abschnitt \ref{sss:el_protokoll} \textit{Estimated Location-Protokoll} folgt eine genaue Beschreibung. Weiter befindet sich das Protokoll \acrfull{ac:gip} im Informationsteil. Es beinhaltet Kommandos zur Übertragung genereller Informationen wie Teamfarbe und Strategie. Der \cref{sss:gip} beinhaltet weitere Angaben dazu. 
+            	\item[Information] Die Informationen sind Positionsangaben der eigenen Roboter (untereinander/innerhalb des Roboters) und diejenige der Gegner. Das \acrfull{ac:elp} genannte Protokoll wird so ausgelegt, dass alle Fälle abgedeckt sind. Im Abschnitt \ref{sss:el_protokoll} \textit{Estimated Location-Protokoll} folgt eine genaue Beschreibung. Weiter befindet sich das Protokoll \acrfull{ac:gip} im Informationsteil. Es beinhaltet Kommandos zur Übertragung genereller Informationen wie Teamfarbe und Strategie. Der Abschnitt 5.4.2.3 beinhaltet weitere Angaben dazu. 
             \end{description}\par
             %
             \image{content/image/5_kommunikation_uebersicht}{scale=0.6}{htbp}[Mögliche Kommunikationen zwischen den Robotern][abb:kommunikation_uebersicht]
@@ -417,7 +417,7 @@
             \end{sidewaystable}    
             %
             \begin{description}
-                \item[GoTo-Befehl] Der \textsf{GoTo-Befehl} dient der Antriebssteuerung, respektive Wegbestimmung\footnote{Die Daten beziehen sich auf das festgelegte Koordinatensystem in Abschnitt \ref{ss:spielfeld} \textit{Spielfeld} auf Seite \pageref{ss:spielfeld}}. Wird vor dem erreichen der Endposition ein neuer \textsf{GoTo-Befehl} an den Antrieb gesendet, so wird dieser übernommen und der vorherige verworfen. Die genaue Wegfindung übernimmt die Antriebseinheit, ebenso die Regelung der Geschwindigkeit. Für das Beeinflussen der Wegfindung können zu den Grunddaten (Endposition, Geschwindigkeit und Endwinkel) noch Barrieren gesetzt werden. Die Barrieren, die mit einer ID identifiziert werden (ersichtlich in \cref{abb:barrier_id}), werden vom Wegfindealgorithmus der Antriebseinheit gemieden.
+                \item[GoTo-Befehl] Der \textsf{GoTo-Befehl} dient der Antriebssteuerung, respektive Wegbestimmung\footnote{Die Daten beziehen sich auf das festgelegte Koordinatensystem in Abschnitt \ref{ss:spielfeld} \textit{Spielfeld} auf Seite \pageref{ss:spielfeld}}. Wird vor dem erreichen der Endposition ein neuer \textsf{GoTo-Befehl} an den Antrieb gesendet, so wird dieser übernommen und der vorherige verworfen. Die genaue Wegfindung übernimmt die Antriebseinheit, ebenso die Regelung der Geschwindigkeit. Für das Beeinflussen der Wegfindung können zu den Grunddaten (Endposition, Geschwindigkeit und Endwinkel) noch Barrieren gesetzt werden. Die Barrieren, die mit einer ID identifiziert werden (ersichtlich in Abb. 5.14), werden vom Wegfindealgorithmus der Antriebseinheit gemieden.
                 \image{content/image/5_goto_barrier_ids.png}{scale=0.8}{htbp}[ID's der Barrieren][abb:barrier_id]
                 %
                 \item[Goto ACK-Befehl] Mit dem \textsf{Goto ACK-Befehl} wird das Empfangen des zuvor erhalten \textsf{GoTo-Befehls} bestätigt.
@@ -482,7 +482,7 @@
             \end{description} 
             %
             \subsubsection{General Information Protocol}\label{sss:gip}
-            	Zu Beginn einer Spielrunde ist es wichtig das alle Komponenten des Roboters in einem definierten Zustand gebracht werden. Dieser Zustand ist abhängig von der Teamfarbe, wie auch von der Anzahl zu erwartenden Gegner und Verbündeten. Diese Faktoren können sich von Spiel zu Spiel unterscheiden, weshalb zur Austausch dieser Informationen das \acrfull{ac:gip} definiert wird. Die genaue Struktur des Protokolls ist der \cref{tab:gip_befehlssatz} zu entnehmen.
+            	Zu Beginn einer Spielrunde ist es wichtig das alle Komponenten des Roboters in einem definierten Zustand gebracht werden. Dieser Zustand ist abhängig von der Teamfarbe, wie auch von der Anzahl zu erwartenden Gegner und Verbündeten. Diese Faktoren können sich von Spiel zu Spiel unterscheiden, weshalb zur Austausch dieser Informationen das \acrfull{ac:gip} definiert wird. Die genaue Struktur des Protokolls ist der Tabelle 5.4 zu entnehmen.
             	%
 				\begin{sidewaystable}
 					\centering
