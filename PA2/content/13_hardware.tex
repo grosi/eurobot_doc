@@ -17,7 +17,7 @@
 	%Bedieneinheit
 	\section{Bedieneinheit}\label{s:hw_bedieneinheit}
 		Da vor jeder Spielrunde während dem \gls{g:eurobot}-Turnier die Teamzuteilung (Rot o. Gelb) alternieren kann und sonstige Initialisierung, wie z.B. die Quantität der gegnerischen Roboter, eingestellt werden müssen, benötigen unsere Roboter eine Bedienoberfläche.\\
-		Das \gls{ac:kernteam} hat daher beschlossen eine einfache Bedieneinheit mit einem kleinem LCD Display (2x16) und mehreren Tastern zu entwickeln (Abbildung \ref{pic:bedienpanel}). Diese Aufgabe fiel dem \gls{ac:kernteam}-Mitglied Jascha zu und stellt damit der Hauptbestandteil seiner \gls{ac:pa2} dar.
+		Das \gls{ac:kernteam} hat daher beschlossen eine einfache Bedieneinheit mit einem kleinem LC-Display (2x16) und mehreren Tastern zu entwickeln (Abbildung \ref{pic:bedienpanel}). Diese Aufgabe fiel dem \gls{ac:kernteam}-Mitglied Jascha zu und stellt damit der Hauptbestandteil seiner \gls{ac:pa2} dar.
 		\par
 		\image{content/image/Bedienpanel/Bedienpanel}{scale=0.7}{htbp}[Bedienpanel Eurobot 2014][pic:bedienpanel]
 		%
@@ -75,7 +75,7 @@
 				\item Speisung: 5 V oder sogar 3.3 V kompatibel, damit keine Treiber nötig
 				\item Hintergrundbeleuchtung
 	        \end{itemize}
-			Daraus ergaben sich vier LCD Displays, die diese Anforderungen erfüllen.\\
+			Daraus ergaben sich vier LC-Displays, die diese Anforderungen erfüllen.\\
 			Um die Auswahl weiter zu begrenzen wurden sekundäre Anforderungen definiert:
 	        \begin{itemize}
 				\item Schriftgrösse > 5 mm
@@ -139,7 +139,7 @@
 				%
 		\subsection{Layout}\label{ss:layout}
 			Das Layout der Bedieneinheit ist einseitig (Bottom-Layer) mit einem GND-Plane und Leiterbahnbreiten von mindestens 20 mil. Bis auf den selbst erstellten Footprint des Displays sind sämtliche Footprints aus der Standardbibliothek. Da die Bedieneinheit im Roboter nach Aussen zugänglich sein muss, müssen sämtliche Buchsen abgewinkelt sein. Dies musste im Layout vor allem bei der 10-Pin-Buchse berücksichtigt werden, da aus Zeitgründen kein passender Footprint erstellt wurde. Es wurde ausserdem darauf geachtet, dass die Taster einen genügend grossen Abstand zu den höheren Bauteilen und je einen Abstand von 1 cm zueinander haben, um die Bedienung zu erleichtern.\\
-			Die Prints für beide Roboter wurden intern (mit der Fräse) innerhalb eines Tages hergestellt werden.
+			Die Prints für beide Roboter wurden intern (mit der Fräse) innerhalb eines Tages hergestellt.
 			%
 		\subsection{Inbetriebnahme}\label{ss:inbetriebnahme}
 			Das Testen der Funktionalität der Hardware wurde parallel zum Bestücken durchgeführt. Dabei wurde vorgängig ein Inbetriebnahme-Protokoll definiert, welches im Anhang G zu finden ist. Dabei wurden primär die Speisungen und nebeneinander liegende Leitungen auf Kurzschlüsse überprüft.\\
@@ -155,7 +155,7 @@
 	%
 	%CAN-Adapter
 	\section{CAN-Adapter}\label{s:can-adapter}
-		Ebenfalls von Jascha wurden vier CAN-Adapter (Abbildung \ref{pic:can_adapter} \& \ref{pic:can_adapter_layout}) angefertigt, die das Debuggen der CAN-Kommunikation erleichtern sollen. Sie enthalten zwei 10-Pin-Buchsen (X1 \& X2), eine D-Sub-Buchse (J1) und eine 3-Pin-Stiftleiste (X3) für Messabgriffe. Ausserdem kann wahlweise ein 150 Ohm Abschlusswiderstand (R1) mit einem Jumper (X4) dazugeschaltet werden.
+		Ebenfalls von Jascha wurden vier CAN-Adapter (Abbildung \ref{pic:can_adapter} \& \ref{pic:can_adapter_layout}) angefertigt, die das Debuggen der CAN-Kommunikation erleichtern sollen. Sie enthalten zwei 10-Pin-Buchsen (X1 \& X2), eine D-Sub-Buchse (J1) und eine 3-Pin-Stiftleiste (X3) für Messabgriffe. Ausserdem kann wahlweise ein 120 $\Omega$ Abschlusswiderstand (R1) mit einem Jumper (X4) dazugeschaltet werden.
 		\par
 		\image{content/image/Bedienpanel/CAN_Adapter}{scale=0.6}{htbp}[CAN-Adapter Schema][pic:can_adapter]
 		%

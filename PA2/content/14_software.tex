@@ -18,7 +18,7 @@
 	%
 	%System
 	\section{System}\label{s:system}
-		Das komplette System gliedert sich mehrere Komponente. Folgend wird detailliert auf einzelnen Aspekte eingegangen. Dabei wird Top $\rightarrow$ Bottom vorgegangen und nur der kleine Roboter betrachtet.
+		Das komplette System gliedert sich mehrere Komponente. Folgend wird detailliert auf einzelnen Aspekte eingegangen. Dabei wird Top $\rightarrow$ Bottom vorgegangen und nur der kleine Roboter betrachtet\footnote{Zum Zeitpunkt der Dokmentation war der grosse Roboter noch nicht betriebsbereit. Die Software wird aber über weite Bereiche indentisch ausfallen.}.
 		%
 		%
 		\subsection{Roboter}
@@ -53,7 +53,7 @@
 						Um verifizieren zu können ob ein Fresko anklebt oder die Wand erreicht wurde, werden drei einfache Hubtaster eingesetzt.
 					%
 					\item[Taster Schlüssel]
-						Das Reglement schreibt vor, dass die Roboter mit dem Herausziehen einer Schnur gestartet werden müssen. In unserem Fall wird mit Hilfe der Schnur ein Schlüssel aus seiner Verankerung verschoben, die wiederum einen Taster aktiviert.
+						Das Reglement schreibt vor, dass die Roboter mit dem Herausziehen einer Schnur gestartet werden müssen. In unserem Fall wird mit Hilfe der Schnur ein Schlüssel aus seiner Verankerung verschoben, die wiederum einen Taster betätigt.
 					%
 					\item[Taster Notstopp]
 						Ebenfalls vorgeschrieben ist ein Notstopp-Schalter. Dieser unterbricht zum einen die Stromversorgung zu allen Aktoren und zum anderen wird das System in einen definierten Zustand gesetzt.
@@ -65,7 +65,7 @@
 						Sind zuständig für die Fortbewegung des Roboters.
 					%
 					\item[Servo Mammut]
-						Betätigt den Mechanismus zum abfeuern der Bälle
+						Betätigt den Mechanismus zum abfeuern der Bälle.
 					%
 					\item[Servo Fresko]
 						Klebt als Hauptaufgabe die Freskos an die Wand. Weiter übernimmt es noch die Vereinzelung der Bälle.
@@ -84,7 +84,7 @@
 			%
 			\begin{description}
 				\item[Kernknoten, \acrfull{ac:kernteam}]
-					Dem Kernknoten unterliegt die Steuerung und Kontrolle des gesamten Systems. Weiter übernimmt er die Ansteuerung der spielaufgabenrelevanten Aktoren und Sensoren. Es ist Aufgabe des \gls{ac:kernteam} für seine Funktionalität zu sorgen. In den folgenden Abschnitten \ref{ss:kernknoten} und \ref{ss:systemzustaende} wird daher näher auf seinen Aufbau eingegangen.
+					Dem Kernknoten unterliegt die Steuerung und Kontrolle des gesamten Systems. Weiter übernimmt er die Ansteuerung der spielaufgabenrelevanten Aktoren und Sensoren. Es ist Aufgabe des \gls{ac:kernteam} für seine Funktionalität zu sorgen. In den folgenden Abschnitten \ref{ss:kernknoten} bis \ref{ss:match} wird daher näher auf seinen Aufbau eingegangen.
 				%
 				\item[Antriebsknoten, \acrfull{ac:antriebsteam}]
 					Die Aufgabe des Antriebsknoten ist es primär für die Fortbewegung des Roboters zu sorgen. Weiter wird in ihm ein Wegfindealgorithmus und ein Kalman-Filter für eine exaktere Positionsbestimmung implementiert.
@@ -116,7 +116,7 @@
 					Die Befehle sind dem Anhang H entnommen. Die Periodizität muss eventuell noch an die realen Gegebenheiten angepasst werden.
 				%
 				\item[Default Task]
-					Für die einfache Visualisierung des \gls{g:rtos}-Zustandes wird der Default Task eingesetzt. Wenn das System ohne Einschränkungen läuft, so wird dies über Lichtspiel angezeigt. Im Falle eines Stackoverflows oder ähnlichen Misszuständen wird das Lichtspiel angehalten.
+					Für die einfache Visualisierung des \gls{g:rtos}-Zustandes wird der Default Task eingesetzt. Wenn das System ohne Einschränkungen läuft, so wird dies über ein Lichtspiel angezeigt. Im Falle eines Stackoverflows oder ähnlichen Misszuständen wird das Lichtspiel angehalten.
 				%
 				\item[Knoten Task]
 					Im Knoten Task werden die einzelnen Aufgaben-Knoten, falls vom System Task gewünscht, der Spielstrategie (siehe dazu \cref{s:speilstrategie}) abgearbeitet. Dies beinhaltet die Steuerung von Aktoren unter Berücksichtigung von Sensorwerten. Weiter muss eine Kommunikation mit dem Rangfinder Task bestehen um mögliche Hindernisse während der Ausführung zu erkennen.
@@ -125,10 +125,10 @@
 					Für die Auswertung der Naherkennung ist der Rangfinder Task zuständig. Als Informationsquelle dienen ihm die zwei Ultraschallsensoren (hinten/vorne) und vier Infrarotschalter. Die Kommunikation zum Knoten Task erfolgt einerseits mit Hilfe einer Semaphore und andererseits mit globalen Zustandsflags.
 				%
 				\item[System Task]
-					Die Abläufe der kompletten Applikation werden mit Hilfe des System Task gesteuert. Weiter ermöglicht er auch Benutzerinteraktionen durch entsprechende Taster (Schlüssel/Notstopp) und Anzeige. Für detaillierte Information zu den einzelnen Systemzuständen empfiehlt sich das \cref{ss:systemzustaende}.
+					Die Abläufe der kompletten Applikation werden mit Hilfe des System Task gesteuert. Weiter ermöglicht er auch Benutzerinteraktionen durch entsprechende Taster (Schlüssel/Notstopp) und Anzeige. Für detaillierte Information zu den einzelnen Systemzuständen empfiehlt sich der \cref{ss:systemzustaende}.
 				%
 				\item[Timer Task]
-					Eine Spielrunde dauert immer 90 Sekunden (+ 5 Sekunden Funny Action) \cite[]{lit:eurobot}. Sollte diese Zeit nicht eingehalten werden, so hat dies Punktabzüge zur Folge. Um diesen Fall zur vermeiden wird der Timer Task eingesetzt. Seine Aufgabe besteht darin die Spielzeit zu überwachen und bei Ablauf den Roboter zu stoppen (sollte die nicht bereits der Fall sein).
+					Eine Spielrunde dauert immer 90 Sekunden (+ 5 Sekunden Funny Action) \cite[]{lit:eurobot}. Sollte diese Zeit nicht eingehalten werden, so hat dies Punktabzüge zur Folge. Um diesen Fall zu vermeiden wird der Timer Task eingesetzt. Seine Aufgabe besteht darin die Spielzeit zu überwachen und bei Ablauf den Roboter zu stoppen (sollte dies nicht bereits der Fall sein).
 			\end{description}
 			%
 			\image{content/image/14_dfd_level_2}{scale=1}{htbp}[DFD Kernknoten][pic:kernknoten]
@@ -170,10 +170,10 @@
 			%
 			\begin{description}
 				\item[Initialisierung]
-					Im ersten Zustand werden alle Komponenten initialisiert, die zuvor, vor dem Start des \gls{g:rtos} Task-Schedulers, noch nicht gestartet werden konnten. Dies betrifft auf dem Kern Knoten die Anzeige-Einheit, die auf Verzögerungsfunktionen des \gls{ac:os} angewiesen ist. Weiter wird das komplette System hinsichtlich der Erreichbarkeit von übrigen Feldbus-Knoten überprüft. Sollte eine Teilkomponente nicht auf eine entsprechende Anfragen auf dem \gls{ac:can}-Bus antworten, so ist das System nicht funktionsfähig und er Zustand wechselt zu Error.
+					Im ersten Zustand werden alle Komponenten initialisiert, die zuvor, vor dem Start des \gls{g:rtos} Task-Schedulers, noch nicht gestartet werden konnten. Dies betrifft auf dem Kern Knoten die Anzeige-Einheit, die auf Verzögerungsfunktionen des \gls{ac:os} angewiesen ist. Weiter wird das komplette System hinsichtlich der Erreichbarkeit von übrigen Feldbus-Knoten überprüft. Sollte eine Teilkomponente nicht auf eine entsprechende Anfragen auf dem \gls{ac:can}-Bus antworten, so ist das System nicht funktionsfähig und der Zustand wechselt zu Error.
 				%
 				\item[Setup]
-				 	Im Setup werden Match betreffende Einstellungen vorgenommen. Dies beinhaltet die Parameter Teamfarbe, Anzahl Gegner/Verbündeter, Durchmesser der Gegner, sowie der gewünschte Startknoten\footnote{Für mögliche Knoten-Identitäten sei auf den \cref{s:speilstrategie} ab Seite \cpageref{s:speilstrategie} und insbesonders auf die \cref{abb:node_id} verwiesen.}. Für die Menü-Navigation stehen drei Taster bereit, mit denen Schritt für Schritt die Einstellungen vorgenommen werden können (Ringmenü-Struktur). Ist die Parametriesierung abgeschlossen, so kann mit Hilfe des Schlüsselschalters der Roboter gestartet werden. 
+				 	Im Setup werden Match betreffende Einstellungen vorgenommen. Dies beinhaltet die Parameter Teamfarbe, Anzahl Gegner/Verbündeter, Durchmesser der Gegner, sowie der gewünschte Startknoten\footnote{Für mögliche Knoten-Identitäten sei auf den \cref{s:speilstrategie} ab \cpageref{s:speilstrategie} und insbesonders auf die \cref{abb:node_id} verwiesen.}. Für die Menü-Navigation stehen drei Taster bereit, mit denen Schritt für Schritt die Einstellungen vorgenommen werden können (Ringmenü-Struktur). Ist die Parametriesierung abgeschlossen, so kann mit Hilfe des Schlüsselschalters der Roboter gestartet werden. 
 				%
 				\item[Run]
 					Nachdem Abschluss der Konfiguration startet ein neuer Match. Die Kontrolle über die  einzelnen Teilaufgaben hat dabei der Run Zustand. Er übernimmt strategische Entscheide und übergibt dem Knoten Task entsprechende Information zum erfüllen einer Spielaufgabe. Die dabei angewandte Struktur ist im \cref{ss:match} erläutert.
@@ -367,7 +367,7 @@
 					\item Jeder Kante verdoppeln in $T$
 					\item Einen Startknoten $v$ bestimmen $T$
 					\item Eulerkreis $K$ in $T$ ermitteln
-					\item Im Eulerkreis alle Kanten entfernen, die bereits zu einem besuchten Knoten führen und ersetze sie durch eine Kante zu einem Konten, der im Eulerkreis an nächster Stelle kommt (ausser Startknoten). 
+					\item Im Eulerkreis alle Kanten entfernen, die bereits zu einem besuchten Knoten führen und ersetze sie durch eine Kante zu einem Knoten, der im Eulerkreis an nächster Stelle kommt (ausser Startknoten). 
 				\end{enumerate}	
 				Die sich dadurch ergebende Route ist maximal um den Faktor 2 länger als die optimale. Da die Punkte der Symmetrie und Dreieckungleichung vom vorliegenden Problem nicht erfüllt werden, kann diese Heuristik nicht eingesetzt werden. 	
 			%
@@ -375,11 +375,11 @@
 				Bei der Nearest-Neighbour Heuristik handelt es sich um einen Greedy-Algorithmus, was so viel bedeutet, dass er lokale optimale Lösungen findet, die schlussendlich zu einer globalen Lösung führen. Dadurch ist dieser Ansatz jedoch nicht sehr vorausschauend, dafür relativ einfach umzusetzen.
 				%
 				\begin{enumerate}
-					\item Alle Knoten als unbesucht kennzeichnen
-					\item Einen Startknoten wählen
+					\item Alle Knoten als unbesucht kennzeichnen.
+					\item Einen Startknoten wählen.
 					\item Knoten $v$ finden, der mit einem minimalen Gewicht vom Startknoten aus erreichbar ist.
-					\item Den Knoten $v$ als besucht markieren
-					\item Die Schritte 3 bis 4 so lange wiederholen bis alle Knoten als besucht gekennzeichnet sind 
+					\item Den Knoten $v$ als besucht markieren.
+					\item Die Schritte 3 bis 4 so lange wiederholen bis alle Knoten als besucht gekennzeichnet sind.
 				\end{enumerate}
 				%
 				Dieser Ansatz ist sehr zeiteffizient, kann jedoch als Resultat die schlechtest mögliche Handelsroute liefern \cite[S.12]{lit:tsp_achen}. Durch seine Einfachheit ist er jedoch prädestiniert für den Einsatz auf einem eingebetteten System. Weiter kann er auch bei asymmetrische Grahpen eingesetzt werden, weshalb diese Heuristik gewählt wird.   	
@@ -421,7 +421,7 @@
 				    t_{Game} & Spielzeit 90 Sekunde\\
 				    w_{dec} & Aktuelle Zeit [0 90]}[eq:gewichtung]
 				%
-				\paragraph{Anfahrtsrichtung} Für die Berücksichtigung der Anfahrtsrichtung des Knoten wird die Komponente \textsf{Kosten eines Knoten} zusätzlich ganzzahlig mit einem Faktor 1 bis 4 multipliziert. Der Faktor 1 entspricht dabei einer optimalen Anfahrt. Die verschiedenen Anfahrtszonen sind der \cref{pic:anfahrt} zu entnehmen. Es wird zwischen 
+				\paragraph{Anfahrtsrichtung} Für die Berücksichtigung der Anfahrtsrichtung des Knoten wird die Komponente \textsf{Kosten eines Knoten} zusätzlich ganzzahlig mit einem Faktor 1 bis 4 multipliziert\footnote{Sollten sich die Faktoren während der Tests nicht als optimal herausstellen, so können sie entsprechend modifiziert werden.}. Der Faktor 1 entspricht dabei einer optimalen Anfahrt. Die verschiedenen Anfahrtszonen sind der \cref{pic:anfahrt} zu entnehmen. Es wird zwischen 
 				%
 				\begin{enumerate}
 					\item optimale Anfahrt (Fakor 1)
@@ -432,7 +432,7 @@
 				%
 				unterschieden. Der Abstand \textsf{Frame} kann eingestellt werden und beträgt standardmässig 15cm.\par 
 				%
-				\image{content/image/14_node_arrive}{scale=0.4}{htbp}[Anfahrtsrichtung-Gewichtung (Anfahrt aus Norden)][pic:anfahrt] 
+				\image{content/image/14_node_arrive}{scale=0.4}{htbp}[Anfahrtsrichtung-Gewichtung (optimale Anfahrt aus Norden)][pic:anfahrt] 
 				%
 				\paragraph{Gegner Tracking} Da der Roboter über keine visuellen Sensoren verfügt, mit denen das Vorhanden sein eines Spielelements geprüft werden kann, muss die Position des Gegners aufgezeichnet werden. Mit dieser Aufzeichnung kann anschliessend abgeschätzt werden, ob eine Aufgabe bereits gelöst wurde.\par
 				%
@@ -440,7 +440,7 @@
 				%
 				\image{content/image/14_enemy_track_red}{scale=0.8}{htbp}[Gegner-Tracking einer möglichen Route][pic:tracking]
 				%
-				\paragraph{Totales Kontengewicht}Das totale Gewicht eines Knoten berechnet sich anschliessend wie in \cref{eq:w_node} ersichtlich. Je tiefer das Gewicht ausfällt, des höher ist der Wert des Knoten.
+				\paragraph{Totales Knotengewicht}Das totale Gewicht eines Knoten berechnet sich anschliessend wie in \cref{eq:w_node} ersichtlich. Je tiefer das Gewicht ausfällt, dessto höher ist der Wert des Knoten.
 				%
 				\formula{
 					w_{Node}&=w_{dec}*c_{dest}+w_{dec}*c_{enemy}\\
@@ -508,7 +508,7 @@
 	    	%
 	    	\image{content/image/14_field_end_red}{scale=0.6}{htbp}[Spielfeldsituation bei Match-Ende Teamfarbe rot][pic:match_ende]
 	    	%
-			Der Knoten-Gewicht-Verlauf ändert während der gesamten Match-Dauer in Abhängigkeit des aktuellen Knotens (siehe \cref{pic:match_weight}). Zu beachten ist, dass dieses Diagramm ohne Berücksichtigung eines Gegners aufgezeichnet wurde. Ein allfälliger Gegner würde eine Horizontaltverschiebung nach oben des Gewichtsverlaufes zur Folge haben. Weiter kann im Diagramm der Wert einzelner Spielaufgaben erkannt werden. Die Aufgaben \gls{g:mammut} und \gls{g:fresko} liegen sehr nahe beieinander, wohingegen die Aufgabe \gls{g:fire} zu Beginn kaum ins Gewicht fällt.
+			Der Knoten-Gewicht-Verlauf ändert während der gesamten Matchdauer in Abhängigkeit des aktuellen Knotens (siehe \cref{pic:match_weight}). Zu beachten ist, dass dieses Diagramm ohne Berücksichtigung eines Gegners aufgezeichnet wurde. Ein allfälliger Gegner würde eine Horizontaltverschiebung nach oben des Gewichtsverlaufes zur Folge haben. Weiter kann im Diagramm der Wert einzelner Spielaufgaben erkannt werden. Die Aufgaben \gls{g:mammut} und \gls{g:fresko} liegen sehr nahe beieinander, wohingegen die Aufgabe \gls{g:fire} zu Beginn kaum ins Gewicht fällt.
 	    	%
 	    	\image{content/image/14_weight_end_red}{scale=0.6}{htbp}[Knoten-Gewichte während eines Matchs][pic:match_weight]
 	    	
