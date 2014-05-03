@@ -182,12 +182,14 @@
 					Sollte der Roboter nicht funktionsfähig sein (z.B. keine Feldbus-Kommunikation), so befindet sich das System im Error Zustand. Dieser Zustand kann nicht verlassen werden und zwingt so den Bediener den aufgetretene Fehler genau zu analysieren. 
 			\end{description}
 			%
-			\begin{figure}[htbp]
-				\centering
-				\includegraphics[angle=90,scale=0.26]{content/image/14_system_overview}
-				\caption{Systemzustände}
-				\label{pic:systemzustände}
-			\end{figure}
+			\begin{rotpdf90}
+				\begin{figure}[htbp]
+					\centering
+					\includegraphics[angle=90,scale=0.26]{content/image/14_system_overview}
+					\caption{Systemzustände}
+					\label{pic:systemzustände}
+				\end{figure}
+			\end{rotpdf90}
 			%
 			\subsection{Match}\label{ss:match}
 				Wie im \cref{s:speilstrategie} erklärt wird, besteht ein Match aus mehreren Spielaufgaben, die wiederum unterschiedlichen Konten in einem Graphen zugeordnet sind. Für die Auswahl des nächsten Knotens ist die Spielstrategie zuständig, für die Ausführung der Knoten Task. Dafür wird er vom System Task gesteuert und mit neuen Knotendaten informiert. Dieser Vorgang ist in der \cref{pic:match} verdeutlicht.

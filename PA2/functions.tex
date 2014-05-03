@@ -191,3 +191,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand\mpar[1]{\marginpar[\flushleft\sffamily\small #1]{\flushleft\sffamily\small #1}}
 \setlength{\marginparwidth}{3cm}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Neue Umgebung erstellen, PDF-Seiten darin sind 90° rotiert (z.B. Querformat)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{rotpdf90}{%
+	% PDF-Seite 90° rotieren
+	\clearpage\global\pdfpageattr\expandafter{\the\pdfpageattr/Rotate 90}
+}{%
+	% PDF-Seite wieder auf 0° Rotation
+	\clearpage\global\pdfpageattr\expandafter{\the\pdfpageattr/Rotate 0}
+}
