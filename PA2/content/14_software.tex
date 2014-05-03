@@ -201,33 +201,34 @@
 	\section{Bedieneinheit}\label{s:sw_bedieneinheit}
 		Der für die Bedieneinheit entwickelte SW-Code ist grundsätzlich in den folgenden Dateien zu finden:
 		\begin{itemize}
-			\item (spi.c/.h)
 			\item display.c/.h
 			\item RoboSetup.c/.h
 		\end{itemize}
 		%
-		Dabei dienen die spi- und display-Dateien als Bibliotheksdateien (lib) und die RoboSetup-Datei als System-Datei (application/system). In der letztgenannten befindet sich die Menü-Steuerung um die gewünschten Spiel-spezifischen Initialisierungen einzustellen.
+		Dabei dient die display-Datei als Bibliotheksdatei (lib) und die RoboSetup-Datei als System-Datei (application/system). In der letztgenannten befindet sich die Menü-Steuerung um die gewünschten Spiel-spezifischen Initialisierungen einzustellen.
 		\par
 		Die Konfigurationen erfolgen mit den drei Tastern unter dem Display. Die Taster links und rechts dienen der Auswahl einer Option und der mittlere Taster zur Bestätigung. Sämtliche Taster auf der Bedieneinheit funktionieren Flankengesteuert.
 		%
-		\subsection{SPI}\label{ss:spi}
-			Diese Bibliotheksdatei wurden schlussendlich nicht mehr genutzt, da die Datenübertragung manuell in der display-Datei programmiert wurde. Sie beinhaltet jedoch eine SPI-Initialisierungsfunktion (initSPI()) und eine Send-Byte-Funktion (SPI\_send\_byte()), die mit den von stm32f4 gegebenen SPI-Funktionen realisiert wurde.\\
-			Bei der Initialisierung ist zu beachten, dass lediglich die SCK- und MOSI-Pins konfiguriert werden. Das MISO-Pin wird in dieser Anwendung nicht benötigt, da nur vom Master (RoboBoard) zum Slave (Bedieneinheit) gesendet werden muss (send only).
+		\subsection{SPI-\"Ubertragung}\label{ss:spi}
+			Ursprünglich wurde eine weitere Bibliotheksdatei (spi.c/.h) genutzt. Sie beinhaltet eine SPI-Initialisierungsfunktion (initSPI()) und eine Send-Byte-Funktion (SPI\_send\_byte()), die mit den von stm32f4 gegebenen SPI-Funktionen realisiert wurde.
+			%Bei der Initialisierung ist zu beachten, dass lediglich die SCK- und MOSI-Pins konfiguriert werden. Das MISO-Pin wird in dieser Anwendung nicht benötigt, da nur vom Master (RoboBoard) zum Slave (Bedieneinheit) gesendet werden muss (send only).
 			\par
-			Bei den ersten Tests tauchte das Problem auf, dass die eingestellte Baudrate zu hoch war und daher mit dem Oszilloskop keine erkennbare Byte-Übertragung festgestellt werden konnte. Es ist daher darauf zu achten, dass der SPI\_BaudRatePrescaler gross genug gewählt wird, damit die Frequenz dem Datenblatt des Controllers des Displays entsprechend kleiner als 300 kHz ist. Er berechnet sich mit der Formel:
+			Bei den ersten Tests tauchte jedoch das Problem auf, dass die eingestellte Baudrate zu hoch war und daher mit dem Oszilloskop keine erkennbare Byte-Übertragung festgestellt werden konnte. Folge dessen ist darauf zu achten, dass der SPI\_BaudRatePrescaler gross genug gewählt wird, damit die Frequenz dem Datenblatt des Controllers des Displays entsprechend kleiner als 300 kHz ist. Er berechnet sich mit der Formel:
 			\par
 			$Baudrate = \frac{(APB2 frequency (=84MHz))}{Prescaler}$
 			\par
 			Verwendet wurde in einem zweiten Versuch der maximal mögliche Prescaler von 256, was eine Baudrate von 328'125 Hz zur Folge hat.\\
-			Mit dieser (Fehl-)Konfiguration funktionierte das erste Display. Das zweite für den grossen Roboter jedoch nicht. Da das Erste so weit zuverlässig lief, wurde der Fehler in der HW gesucht. Nach aufwändiger Fehlersuche und der Mithilfe eines weiteren Kernteammitglieds (Simon) hat man die Fehlerquelle dennoch auf die SW begrenzen können. Dabei wurde versuchsweise die eingestellte Übertragungsfrequenz (mit einem Interrupt) auf 100 kHz begrenzt. Dieser Wert gilt z.B. für das im Kapitel \ref{sss:NHD} beschriebene Display (NHD-0216K3Z) als Maximalwert. Umgesetzt wurde dies mit einem Timerinterrupt in der display.c-Datei, in dessen Handler schlussendlich die gesamte Datenübertragung umgesetzt wurde. Mit dieser Massnahme funktionierte auch das zweite Display.			
+			Trotz dieser (Fehl-)Konfiguration funktionierte das erste Display. Das zweite für den grossen Roboter jedoch nicht. Da das Erste so weit zuverlässig lief, wurde der Fehler in der HW gesucht. Nach aufwändiger Fehlersuche und der Mithilfe eines weiteren Kernteammitglieds (Simon) hat man die Fehlerquelle dennoch auf die SW begrenzen können. Dabei hat man festgestellt, dass nebst der Frequenz auch das RS-Pin nicht ganz korrekt gesetzt wurden. Es wurde nämlich jeweils zu beginn einer \"Ubertragung eines Instruktionsbytes gesetzt und nicht wie gemäss dem Datenblatt des Display-Controllers (s. 47) nur über dem achten Bit (Abbildung \ref{pic:timing}).
 			\par
-			Bei einer Änderung der GPIO-Pins in der spi.h-Datei muss beachtet werden, dass allfällig die Konfiguration des Peripherie-Clocks (RCC\_AHB1PeriphClockCmd()) in der spi.c-Datei angepasst werden muss.
+			\image{content/image/Bedienpanel/timing_sequenz.PNG}{scale=1}{htbp}[SPI timing sequenz][pic:timing]
+			%
+			Versuchsweise hat man ausserdem die eingestellte Übertragungsfrequenz (mit einem Interrupt) auf 100 kHz begrenzt. Dieser Wert gilt z.B. für das im Kapitel \ref{sss:NHD} beschriebene Display (NHD-0216K3Z) als Maximalwert. Umgesetzt wurde dies mit einem Timerinterrupt in der display.c-Datei, in dessen Handler schlussendlich die gesamte Datenübertragung umgesetzt wurde.\\
+			Mit diesen Massnahmen funktionierte auch das zweite Display so weit einwandfrei.
 			%
 		\subsection{Display}\label{ss:display}
 			In dieser Bibliotheksdatei befinden sich sämtliche Funktionen um das Display anzusteuern. Diejenigen die nicht verwendet wurden, werden in dieser Dokumentation nicht näher erläutert. Sie sollten jedoch selbsterklärend sein, da sie lediglich ein bestimmtes Instruktionsbyte ans Display senden und sinnvoll benannt wurden. Die wichtigsten Funktionen werden in der nachfolgenden Tabelle (\ref{tab:display-funktionen}) beschrieben:
 	 		\begin{table}[H]
 		    	\centering
-		    	\caption{Display-Funktionen}
 		    	\begin{tabular}{|p{3.5cm}|p{11cm}|} 
 		    		\hline
 		    		\rowcolor{bfhblue}
@@ -250,12 +251,11 @@
 					LCD\_set\_contrast() & Setzt den Kontrast des Displays mit einer Intensität zwischen 0 und 63, wobei 24 standardmässig eingestellt ist und im Normalfall nicht verändert werden sollte\\
 					\hline				
 				\end{tabular}
+			\caption{Display-Funktionen}
 			\label{tab:display-funktionen}
 			\end{table}
 			%
 			Erwähnenswert ist, dass bei der Kommunikation mit einem Display des öfteren Zeitverzögerungen (delays) eingebaut werden müssen, damit der Controller des Displays Zeit für die Verarbeitung hat. Gelöst wurde dieses Problem mit der vTaskDelay()-Funktion von FreeRTOS die mittels einem Funktionspointer beim Aufruf der init\_display()-Funktion übergeben wird und darin in eine private Variable (*Delay) gespeichert wird.
-			\par
-			Bei der Übertragung eines Instruktionsbytes ist ausserdem zu beachten, dass das RS-Pin gemäss dem Datenblatt des Display-Controllers (s. 47) lediglich beim Bit 8 gesetzt wird.
 			\par
 			Bei einer Änderung der GPIO-Pins in der display.h-Datei muss beachtet werden, dass allfällig die Konfiguration des Peripherie-Clocks (RCC\_AHB1PeriphClockCmd()) in der display.c-Datei angepasst werden muss.
 			%
