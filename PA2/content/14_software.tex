@@ -515,9 +515,55 @@
 	    	\image{content/image/14_weight_end_red}{scale=0.6}{htbp}[Knoten-Gewichte während eines Matchs][pic:match_weight]
 	    	
 		
-			
+			\clearpage
 	%
 	%
 	%Spielaufgaben
-	\section{Spielaufgaben}\label{s:spielaufgaben}{kasen1}
+	\section{Spielaufgaben}\label{s:spielaufgaben}
+		Zum erledigen der Spielaufgaben ist der Task \texttt{vNodeTask} zuständig. Wie in Abb. \ref{pic:match} ersichtlich, wird dessen Task-Zustand vom System-Task auf \textit{Running} gesetzt sobald eine neue Node bearbeitet werden muss. Der Task ist in zwei Teile unterteilt, das Anfahren der Node und das Behandeln der Node.
+		%
+		\subsection{gotoNode}\label{ss:gotonode}
+			Die Funktion \texttt{gotoNode} wird zu Beginn des Taskablauf aufgerufen. Als Parameter werden die Node-Informationen, sowie Informationen auf den aktuellen Spielzustand mitgegeben. Die Spielzustands-Informationen beinhalten Angaben wie die eigenen Positionen und Winkel, sowie die Positionen der Gegner.
+			%
+			\par Als Erstes wird der Rangefinder-Task in den \textit{Running}-State gebracht, damit die gesamte Fahrt überwacht und ein möglicher Zusammenstoss verhindert werden kann. Danach kann gleich losgefahren werden. Dies wird veranlasst, indem dem Antriebssystem via CAN-Message die Position des Nodes angegeben wird. Daraufhin liefert das Antriebssystem auf Anfrage die geschätzte Fahrdauer. Diese wird sogleich als Angabe benutzt wie lange versucht werden soll vom Rangefinder-Task eine Semaphore zu erhalten. Ist die Zeit abgelaufen ohne die Semaphore erhalten zu haben, so wird der Vorgang wiederholt bis die geschätzte Zeit gleich Null ist. Dies bedeutet, dass der Roboter das Ziel erreicht hat und nun die Spielaufgabe behandeln kann.
+			%
+			\par Übergibt jedoch der Rangefinder-Task während der Fahrtzeit die Semaphore, so bedeutet dies, dass ein Hindernis erkannt wurde. Nun muss überprüft werden, ob ein Notbremsung durchgeführt werden muss oder nicht. Dazu überprüft er zuerst ob die Distanz zum Gegner innerhalb der Rangefinder-Reichweite ist. Ist dies der Fall, so wird die die Position des Gegners relativ zur eigenen Position und Winkel berechnet. Befindet sich ein Gegnerroboter im Bereich vor dem eigenen Roboter, so wird einen Notbremsung ausgelöst. Ist ein Gegnerroboter in einem anderen Bereich, so besteht keine Gefahr eines Zusammenstosses und es kann weitergefahren werden. Durch diese Differenzierung wird beim Erkennen eines Feuer-Spielsteins oder einer Seitenwand nicht unnötig eine Notbremsung durchgeführt, sondern nur wenn wirklich ein Zusammenstoss mit dem Gegner bevorsteht. Zum Stand der Dokumentation ist diese Kalkulation jedoch noch nicht ausreichend ausgearbeitet und erfordert weitere Tests.
+			%
+			\clearpage
+			\image{content/image/14_node_rangefinder}{scale=0.5}{htbp}[Ablauf des Node-Tasks und Kommunikation mit dem Rangefinder-Task][pic:node_rangefinder]
+			\clearpage
+			%
+		\subsection{Bearbeitung der Spielaufgabe}\label{ss:doNode}
+			Nach dem die Node angefahren wurde, ruft der Node-Task mittels Funktionspointer die zur Node gehörende Funktion auf. Die Funktionen zum bearbeiten der Spielaufgaben sind \texttt{doMammothNode}, \texttt{doFrescoNode} und \texttt{doFireNode}, wobei letztere die vom grossen Roboter behandelt wird zum Stand der Dokumentation noch nicht implementiert ist.
+			%
+			\par Nach der Bearbeitung einer Node wird der Zustand von der jeweiligen Funktion geändert. Folgende Möglichkeiten sind definiert:
+			%
+			\begin{description}[leftmargin=!, noitemsep, labelwidth=\widthof{\texttt{NODE\_FINISH\_SUCCESS}}]
+				\item[\texttt{NODE\_UNDONE}] Node ist bereit, wurde also noch nicht bearbeitet.
+				\item[\texttt{NODE\_FINISH\_SUCCESS}] Node wurde erfolgreich bearbeitet.
+				\item[\texttt{NODE\_FINISH\_ERROR}] Node wurde bearbeitet, konnte aber nicht komplett erledigt werden.
+				\item[\texttt{GOTO\_CAN\_ERROR}] Das Antriebssystem konnte nicht angesprochen werden. Das Setzen dieses Status hat zur Folge, dass das System in den Error-Zustand wechselt!
+			\end{description}
+			%
+			\subsubsection{doMammothNode}\label{sss:doMammothNode}
+				Die Behandlung der Mammut-Node besteht aus dem einmaligen Schleudern von zwei geladenen Bällen. Dafür müssen zwei Servomotoren angesteuert werden, einer zum Separieren/Laden der Bälle (Separations-Servo) und einer zum Zurückziehen des Spannbügels (Launcher-Servo), wodurch die Bälle aus dem Roboter katapultiert werden werden. Bei beiden Servos handelt es sich um digitale Varianten. Jedoch ist es nur beim Separations-Servo möglich vorgängig eine Geschwindigkeit einzustellen. Aus diesem Grund wird die Position des Launcher-Servos jeweils Schritt für Schritt in kleinen Abschnitten angefahren.
+				%
+				\par Die Funktion \texttt{doMammothNode} wird mehrmals für verschiedene Mammut-Nodes aufgerufen. Deshalb wird zu Beginn zuerst überprüft, ob es nötig ist zwei neue Bälle bereit zu machen (vereinzeln). Beim allerersten Aufruf der Funktion ist dies nicht nötig, da die Bälle vom Team schon bereit gemacht wurden. Bei weiteren Aufrufen der Funktion kommt es darauf an, ob im letzten Durchlauf die Vereinzelung durchgeführt werden konnte. Es kann nämlich sein, dass der benötigte Platz nicht verfügbar war, worauf entschieden wurde mit der Separation noch zu warten. Ist es in einer bestimmten Frist immer noch nicht möglich die Bälle zu vereinzeln, so wird die Funktion beendet und es wird der Status \texttt{NODE\_FINISH\_ERROR} für die Node gesetzt.
+				%
+				\par Ist die Vereinzelung aber gelungen, so wird der Launcher-Servo nach vorne und die Vereinzelung wieder rein bewegt. Jetzt ist der Roboter bereit für den Wurf. Dieser wird ausgelöst, indem der Launcher-Servo nach hinten bewegt wird. Danach kann er gleich wieder nach vorne bewegt werden und es wird in einer bestimmten Frist versucht die nächsten Bälle zu vereinzeln. Je nach dem ob dies gelungen ist, wird eine Variable gesetzt, mit der beim nächsten Aufruf der Funktion überprüft werden kann ob noch eine Separation nötig ist.
+				%
+			\subsubsection{doFrescoNode}\label{sss:doFrescoNode}
+				Für die Bearbeitung des Fresko-Nodes wird nur ein Servomotor benötigt. Dabei handelt es sich um den selben wie für die Vereinzelung. Durch ausfahren der Vereinzelung wird auch das Panel mit den Freskos hinaus bewegt. Da es jedoch in dieser Anwendung nötig ist damit Kontakt zur Spielfeldwand herzustellen, darf dies nicht so schnell gehen wie eine Vereinzelung der Bälle. Während der Verwendung des Servos ist es aber nicht einfach möglich die eingespeicherte Geschwindigkeit zu ändern. Aus diesem Grund wird auch in diesem Fall die Servoposition Schritt für Schritt in kleinen Abschnitten angefahren.
+				%
+				\par In dieser Schlaufe wird auch gleich überprüft, ob der Sensor der sich vorne am Panel befindet die Wand detektiert hat. Falls dem so ist, wird das Freskopanel wieder rein gefahren. Auch dies darf nicht zu schnell geschehen, damit die Freskos gut an der Velcro-Wand kleben bleiben.
+				%
+				\par Nach dem das Panel wieder eingefahren wurde wird überprüft, ob sich die Freskos auch vom Panel gelöst haben und demnach an der Wand kleben. Dafür sind bei beiden Freskos im Panel Sensoren vorhanden. Sind nicht beide Freskos vom Panel gelöst worden, so wird der ganze Vorgang wiederholt (maximal so oft wie durch \texttt{FRESCO\_MAX\_RETRIES} definiert). Befindet sich zum Schluss noch immer mindestens ein Fresko im Roboter so wird der Status \texttt{NODE\_FINISH\_ERROR} für die Node gesetzt und die Funktion beendet.
+				%
+			%
+			\clearpage
+			\image{content/image/14_donode}{scale=0.6}{htbp}[Bearbeitung der Spielaufgaben][pic:donode]
+			\clearpage
+		
+		
+		
 		
